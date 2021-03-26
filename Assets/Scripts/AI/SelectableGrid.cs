@@ -24,29 +24,19 @@ public class SelectableGrid : ISelectable
 
     public override void Selected()
     {
-        if (!m_isSelected)
+        if (Selectable && !m_isSelected)
         {
             switch (SelectedState)
             {
                 case GridSelectedState.Idle:
                     //TODO: 提示UI显示
                     Debug.Log("当前选中的格子类型为：" + m_grid.TerrainType.ToString());
-                    if (BattleSystem.Instance.BattleState == BattleState.WaitMoving)
-                    {
-                        BattleSystem.Instance.CancelMoving();
-                    }
+                    BattleSystem.Instance.OnSelectIdleGrid();
                     break;
                 case GridSelectedState.Moveable:
                     //通知战斗系统玩家选中了该棋子
                     Debug.Log("当前选中的格子类型为：" + m_grid.TerrainType.ToString());
-                    if (BattleSystem.Instance.BattleState == BattleState.WaitMoving)
-                    {
-                        BattleSystem.Instance.OnSelectWalkableGrid(m_grid);
-                    }
-                    else if (BattleSystem.Instance.BattleState == BattleState.WaitMoveConfirm)
-                    {
-                        BattleSystem.Instance.OnConfirmWalkableGrid(m_grid);
-                    }
+                    BattleSystem.Instance.OnSelectWalkableGrid(m_grid);
                     break;
                 case GridSelectedState.Attackable:
                     break;

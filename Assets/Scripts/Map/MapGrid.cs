@@ -18,6 +18,8 @@ public class MapGrid : MonoBehaviour
 {
     public TerrainType TerrainType { get; set; }
     public bool CanMove { get; set; }
+    public int X { get; private set; }
+    public int Y { get; private set; }
 
     private SelectableGrid m_selectable;
     private Outline m_outline = null;
@@ -27,6 +29,12 @@ public class MapGrid : MonoBehaviour
         CanMove = true;
         m_outline = GetComponent<Outline>();
         m_selectable = GetComponent<SelectableGrid>();
+    }
+
+    public void SetCoord(int x, int y)
+    {
+        X = x;
+        Y = y;
     }
 
     public void HighlightWalkable()

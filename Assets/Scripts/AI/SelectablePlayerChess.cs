@@ -24,7 +24,7 @@ public class SelectablePlayerChess : ISelectable
 
     public override void Selected()
     {
-        if (!m_isSelected)
+        if (Selectable && !m_isSelected)
         {
             switch (m_selectedState)
             {

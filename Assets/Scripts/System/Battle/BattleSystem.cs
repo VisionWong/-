@@ -26,6 +26,8 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     private PlayerChess m_curPlayerChess = null;
 
     private GameObject m_virtualChess = null;
+    private MapGrid m_curWalkableGrid = null;
+    private MapGrid m_lastOriginGrid = null;
 
     public void StartBattle()
     {
@@ -74,15 +76,17 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     {
         m_curPlayerChess = chess;
         m_map.HighlightWalkableGrids(chess);
-        BattleState = BattleState.WaitMoving;
     }
 
-    public void CancelMoving()
+    private void CancelMoving()
     {
+        if (m_virtualChess.activeSelf) m_virtualChess.SetActive(false);
+        m_curWalkableGrid = null;
+
         m_curPlayerChess.ChangeToIdle();
         m_curPlayerChess = null;
+
         m_map.CancelLastHighlightGrids();
-        BattleState = BattleState.WaitSelecting;
     }
 
     public void OnSelectWalkableChess(PlayerChess chess)
@@ -95,12 +99,41 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         HighlightWalkableGrids(chess);
         //将虚拟棋子设为当前的棋子样式
         m_virtualChess.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>(m_curPlayerChess.PathPack.SpritePath);
+        BattleState = BattleState.WaitMoving;
+    }
+
+    public void OnSelectIdleGrid()
+    {
+        if (BattleState == BattleState.WaitMoving)
+        {
+            CancelMoving();
+            BattleState = BattleState.WaitSelecting;
+        }
+    }
+
+    public void OnSelectWalkableGrid(MapGrid grid)
+    {
+        if (BattleState == BattleState.WaitMoving)
+        {
+            if (m_curWalkableGrid == null || m_curWalkableGrid != grid)
+            {
+                m_curWalkableGrid = grid;
+                LoadVirtualChessOnGrid(grid);
+            }
+            else if(m_curWalkableGrid == grid) //两次选择了同一个高亮格子
+            {
+                OnConfirmWalkableGrid(grid);
+                //TODO 观察我方是否还有可以行动的棋子
+                m_curWalkableGrid = null;
+                BattleState = BattleState.WaitSelecting;
+            }
+        }
     }
 
     /// <summary>
     /// 在指定格子生成棋子虚像
     /// </summary>
-    public void OnSelectWalkableGrid(MapGrid grid)
+    private void LoadVirtualChessOnGrid(MapGrid grid)
     {
         if (m_curPlayerChess != null)
         {
@@ -113,12 +146,19 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     /// 将虚像解除，将棋子送往该格子位置，期间无法选中其他格子
     /// </summary>
     /// <param name="grid"></param>
-    public void OnConfirmWalkableGrid(MapGrid grid)
+    private void OnConfirmWalkableGrid(MapGrid grid)
     {
         if (m_curPlayerChess != null)
         {
             m_virtualChess.SetActive(false);
+            m_map.CancelLastHighlightGrids(false);
+            //记录初始位置
+            m_lastOriginGrid = m_curPlayerChess.StayGrid;
+            //获取路径，然后让棋子按路径走过去，走的过程屏蔽操作
+            List<MapGrid> path = m_map.PathFinding(m_curPlayerChess, m_lastOriginGrid, grid, new AStarPathFinding());
+            MessageCenter.Instance.Broadcast(MessageType.GlobalCantSelect);
 
+            //
         }
     }
 

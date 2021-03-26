@@ -10,6 +10,15 @@ public class Map : MonoBehaviour
 
     private List<MapGrid> lastGrids = new List<MapGrid>();
 
+    public void Start()
+    {
+        foreach (var grid in grids)
+        {
+            var coord = GetCoordByGrid(grid);
+            grid.SetCoord(coord.x, coord.y);
+        }
+    }
+
     public MapGrid GetGridByCoord(int x, int y)
     {
         int index = y * col + x;
@@ -30,12 +39,12 @@ public class Map : MonoBehaviour
     /// <param name="chess"></param>
     public void HighlightWalkableGrids(IChess chess)
     {
+        lastGrids.Clear();
         //根据该棋子的属性 搜索可以走的格子
         MapGrid originGrid = chess.StayGrid;
         int pathNum = chess.Attribute.AP;
         //广搜 高亮所有可走的格子
         Queue<MapGrid> open = new Queue<MapGrid>();
-        //HashSet<MapGrid> close = new HashSet<MapGrid>();
         HashSet<(int, int)> close = new HashSet<(int, int)>();
         open.Enqueue(originGrid);
         var oriCoord = GetCoordByGrid(originGrid);
@@ -59,16 +68,73 @@ public class Map : MonoBehaviour
     }
 
     /// <summary>
-    /// 隐藏上一次高亮的寻路网络
+    /// 隐藏上一次高亮的寻路网络，可选择是否清空缓存
     /// </summary>
-    public void CancelLastHighlightGrids()
+    public void CancelLastHighlightGrids(bool isDelete = true)
     {
         foreach (var grid in lastGrids)
         {
             grid.CancelHighlight();
         }
-        lastGrids.Clear();
+        if(isDelete) lastGrids.Clear();
     }
+
+    /// <summary>
+    /// 重新展示上一次高亮的寻路网络
+    /// </summary>
+    public void ShowLastHighlightGrids()
+    {
+        foreach (var grid in lastGrids)
+        {
+            grid.HighlightWalkable();
+        }
+    }
+
+    /// <summary>
+    /// 使用指定寻路策略寻路，返回起点开始到终点的路径格子列表
+    /// </summary>
+    /// <param name="origin">起点</param>
+    /// <param name="dest">终点</param>
+    /// <returns></returns>
+    public List<MapGrid> PathFinding(IChess chess, MapGrid origin, MapGrid dest, IPathFindingStrategy strategy)
+    {
+        return strategy.PathFinding(chess, origin, dest, this);
+    }
+
+    #region 获取四周的格子
+    public MapGrid GetUpGrid(MapGrid grid)
+    {
+        if (grid.Y - 1 >= 0)
+        {
+            return GetGridByCoord(grid.X, grid.Y - 1);
+        }
+        return null;
+    }
+    public MapGrid GetDownGrid(MapGrid grid)
+    {
+        if (grid.Y + 1 < row)
+        {
+            return GetGridByCoord(grid.X, grid.Y + 1);
+        }
+        return null;
+    }
+    public MapGrid GetLeftGrid(MapGrid grid)
+    {
+        if (grid.X - 1 >= 0)
+        {
+            return GetGridByCoord(grid.X - 1, grid.Y);
+        }
+        return null;
+    }
+    public MapGrid GetRightGrid(MapGrid grid)
+    {
+        if (grid.X + 1 < col)
+        {
+            return GetGridByCoord(grid.X + 1, grid.Y);
+        }
+        return null;
+    }
+    #endregion
 
     /// <summary>
     /// 根据棋子的属性和访问格子的类型判断是否可以通行
@@ -76,7 +142,7 @@ public class Map : MonoBehaviour
     /// <param name="chess"></param>
     /// <param name="grid"></param>
     /// <returns></returns>
-    private bool IsWalkable(IChess chess, MapGrid grid)
+    public bool IsWalkable(IChess chess, MapGrid grid)
     {
         if (!grid.CanMove || grid.TerrainType == TerrainType.Obstacle) return false;
         return true;
@@ -109,4 +175,6 @@ public class Map : MonoBehaviour
             open.Enqueue(temp);
         }
     }
+
+    
 }

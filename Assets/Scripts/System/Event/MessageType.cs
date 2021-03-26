@@ -9,10 +9,8 @@ namespace VFramework
     /// </summary>
 	public enum MessageType
     {
-        OnKeyDown,
-        OnKeyUp,
-        OnSceneLoading,
-        //Test
-        MonsterDead
+        GlobalCantSelect,
+        GlobaCanSelect,
+
     }
 }

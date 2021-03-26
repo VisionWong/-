@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using VFramework;
 
 public abstract class ISelectable : MonoBehaviour
 {
@@ -8,10 +9,23 @@ public abstract class ISelectable : MonoBehaviour
 
     protected bool m_isSelected = false;
 
+    public virtual void Start()
+    {
+        Selectable = true;
+        MessageCenter.Instance.AddListener(MessageType.GlobalCantSelect, OnCantSelect);
+        MessageCenter.Instance.AddListener(MessageType.GlobaCanSelect, OnCanSelect);
+    }
+
     public void OnMouseDown()
     {
         BattleSystem.Instance.SetSelected(this);
         Selected();
+    }
+
+    private void OnDestroy()
+    {
+        MessageCenter.Instance.RemoveListener(MessageType.GlobalCantSelect, OnCantSelect);
+        MessageCenter.Instance.RemoveListener(MessageType.GlobaCanSelect, OnCanSelect);
     }
 
     public virtual void Selected()
@@ -22,5 +36,15 @@ public abstract class ISelectable : MonoBehaviour
     public virtual void CancelSelect()
     {
         m_isSelected = false;
+    }
+
+    private void OnCantSelect()
+    {
+        Selectable = false;
+    }
+
+    private void OnCanSelect()
+    {
+        Selectable = true;
     }
 }
