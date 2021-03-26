@@ -39,6 +39,14 @@ public class SelectableGrid : ISelectable
                 case GridSelectedState.Moveable:
                     //通知战斗系统玩家选中了该棋子
                     Debug.Log("当前选中的格子类型为：" + m_grid.TerrainType.ToString());
+                    if (BattleSystem.Instance.BattleState == BattleState.WaitMoving)
+                    {
+                        BattleSystem.Instance.OnSelectWalkableGrid(m_grid);
+                    }
+                    else if (BattleSystem.Instance.BattleState == BattleState.WaitMoveConfirm)
+                    {
+                        BattleSystem.Instance.OnConfirmWalkableGrid(m_grid);
+                    }
                     break;
                 case GridSelectedState.Attackable:
                     break;

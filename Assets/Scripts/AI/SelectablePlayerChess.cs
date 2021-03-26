@@ -9,6 +9,7 @@ public class SelectablePlayerChess : ISelectable
     public void SetChess(PlayerChess chess)
     {
         m_chess = chess;
+        m_chess.SelectableSript = this;
     }
 
     public enum SelectedState
@@ -29,8 +30,8 @@ public class SelectablePlayerChess : ISelectable
             {
                 case SelectedState.Idle:
                     //通知战斗系统展开寻路网络
-                    
-                    BattleSystem.Instance.HighlightWalkableGrids(m_chess);
+                    BattleSystem.Instance.OnSelectWalkableChess(m_chess);
+                    m_selectedState = SelectedState.WaitMoving;
                     break;
                 case SelectedState.WaitMoving:
                     //提示是否要停留原地
@@ -47,5 +48,11 @@ public class SelectablePlayerChess : ISelectable
     {
         base.CancelSelect();
         //TODO 取消UI显示
+        
+    }
+
+    public void ChangeToIdle()
+    {
+        m_selectedState = SelectedState.Idle;
     }
 }

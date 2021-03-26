@@ -16,16 +16,22 @@ public enum PMType
 }
 public abstract class IChess
 {
+    public PathPack PathPack { get; private set; }
     public IChessAttr Attribute { get; set; }
     public MapGrid StayGrid { get; private set; }
 
-    private GameObject m_gameObject;
+    protected GameObject m_gameObject;
     private List<ISkill> m_skillList = new List<ISkill>();
 
     public IChess(IChessAttr attr, GameObject go)
     {
         Attribute = attr;
         m_gameObject = go;
+    }
+
+    public void SetPathPack(PathPack pack)
+    {
+        PathPack = pack;
     }
 
     public void SetStayGrid(MapGrid grid)
@@ -38,5 +44,8 @@ public abstract class IChess
 
     public void ForgetSkill() { }
 
-
+    public void Release()
+    {
+        GameObject.Destroy(m_gameObject);
+    }
 }

@@ -4,7 +4,14 @@ using UnityEngine;
 
 public class PlayerChess : IChess
 {
-    public PlayerChess(IChessAttr attr, GameObject go) : base(attr, go) { }
+    public SelectablePlayerChess SelectableSript { get; set; }
 
-    
+    public PlayerChess(IChessAttr attr, GameObject go) : base(attr, go)
+    {
+    }
+
+    public void ChangeToIdle()
+    {
+        SelectableSript.ChangeToIdle();
+    }
 }

@@ -14,6 +14,9 @@ public abstract class IChessAttr
     public PMType PMType { get; set; }
     public IAbility Ability { get; set; }
 
+    /// <summary>
+    /// 中文名
+    /// </summary>
     public string Name { get; set; }
     /// <summary>
     /// 行动力，可移动的步数
