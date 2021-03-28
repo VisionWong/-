@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class AStarPathFinding : IPathFindingStrategy
 {
-    class AStarGrid
+    private class AStarGrid
     {
         public MapGrid grid;
         public AStarGrid lastGrid;
@@ -52,7 +52,7 @@ public class AStarPathFinding : IPathFindingStrategy
                 List<MapGrid> path = new List<MapGrid>();
                 path.Add(dest);
                 AStarGrid curGrid = cur;
-                while (curGrid.grid != null)
+                while (curGrid != null)
                 {
                     path.Add(curGrid.grid);
                     curGrid = curGrid.lastGrid;
@@ -72,7 +72,7 @@ public class AStarPathFinding : IPathFindingStrategy
     public (int g, int h) HeuristicFunc(MapGrid origin, MapGrid cur, MapGrid dest)
     {
         int g = Math.Abs(cur.X - origin.X) + Math.Abs(cur.Y - origin.Y);
-        int h = Math.Abs(dest.X - origin.X) + Math.Abs(dest.Y - origin.Y);
+        int h = Math.Abs(dest.X - cur.X) + Math.Abs(dest.Y - cur.Y);
         return (g, h);
     }
 
@@ -105,7 +105,7 @@ public class AStarPathFinding : IPathFindingStrategy
             var gh = HeuristicFunc(origin, temp.grid, dest);
             temp.SetGAndH(gh.g, gh.h);
             open.Add(temp);
-            Debug.Log(string.Format("坐标为（{0}，{1}）的格子被加入到open列表中", temp.grid.X, temp.grid.Y));
+            //Debug.Log(string.Format("坐标为（{0}，{1}）的格子被加入到open列表中, F={2}，G={3}，H={4}", temp.grid.X, temp.grid.Y,temp.f,temp.g,temp.h));
         }
         return false;
     }

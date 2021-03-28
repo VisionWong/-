@@ -21,7 +21,8 @@ public abstract class IChess
     public MapGrid StayGrid { get; private set; }
 
     protected GameObject m_gameObject;
-    private List<ISkill> m_skillList = new List<ISkill>();
+    protected List<ISkill> m_skillList = new List<ISkill>();
+    protected ChessAnimator m_anim = null; 
 
     public IChess(IChessAttr attr, GameObject go)
     {

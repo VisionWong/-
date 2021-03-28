@@ -157,7 +157,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
             //获取路径，然后让棋子按路径走过去，走的过程屏蔽操作
             List<MapGrid> path = m_map.PathFinding(m_curPlayerChess, m_lastOriginGrid, grid, new AStarPathFinding());
             MessageCenter.Instance.Broadcast(MessageType.GlobalCantSelect);
-
+            
             //
         }
     }
