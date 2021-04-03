@@ -1,0 +1,8 @@
+[
+{"panelType":"MainMenu",
+"resPath":"UI/MainMenuPanel"},
+
+{"panelType":"Battle",
+"resPath":"UI/BattlePanel"},
+
+]

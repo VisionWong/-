@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -35,10 +36,21 @@ public abstract class IChess
         PathPack = pack;
     }
 
+    public void SetAnimator(ChessAnimator anim)
+    {
+        m_anim = anim;
+    }
+
+    /// <summary>
+    /// 让上一个棋子取消停留，让新的棋子执行停留方法
+    /// </summary>
+    /// <param name="grid"></param>
     public void SetStayGrid(MapGrid grid)
     {
+        StayGrid?.ChessAway();
         StayGrid = grid;
         StayGrid.StayChess();
+        m_gameObject.transform.position = grid.transform.position;
     }
 
     public void LearnSkill() { }
@@ -48,5 +60,10 @@ public abstract class IChess
     public void Release()
     {
         GameObject.Destroy(m_gameObject);
+    }
+
+    public void Move(List<MapGrid> grids, Action callback = null)
+    {
+        m_anim.Move(grids, callback);
     }
 }

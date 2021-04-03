@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using VFramework;
 
 public enum GridSelectedState
 {
@@ -29,14 +30,12 @@ public class SelectableGrid : ISelectable
             switch (SelectedState)
             {
                 case GridSelectedState.Idle:
-                    //TODO: 提示UI显示
-                    Debug.Log("当前选中的格子类型为：" + m_grid.TerrainType.ToString());
-                    BattleSystem.Instance.OnSelectIdleGrid();
+                    Debug.Log("当前选中的格子类型为" + m_grid.TerrainType.ToString());
+                    MessageCenter.Instance.Broadcast(MessageType.OnSelectIdleGrid, m_grid);
                     break;
                 case GridSelectedState.Moveable:
                     //通知战斗系统玩家选中了该棋子
-                    Debug.Log("当前选中的格子类型为：" + m_grid.TerrainType.ToString());
-                    BattleSystem.Instance.OnSelectWalkableGrid(m_grid);
+                    MessageCenter.Instance.Broadcast(MessageType.OnSelectWalkableGrid, m_grid);
                     break;
                 case GridSelectedState.Attackable:
                     break;

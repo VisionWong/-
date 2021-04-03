@@ -13,7 +13,7 @@ public abstract class ISelectable : MonoBehaviour
     {
         Selectable = true;
         MessageCenter.Instance.AddListener(MessageType.GlobalCantSelect, OnCantSelect);
-        MessageCenter.Instance.AddListener(MessageType.GlobaCanSelect, OnCanSelect);
+        MessageCenter.Instance.AddListener(MessageType.GlobalCanSelect, OnCanSelect);
     }
 
     public void OnMouseDown()
@@ -25,7 +25,7 @@ public abstract class ISelectable : MonoBehaviour
     private void OnDestroy()
     {
         MessageCenter.Instance.RemoveListener(MessageType.GlobalCantSelect, OnCantSelect);
-        MessageCenter.Instance.RemoveListener(MessageType.GlobaCanSelect, OnCanSelect);
+        MessageCenter.Instance.RemoveListener(MessageType.GlobalCanSelect, OnCanSelect);
     }
 
     public virtual void Selected()

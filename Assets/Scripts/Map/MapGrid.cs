@@ -16,6 +16,8 @@ public enum TerrainType
 
 public class MapGrid : MonoBehaviour
 {
+    public string TypeName { get; set; }
+    public string Description { get; set; }
     public TerrainType TerrainType { get; set; }
     public bool CanMove { get; set; }
     public int X { get; private set; }
@@ -29,6 +31,10 @@ public class MapGrid : MonoBehaviour
         CanMove = true;
         m_outline = GetComponent<Outline>();
         m_selectable = GetComponent<SelectableGrid>();
+
+        //todo
+        TypeName = TerrainType.ToString();
+        Description = "没有任何效果";
     }
 
     public void SetCoord(int x, int y)

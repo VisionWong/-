@@ -10,7 +10,12 @@ namespace VFramework
 	public enum MessageType
     {
         GlobalCantSelect,
-        GlobaCanSelect,
+        GlobalCanSelect,
 
+        //战斗相关
+        OnSelectIdleGrid,
+        OnSelectWalkableGrid,
+        OnSelectIdleChess,
+        OnSelectWalkableChess,
     }
 }

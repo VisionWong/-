@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using VFramework;
 
 public class SelectablePlayerChess : ISelectable
 {
@@ -9,14 +10,14 @@ public class SelectablePlayerChess : ISelectable
     public void SetChess(PlayerChess chess)
     {
         m_chess = chess;
-        m_chess.SelectableSript = this;
     }
 
     public enum SelectedState
     {
         Idle,
-        WaitMoving,
-        WaitAttacing,
+        WaitMove,
+        WaitAttack,
+        ActionEnd,
         Unselectable,
     }
 
@@ -30,14 +31,14 @@ public class SelectablePlayerChess : ISelectable
             {
                 case SelectedState.Idle:
                     //通知战斗系统展开寻路网络
-                    BattleSystem.Instance.OnSelectWalkableChess(m_chess);
-                    m_selectedState = SelectedState.WaitMoving;
+                    MessageCenter.Instance.Broadcast(MessageType.OnSelectWalkableChess, m_chess);
                     break;
-                case SelectedState.WaitMoving:
+                case SelectedState.WaitMove:
                     //提示是否要停留原地
-
+                    Debug.Log("正在准备移动");
                     break;
-                case SelectedState.WaitAttacing:
+                case SelectedState.WaitAttack:
+                    Debug.Log("正在准备攻击");
                     break;
             }
         }
@@ -54,5 +55,20 @@ public class SelectablePlayerChess : ISelectable
     public void ChangeToIdle()
     {
         m_selectedState = SelectedState.Idle;
+    }
+
+    public void ChangeToWaitMove()
+    {
+        m_selectedState = SelectedState.WaitMove;
+    }
+
+    public void ChangeToWaitAttack()
+    {
+        m_selectedState = SelectedState.WaitAttack;
+    }
+
+    public void ChangeToActionEnd()
+    {
+        m_selectedState = SelectedState.ActionEnd;
     }
 }

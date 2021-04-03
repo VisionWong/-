@@ -4,14 +4,35 @@ using UnityEngine;
 
 public class PlayerChess : IChess
 {
-    public SelectablePlayerChess SelectableSript { get; set; }
+    private SelectablePlayerChess m_selectable;
 
     public PlayerChess(IChessAttr attr, GameObject go) : base(attr, go)
     {
     }
 
+    public void SetSelectableScript(SelectablePlayerChess script)
+    {
+        m_selectable = script;
+        m_selectable.SetChess(this);
+    }
+
     public void ChangeToIdle()
     {
-        SelectableSript.ChangeToIdle();
+        m_selectable.ChangeToIdle();
+    }
+
+    public void ChangeToWaitMove()
+    {
+        m_selectable.ChangeToWaitMove();
+    }
+
+    public void ChangeToWaitAttack()
+    {
+        m_selectable.ChangeToWaitAttack();
+    }
+
+    public void ChangeToActionEnd()
+    {
+        m_selectable.ChangeToActionEnd();
     }
 }

@@ -6,10 +6,10 @@ using VFramework;
 public enum BattleState
 {
     Pause,
-    WaitSelecting,
-    WaitMoving,
+    WaitSelect,
+    WaitMove,
     WaitMoveConfirm,
-    WaitAttacking,
+    WaitAttack,
     WaitAttackConfirm,
     EnemyTurn,
 }
@@ -35,30 +35,39 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         LoadPlayerChess();
         LoadEnemyChess();
         LoadVirtualChess();
-        BattleState = BattleState.WaitSelecting;
+        BattleState = BattleState.WaitSelect;
+
+        RegisterAll();
     }
 
-    public void LoadMap()
+    private void LoadMap()
     {
-        Map map = Resources.Load<Map>("Map/Map001");
+        Map map = ResourceMgr.Instance.Load<Map>("Map/Map001");
         m_map = Instantiate(map, Vector3.zero, Quaternion.identity).GetComponent<Map>();
         //TODO 根据关卡信息生成地图或随机生成
     }
 
-    public void LoadPlayerChess()
+    private void LoadPlayerChess()
     {
-        PathPack pathPack = new PathPack(1, "Chess/001", "Sprite/Chess/001");
+        LoadPlayerChess(5, 4);
+        LoadPlayerChess(4, 6);
+        //TODO 根据玩家背包里的信息生成棋子，位置则根据关卡默认位置，玩家后续可在区域内调整
+    }
 
+    private void LoadPlayerChess(int x, int y)
+    {
         GameObject go = Instantiate(Resources.Load<GameObject>("Chess/001"));
         PlayerChess chess = new PlayerChess(new PlayerAttr(), go);
+
+        PathPack pathPack = new PathPack(1, "Chess/001", "Sprite/Chess/001");
         chess.SetPathPack(pathPack);
-        go.AddComponent<SelectablePlayerChess>().SetChess(chess);
-        MapGrid grid = m_map.GetGridByCoord(5, 4);
+        chess.SetAnimator(go.AddComponent<ChessAnimator>());
+        chess.SetSelectableScript(go.AddComponent<SelectablePlayerChess>()); 
+
+        MapGrid grid = m_map.GetGridByCoord(x, y);
         chess.SetStayGrid(grid);
         chess.Attribute.AP = 4;
-        go.transform.position = grid.transform.position;
         m_playerList.Add(chess);
-        //TODO 根据玩家背包里的信息生成棋子，位置则根据关卡默认位置，玩家后续可在区域内调整
     }
 
     public void LoadEnemyChess()
@@ -72,12 +81,14 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         m_curSelected = item;
     }
 
-    public void HighlightWalkableGrids(PlayerChess chess)
+    //高亮可通行网格
+    private void HighlightWalkableGrids(PlayerChess chess)
     {
         m_curPlayerChess = chess;
         m_map.HighlightWalkableGrids(chess);
     }
 
+    //取消棋子选中移动行为
     private void CancelMoving()
     {
         if (m_virtualChess.activeSelf) m_virtualChess.SetActive(false);
@@ -89,31 +100,37 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         m_map.CancelLastHighlightGrids();
     }
 
-    public void OnSelectWalkableChess(PlayerChess chess)
+    //选中未进行行动的棋子
+    private void OnSelectWalkableChess(PlayerChess chess)
     {
-        //如果之前选中了棋子正在寻路，则取消上个棋子的寻路操作
-        if (m_curPlayerChess != null)
+        if (BattleState == BattleState.WaitSelect || BattleState == BattleState.WaitMove)
         {
-            CancelMoving();
-        }
-        HighlightWalkableGrids(chess);
-        //将虚拟棋子设为当前的棋子样式
-        m_virtualChess.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>(m_curPlayerChess.PathPack.SpritePath);
-        BattleState = BattleState.WaitMoving;
-    }
-
-    public void OnSelectIdleGrid()
-    {
-        if (BattleState == BattleState.WaitMoving)
-        {
-            CancelMoving();
-            BattleState = BattleState.WaitSelecting;
+            //如果之前选中了棋子正在寻路，则取消上个棋子的寻路操作
+            if (m_curPlayerChess != null)
+            {
+                CancelMoving();
+            }
+            HighlightWalkableGrids(chess);
+            //将虚拟棋子设为当前的棋子样式
+            m_virtualChess.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>(m_curPlayerChess.PathPack.SpritePath);
+            BattleState = BattleState.WaitMove;
+            m_curPlayerChess.ChangeToWaitMove();
         }
     }
 
-    public void OnSelectWalkableGrid(MapGrid grid)
+    private void OnSelectIdleGrid(MapGrid grid)
     {
-        if (BattleState == BattleState.WaitMoving)
+        if (BattleState == BattleState.WaitMove)
+        {
+            CancelMoving();
+            BattleState = BattleState.WaitSelect;
+        }
+    }
+
+    //选中可通行的格子
+    private void OnSelectWalkableGrid(MapGrid grid)
+    {
+        if (BattleState == BattleState.WaitMove)
         {
             if (m_curWalkableGrid == null || m_curWalkableGrid != grid)
             {
@@ -122,11 +139,39 @@ public class BattleSystem : MonoSingleton<BattleSystem>
             }
             else if(m_curWalkableGrid == grid) //两次选择了同一个高亮格子
             {
-                OnConfirmWalkableGrid(grid);
-                //TODO 观察我方是否还有可以行动的棋子
-                m_curWalkableGrid = null;
-                BattleState = BattleState.WaitSelecting;
+                ConfirmWalkableGrid(grid);
             }
+        }
+    }
+
+    /// <summary>
+    /// 棋子行动回合结束,处理格子停留事件，回合转至下一个棋子
+    /// </summary>
+    public void ConfirmStayGrid()
+    {
+        m_curPlayerChess.SetStayGrid(m_curWalkableGrid);
+        //TODO 观察我方是否还有可以行动的棋子
+        m_curWalkableGrid = null;
+        m_curPlayerChess = null;
+        BattleState = BattleState.WaitSelect;
+    }//未完成
+
+    /// <summary>
+    /// 将虚像解除，将棋子送往该格子位置，期间无法选中其他格子
+    /// </summary>
+    /// <param name="grid"></param>
+    private void ConfirmWalkableGrid(MapGrid grid)
+    {
+        if (m_curPlayerChess != null)
+        {
+            m_virtualChess.SetActive(false);
+            m_map.CancelLastHighlightGrids(false);
+            //记录初始位置
+            m_lastOriginGrid = m_curPlayerChess.StayGrid;
+            //获取路径，然后让棋子按路径走过去，走的过程屏蔽操作
+            List<MapGrid> path = m_map.PathFinding(m_curPlayerChess, m_lastOriginGrid, grid, new AStarPathFinding());
+            MessageCenter.Instance.Broadcast(MessageType.GlobalCantSelect);
+            m_curPlayerChess.Move(path, OnChessMoveComplet);
         }
     }
 
@@ -141,32 +186,51 @@ public class BattleSystem : MonoSingleton<BattleSystem>
             m_virtualChess.SetActive(true);
         }
     }
-
-    /// <summary>
-    /// 将虚像解除，将棋子送往该格子位置，期间无法选中其他格子
-    /// </summary>
-    /// <param name="grid"></param>
-    private void OnConfirmWalkableGrid(MapGrid grid)
-    {
-        if (m_curPlayerChess != null)
-        {
-            m_virtualChess.SetActive(false);
-            m_map.CancelLastHighlightGrids(false);
-            //记录初始位置
-            m_lastOriginGrid = m_curPlayerChess.StayGrid;
-            //获取路径，然后让棋子按路径走过去，走的过程屏蔽操作
-            List<MapGrid> path = m_map.PathFinding(m_curPlayerChess, m_lastOriginGrid, grid, new AStarPathFinding());
-            MessageCenter.Instance.Broadcast(MessageType.GlobalCantSelect);
-            
-            //
-        }
-    }
-
     private void LoadVirtualChess()
     {
         m_virtualChess = Instantiate(Resources.Load<GameObject>("Chess/001"));
         SpriteRenderer m_virtualRenderer = m_virtualChess.GetComponent<SpriteRenderer>();
         m_virtualRenderer.color = new Color(m_virtualRenderer.color.r, m_virtualRenderer.color.g, m_virtualRenderer.color.b, 0.5f);
         m_virtualChess.SetActive(false);
+    }
+    
+    private void OnChessMoveComplet()
+    {
+        MessageCenter.Instance.Broadcast(MessageType.GlobalCanSelect);
+        BattleState = BattleState.WaitAttack;
+        m_curPlayerChess.ChangeToWaitAttack();
+    }
+
+    //取消当前棋子的移动操作
+    private void OnCancelMove()
+    {
+        //将棋子送往原来的位置，重新高亮寻路网络
+        m_curWalkableGrid = null;
+        m_map.ShowLastHighlightGrids();
+        m_curPlayerChess.SetStayGrid(m_lastOriginGrid);
+        m_curPlayerChess.ChangeToWaitMove();
+        BattleState = BattleState.WaitMove;
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            OnCancelMove();
+        }
+    }
+
+    private void RegisterAll()
+    {
+        MessageCenter.Instance.AddListener<MapGrid>(MessageType.OnSelectIdleGrid, OnSelectIdleGrid);
+        MessageCenter.Instance.AddListener<MapGrid>(MessageType.OnSelectWalkableGrid, OnSelectWalkableGrid);
+        MessageCenter.Instance.AddListener<PlayerChess>(MessageType.OnSelectWalkableChess, OnSelectWalkableChess);
+    }
+
+    private void RemoveAll()
+    {
+        MessageCenter.Instance.RemoveListener<MapGrid>(MessageType.OnSelectIdleGrid, OnSelectIdleGrid);
+        MessageCenter.Instance.RemoveListener<MapGrid>(MessageType.OnSelectWalkableGrid, OnSelectWalkableGrid);
+        MessageCenter.Instance.RemoveListener<PlayerChess>(MessageType.OnSelectWalkableChess, OnSelectWalkableChess);
     }
 }
