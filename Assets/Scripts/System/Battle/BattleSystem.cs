@@ -161,6 +161,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         m_curWalkableGrid = null;
         m_curPlayerChess = null;
         BattleState = BattleState.WaitSelect;
+        MessageCenter.Instance.Broadcast(MessageType.GlobalCanSelect);
     }//未完成
 
     /// <summary>
@@ -203,7 +204,6 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     
     private void OnChessMoveComplet()
     {
-        MessageCenter.Instance.Broadcast(MessageType.GlobalCanSelect);
         MessageCenter.Instance.Broadcast(MessageType.OnChessAction);
         BattleState = BattleState.WaitAttack;
         m_curPlayerChess.ChangeToWaitAttack();
@@ -219,6 +219,8 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         m_curPlayerChess.ChangeToWaitMove();
         BattleState = BattleState.WaitMove;
         MessageCenter.Instance.Broadcast(MessageType.OnCancelMove);
+        MessageCenter.Instance.Broadcast(MessageType.GlobalCanSelect);
+        Camera.main.GetComponent<CameraController>().MoveToTarget(m_curPlayerChess.StayGrid.transform.position);
     }
 
     #region 事件注册

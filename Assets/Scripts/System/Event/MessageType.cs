@@ -20,5 +20,6 @@ namespace VFramework
         OnSelectWalkableChess,
         OnChessAction,
         OnCancelMove,
+        OnChessMoving,
     }
 }

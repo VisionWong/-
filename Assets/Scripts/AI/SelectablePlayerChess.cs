@@ -27,6 +27,7 @@ public class SelectablePlayerChess : ISelectable
     {
         if (Selectable && !m_isSelected)
         {
+            Camera.main.GetComponent<CameraController>().MoveToTarget(transform.position);
             switch (m_selectedState)
             {
                 case SelectedState.Idle:

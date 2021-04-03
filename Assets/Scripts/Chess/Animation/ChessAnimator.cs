@@ -3,6 +3,7 @@ using DG.Tweening;
 using System.Collections.Generic;
 using System;
 using System.Collections;
+using VFramework;
 
 public class ChessAnimator : MonoBehaviour
 {
@@ -21,7 +22,8 @@ public class ChessAnimator : MonoBehaviour
         for (int i = 0; i < grids.Count; i++)
         {
             var dest = grids[i].transform.position;
-            var tweener = transform.DOMove(new Vector3(dest.x, dest.y, transform.position.z), 0.25f);
+            var tweener = transform.DOMove(new Vector3(dest.x, dest.y, transform.position.z), 0.4f);
+            MessageCenter.Instance.Broadcast(MessageType.OnChessMoving, dest);
             yield return tweener.WaitForCompletion();
         }
         callback?.Invoke();
