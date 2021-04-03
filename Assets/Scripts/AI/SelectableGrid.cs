@@ -27,6 +27,7 @@ public class SelectableGrid : ISelectable
     {
         if (Selectable && !m_isSelected)
         {
+            MessageCenter.Instance.Broadcast(MessageType.OnSelectGrid, m_grid);
             switch (SelectedState)
             {
                 case GridSelectedState.Idle:
@@ -34,7 +35,6 @@ public class SelectableGrid : ISelectable
                     MessageCenter.Instance.Broadcast(MessageType.OnSelectIdleGrid, m_grid);
                     break;
                 case GridSelectedState.Moveable:
-                    //通知战斗系统玩家选中了该棋子
                     MessageCenter.Instance.Broadcast(MessageType.OnSelectWalkableGrid, m_grid);
                     break;
                 case GridSelectedState.Attackable:

@@ -30,15 +30,22 @@ public class SelectablePlayerChess : ISelectable
             switch (m_selectedState)
             {
                 case SelectedState.Idle:
-                    //通知战斗系统展开寻路网络
                     MessageCenter.Instance.Broadcast(MessageType.OnSelectWalkableChess, m_chess);
                     break;
                 case SelectedState.WaitMove:
-                    //提示是否要停留原地
-                    Debug.Log("正在准备移动");
+                    MessageCenter.Instance.Broadcast(MessageType.OnSelectWalkableGrid, m_chess.StayGrid);
                     break;
                 case SelectedState.WaitAttack:
                     Debug.Log("正在准备攻击");
+                    break;
+                case SelectedState.ActionEnd:
+                    Debug.Log("该棋子已经行动完毕");
+                    break;
+                case SelectedState.Unselectable:
+                    Debug.Log("该棋子暂时无法选中");
+                    break;
+                default:
+                    Debug.LogWarning("棋子不存在该状态");
                     break;
             }
         }

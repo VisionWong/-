@@ -112,10 +112,16 @@ public class BattleSystem : MonoSingleton<BattleSystem>
             }
             HighlightWalkableGrids(chess);
             //将虚拟棋子设为当前的棋子样式
-            m_virtualChess.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>(m_curPlayerChess.PathPack.SpritePath);
+            m_virtualChess.GetComponent<SpriteRenderer>().sprite = ResourceMgr.Instance.Load<Sprite>(m_curPlayerChess.PathPack.SpritePath);
             BattleState = BattleState.WaitMove;
             m_curPlayerChess.ChangeToWaitMove();
         }
+    }
+
+    //选择让棋子停留原地
+    private void OnSelectChessStay()
+    {
+        ConfirmWalkableGrid(m_curPlayerChess.StayGrid);
     }
 
     private void OnSelectIdleGrid(MapGrid grid)
@@ -132,15 +138,15 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     {
         if (BattleState == BattleState.WaitMove)
         {
-            if (m_curWalkableGrid == null || m_curWalkableGrid != grid)
-            {
-                m_curWalkableGrid = grid;
-                LoadVirtualChessOnGrid(grid);
-            }
-            else if(m_curWalkableGrid == grid) //两次选择了同一个高亮格子
+            if (grid == m_curPlayerChess.StayGrid || m_curWalkableGrid == grid) //两次选择了同一个高亮格子或棋子选择停留原地
             {
                 ConfirmWalkableGrid(grid);
             }
+            else if (m_curWalkableGrid == null || m_curWalkableGrid != grid)
+            {
+                LoadVirtualChessOnGrid(grid);
+            }
+            m_curWalkableGrid = grid;
         }
     }
 
@@ -150,6 +156,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     public void ConfirmStayGrid()
     {
         m_curPlayerChess.SetStayGrid(m_curWalkableGrid);
+        m_curPlayerChess.ChangeToActionEnd();
         //TODO 观察我方是否还有可以行动的棋子
         m_curWalkableGrid = null;
         m_curPlayerChess = null;
@@ -197,12 +204,13 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     private void OnChessMoveComplet()
     {
         MessageCenter.Instance.Broadcast(MessageType.GlobalCanSelect);
+        MessageCenter.Instance.Broadcast(MessageType.OnChessAction);
         BattleState = BattleState.WaitAttack;
         m_curPlayerChess.ChangeToWaitAttack();
     }
 
     //取消当前棋子的移动操作
-    private void OnCancelMove()
+    public void OnCancelMove()
     {
         //将棋子送往原来的位置，重新高亮寻路网络
         m_curWalkableGrid = null;
@@ -210,27 +218,21 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         m_curPlayerChess.SetStayGrid(m_lastOriginGrid);
         m_curPlayerChess.ChangeToWaitMove();
         BattleState = BattleState.WaitMove;
+        MessageCenter.Instance.Broadcast(MessageType.OnCancelMove);
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            OnCancelMove();
-        }
-    }
-
+    #region 事件注册
     private void RegisterAll()
     {
         MessageCenter.Instance.AddListener<MapGrid>(MessageType.OnSelectIdleGrid, OnSelectIdleGrid);
         MessageCenter.Instance.AddListener<MapGrid>(MessageType.OnSelectWalkableGrid, OnSelectWalkableGrid);
         MessageCenter.Instance.AddListener<PlayerChess>(MessageType.OnSelectWalkableChess, OnSelectWalkableChess);
     }
-
     private void RemoveAll()
     {
         MessageCenter.Instance.RemoveListener<MapGrid>(MessageType.OnSelectIdleGrid, OnSelectIdleGrid);
         MessageCenter.Instance.RemoveListener<MapGrid>(MessageType.OnSelectWalkableGrid, OnSelectWalkableGrid);
         MessageCenter.Instance.RemoveListener<PlayerChess>(MessageType.OnSelectWalkableChess, OnSelectWalkableChess);
     }
+    #endregion
 }

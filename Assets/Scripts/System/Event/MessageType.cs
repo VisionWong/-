@@ -13,9 +13,12 @@ namespace VFramework
         GlobalCanSelect,
 
         //战斗相关
+        OnSelectGrid,
         OnSelectIdleGrid,
         OnSelectWalkableGrid,
         OnSelectIdleChess,
         OnSelectWalkableChess,
+        OnChessAction,
+        OnCancelMove,
     }
 }

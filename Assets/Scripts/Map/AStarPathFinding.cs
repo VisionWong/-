@@ -32,6 +32,7 @@ public class AStarPathFinding : IPathFindingStrategy
 
     public override List<MapGrid> PathFinding(IChess chess, MapGrid origin, MapGrid dest, Map map)
     {
+        if (origin == dest) return new List<MapGrid>() { origin };
         int sh = HeuristicFunc(origin, origin, dest).h;
         AStarGrid start = new AStarGrid(origin, null, sh, 0, sh);
         List<AStarGrid> open = new List<AStarGrid>();
