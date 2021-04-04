@@ -13,16 +13,29 @@ public enum PMType
     Grass,
     Fire,
     Water,
-
+    Electric,
+    Fly,
+    Fight,
+    Ground,
+    Rock,
+    Bug,
+    Ice,
+    Ghost,
+    Psychic,
+    Poison,
+    Dark,
+    Dragon,
+    Metal,
+    Fairy
 }
-public abstract class IChess
+public abstract class IChess : IAttackable
 {
     public PathPack PathPack { get; private set; }
     public IChessAttr Attribute { get; set; }
     public MapGrid StayGrid { get; private set; }
 
     protected GameObject m_gameObject;
-    protected List<ISkill> m_skillList = new List<ISkill>();
+    protected List<Skill> m_skillList = new List<Skill>();
     protected ChessAnimator m_anim = null; 
 
     public IChess(IChessAttr attr, GameObject go)
@@ -62,8 +75,40 @@ public abstract class IChess
         GameObject.Destroy(m_gameObject);
     }
 
+    #region 战斗相关
     public void Move(List<MapGrid> grids, Action callback = null)
     {
         m_anim.Move(grids, callback);
     }
+
+    public void TakeDamage(int damage)
+    {
+        
+    }
+
+    public void Sleep()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Paralyzed()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Burned()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Poisoned()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Freezed()
+    {
+        throw new NotImplementedException();
+    }
+    #endregion
 }

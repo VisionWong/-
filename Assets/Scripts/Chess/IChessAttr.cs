@@ -27,18 +27,18 @@ public abstract class IChessAttr
     /// </summary>
     public int Gender { get; set; }
 
-    private int m_hp;
-    private int m_maxHp;
-    private int m_attack;
-    private int m_defence;
+    public int HP { get; set; }
+    public int MaxHP { get; set; }
+    public int Attack { get; set; }
+    public int Defence { get; set; }
     /// <summary>
     /// 暴击率
     /// </summary>
-    private float m_critRate;
+    public int CritRate { get; set; }
     /// <summary>
     /// 回避率
     /// </summary>
-    private float m_avoidRate;
+    public int AvoidRate { get; set; }
 
     //TODO
     public IChessAttr() { }
