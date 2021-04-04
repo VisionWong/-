@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class 撞击 : Skill
 {
-    public 撞击(SkillAttr attr, IChess chess, Transform chessTrans) : base(attr, chess, chessTrans)
+    public 撞击(SkillData data, IChess chess, Transform chessTrans) : base(data, chess, chessTrans)
     {
     }
 
-    public override void Effect(List<IChess> targets)
+    public override void UseSkill(List<IChess> targets)
     {
-        
+        targets[0].TakeDamage(Formulas.CalSkillDamage(Data, _chess));
+        PlayAnimation();
     }
 }

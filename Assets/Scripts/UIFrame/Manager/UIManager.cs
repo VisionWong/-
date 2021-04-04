@@ -38,7 +38,7 @@ namespace VFramework.UIManager
         {
             _panelPathDict = new Dictionary<UIPanelType, string>();
             //首先读取Resources文件夹下的Json文档
-            TextAsset ta = Resources.Load<TextAsset>(PathDefine.CONFIG_UI_PANEL);
+            TextAsset ta = ResourceMgr.Instance.Load<TextAsset>(PathDefine.CONFIG_UI_PANEL);
             //解析Json文档，用这个库的好处就是能直接反序列化成对象列表，操作简便
             List<UIPanelInfo> infoList = JsonConvert.DeserializeObject<List<UIPanelInfo>>(ta.text);
             //存入字典保存

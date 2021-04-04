@@ -16,44 +16,42 @@ public enum SkillType
     Effect, //变化
 }
 
-public class SkillAttr
+public class SkillData : IData
 {
-    public string ID { get; set; }
-    public string Name { get; set; }
-    public string Description { get; set; }
-    public PMType PMType {get;set;}
-    public SkillType SkillType { get; set; }
-    public SkillRangeType RangeType { get; set; }
-    public int Power { get; set; } //威力，变化类为0
-    public int HitRate { get; set; } //命中率,代表百分数
-    public List<(int, int)> Range { get; set; } //范围数组，表示坐标差值
-    public int TargetNum { get; set; }
-    public List<SkillEffect> Effects { get; set; }
-    public string AudioPath { get; set; }
-    public string EffectPath { get; set; }
+    public string name;
+    public string description;
+    public PMType pmType;
+    public SkillType skillType;
+    public SkillRangeType rangeType;
+    public int power; //威力，变化类为0
+    public int hitRate; //命中率,代表百分数
+    public List<(int, int)> range; //范围数组，表示坐标差值
+    public int targetNum;
+    public List<SkillEffect> effects;
+    public string audioPath;
+    public string effectPath;
 }
 
 
 public class SkillEffect
 {
-    public enum EffectType
-    {
-        睡眠,
-        烧伤,
-        中毒,
-        麻痹,
-        冰冻,
-        击退,
-        固定伤害,
-        上升攻击,
-        上升防御,
-        上升行动力,
+    //public enum EffectType
+    //{
+    //    睡眠,
+    //    烧伤,
+    //    中毒,
+    //    麻痹,
+    //    冰冻,
+    //    击退,
+    //    固定伤害,
+    //    上升攻击,
+    //    上升防御,
+    //    上升行动力,
 
         
-    }
-
-    public List<EffectType> effects;
-    public int probability;
+    //}
+    //public List<EffectType> effects;
+    public int probability; //概率
     public int fixedDamage; //固定伤害
     public int effectLevel; //作用的能力等级
     public int effectTurns; //作用的回合数
@@ -61,19 +59,19 @@ public class SkillEffect
 
 public abstract class Skill
 {
-    public SkillAttr Attr { get; set; }
+    public SkillData Data { get; set; }
 
-    private Transform _chessTrans;
-    private IChess _chess;
+    protected Transform _chessTrans;
+    protected IChess _chess;
 
-    public Skill(SkillAttr attr, IChess chess, Transform chessTrans)
+    public Skill(SkillData data, IChess chess, Transform chessTrans)
     {
-        Attr = attr;
+        Data = data;
         _chessTrans = chessTrans;
         _chess = chess;
     }
 
-    public abstract void Effect(List<IChess> targets);
+    public abstract void UseSkill(List<IChess> targets);
 
     public virtual void PlayAnimation()
     {

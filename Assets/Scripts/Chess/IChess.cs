@@ -28,6 +28,7 @@ public enum PMType
     Metal,
     Fairy
 }
+
 public abstract class IChess : IAttackable
 {
     public PathPack PathPack { get; private set; }
@@ -83,7 +84,8 @@ public abstract class IChess : IAttackable
 
     public void TakeDamage(int damage)
     {
-        
+        Attribute.HP -= Formulas.CalRealDamage(damage, this);
+        //TODO 通知UI更新
     }
 
     public void Sleep()
