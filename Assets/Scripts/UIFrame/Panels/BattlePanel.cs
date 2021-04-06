@@ -9,6 +9,8 @@ public class BattlePanel : BasePanel
     private Transform _gridInfo;
     private Transform _chessInfo;
     private Transform _actionField;
+    private Transform _skillField;
+    private Transform _skillGroup;
 
     private Transform _gridDes;
     private Text txtGridDes;
@@ -17,6 +19,12 @@ public class BattlePanel : BasePanel
     private Button btnSkill;
     private Button btnStay;
     private Button btnCancel;
+
+    //技能面板
+    private bool isNewAction = true;
+    private bool isSkillOpen = false;
+    private List<SkillButton> _skillBtns = new List<SkillButton>();
+    private Transform _skillDesPanel;
 
     public override void OnEnter()
     {
@@ -46,6 +54,19 @@ public class BattlePanel : BasePanel
         btnCancel = btnGroup.Find("btnCancel").GetComponent<Button>();
         btnCancel.onClick.AddListener(OnClickCancelBtn);
 
+        //技能面板
+        _skillField = transform.Find("SkillField");
+        _skillGroup = _skillField.Find("SkillGroup");
+        _skillDesPanel = _skillField.Find("SkillDes");
+        for (int i = 0; i < 4; i++)
+        {
+            //新建技能按钮
+            var go = ResourceMgr.Instance.Load<GameObject>(PathDefine.UI_SKILL_BUTTON);
+            go.transform.SetParent(_skillGroup, false);
+            var skillBtn = go.GetComponent<SkillButton>();
+            _skillBtns.Add(skillBtn);
+            skillBtn.SkillDesPanel = _skillDesPanel.GetComponent<SkillDesPanel>();
+        }
     }
 
     private void RegisterAll()
@@ -83,6 +104,8 @@ public class BattlePanel : BasePanel
         _chessInfo.gameObject.SetActive(false);
 
         _actionField.gameObject.SetActive(false);
+        _skillField.gameObject.SetActive(false);
+        _skillDesPanel.gameObject.SetActive(false);
     }
 
     private void OnSelectGrid(MapGrid grid)
@@ -105,7 +128,8 @@ public class BattlePanel : BasePanel
 
     private void OnClickSkillBtn()
     {
-        //根据棋子的信息呼出技能界面
+        if (isSkillOpen) HideSkillField();
+        else ShowSkillField();
     }
 
     private void OnClickStayBtn()
@@ -122,11 +146,49 @@ public class BattlePanel : BasePanel
 
     private void ShowActionField()
     {
+        isNewAction = true;
         _actionField.gameObject.SetActive(true);
     }
 
     private void HideActionField()
     {
         _actionField.gameObject.SetActive(false);
+        HideSkillField();
+    }
+
+    private void HideSkillField()
+    {
+        if (_skillField.gameObject.activeSelf)
+        {
+            _skillField.gameObject.SetActive(false);
+            isSkillOpen = false;
+            if (_skillDesPanel.gameObject.activeSelf)
+            {
+                _skillDesPanel.gameObject.SetActive(false);
+            }
+        }
+    }
+
+    private void ShowSkillField()
+    {
+        isSkillOpen = true;
+        _skillField.gameObject.SetActive(true);
+        if (isNewAction)
+        {
+            //删除之前的技能信息
+            foreach (var item in _skillBtns)
+            {
+                if (item.gameObject.activeSelf)
+                    item.gameObject.SetActive(false);
+            }
+            //获取该棋子的技能信息
+            var skillList = BattleSystem.Instance.GetCurPlayerChess().SkillList;
+            for (int i = 0; i < skillList.Count; i++)
+            {
+                _skillBtns[i].gameObject.SetActive(true);
+                _skillBtns[i].SkillData = skillList[i].Data;
+            }
+        }
+        isNewAction = false;
     }
 }

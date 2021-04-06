@@ -26,7 +26,7 @@ public enum PMType
     Dark,
     Dragon,
     Metal,
-    Fairy
+    Fairy,  
 }
 
 public abstract class IChess : IAttackable
@@ -34,15 +34,16 @@ public abstract class IChess : IAttackable
     public PathPack PathPack { get; private set; }
     public IChessAttr Attribute { get; set; }
     public MapGrid StayGrid { get; private set; }
+    public List<Skill> SkillList { get; private set; }
 
     protected GameObject m_gameObject;
-    protected List<Skill> m_skillList = new List<Skill>();
     protected ChessAnimator m_anim = null; 
 
     public IChess(IChessAttr attr, GameObject go)
     {
         Attribute = attr;
         m_gameObject = go;
+        SkillList = new List<Skill>();
     }
 
     public void SetPathPack(PathPack pack)
@@ -67,9 +68,17 @@ public abstract class IChess : IAttackable
         m_gameObject.transform.position = grid.transform.position;
     }
 
-    public void LearnSkill() { }
+    public void LearnSkill(Skill skill)
+    {
+        if (SkillList.Count < 3)
+        {
+            SkillList.Add(skill);
+            //TODO 提示UI
+        }
+        else ForgetSkill(skill);
+    }
 
-    public void ForgetSkill() { }
+    public void ForgetSkill(Skill skill) { }
 
     public void Release()
     {

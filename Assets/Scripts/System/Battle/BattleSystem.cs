@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using VFramework;
@@ -62,7 +63,13 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         PathPack pathPack = new PathPack(1, "Chess/001", "Sprite/Chess/001");
         chess.SetPathPack(pathPack);
         chess.SetAnimator(go.AddComponent<ChessAnimator>());
-        chess.SetSelectableScript(go.AddComponent<SelectablePlayerChess>()); 
+        chess.SetSelectableScript(go.AddComponent<SelectablePlayerChess>());
+
+        //技能
+        var skillData = SkillLib.Instance.GetData(1);
+        Type type = Type.GetType(skillData.name);
+        var skill = Activator.CreateInstance(type, skillData, chess, go.transform);
+        chess.LearnSkill(skill as Skill);
 
         MapGrid grid = m_map.GetGridByCoord(x, y);
         chess.SetStayGrid(grid);
@@ -79,6 +86,11 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     {
         m_curSelected?.CancelSelect();
         m_curSelected = item;
+    }
+
+    public PlayerChess GetCurPlayerChess()
+    {
+        return m_curPlayerChess;
     }
 
     //高亮可通行网格

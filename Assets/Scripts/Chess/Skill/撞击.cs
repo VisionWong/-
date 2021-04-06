@@ -10,7 +10,7 @@ public class 撞击 : Skill
 
     public override void UseSkill(List<IChess> targets)
     {
+        base.UseSkill(targets);
         targets[0].TakeDamage(Formulas.CalSkillDamage(Data, _chess));
-        PlayAnimation();
     }
 }

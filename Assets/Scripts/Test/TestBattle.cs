@@ -7,8 +7,10 @@ public class TestBattle : MonoBehaviour
 {
     void Start()
     {
+        DataLibsManager.Instance.InitAllLibs();
         BattleSystem.Instance.StartBattle();
         UIManager.Instance.PushPanel(UIPanelType.Battle, true);
+
     }
 
 }

@@ -8,5 +8,6 @@ public class DataLibsManager : MonoSingleton<DataLibsManager>
     public void InitAllLibs()
     {
         SkillLib.Instance.ParseInit(PathDefine.CONFIG_SKILL_DATA);
+        
     }
 }

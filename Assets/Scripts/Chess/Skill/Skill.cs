@@ -25,7 +25,7 @@ public class SkillData : IData
     public SkillRangeType rangeType;
     public int power; //威力，变化类为0
     public int hitRate; //命中率,代表百分数
-    public List<(int, int)> range; //范围数组，表示坐标差值
+    public List<(int x, int y)> range; //范围数组，表示坐标差值
     public int targetNum;
     public List<SkillEffect> effects;
     public string audioPath;
@@ -71,10 +71,26 @@ public abstract class Skill
         _chess = chess;
     }
 
-    public abstract void UseSkill(List<IChess> targets);
+    public virtual void UseSkill(List<IChess> targets)
+    {
+        PlayAnimation();
+    }
 
     public virtual void PlayAnimation()
     {
         //播放默认动画和默认音效
+    }
+
+    public override string ToString()
+    {
+        System.Text.StringBuilder str = new System.Text.StringBuilder();
+        str.Append(Data.id + " ");
+        str.Append(Data.name + " ");
+        str.Append(Data.pmType + " ");
+        str.Append(Data.skillType + " ");
+        str.Append(Data.rangeType + " ");
+        str.Append(Data.power + " ");
+        str.Append(Data.range[0].x + " ");
+        return str.ToString();
     }
 }
