@@ -26,13 +26,13 @@ public class SkillDirButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (_btn.enabled)
+        if (_btn.interactable)
             BattleSystem.Instance.HighlightAttackableGrids(_dir);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (_btn.enabled)
+        if (_btn.interactable)
             BattleSystem.Instance.CancelHighlightAttackableGrids(_dir);
     }
 }

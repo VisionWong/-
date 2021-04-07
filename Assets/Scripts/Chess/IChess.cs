@@ -68,12 +68,12 @@ public abstract class IChess : IAttackable
     /// 让上一个棋子取消停留，让新的棋子执行停留方法
     /// </summary>
     /// <param name="grid"></param>
-    public void SetStayGrid(MapGrid grid)
+    public void SetStayGrid(MapGrid grid, bool isChangePos = true)
     {
         StayGrid?.ChessAway();
         StayGrid = grid;
         StayGrid.StayChess(this);
-        _gameObject.transform.position = grid.transform.position;
+        if (isChangePos) _gameObject.transform.position = grid.transform.position;
     }
 
     public void LearnSkill(Skill skill)

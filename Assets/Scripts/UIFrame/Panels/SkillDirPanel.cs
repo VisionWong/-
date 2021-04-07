@@ -35,10 +35,10 @@ public class SkillDirPanel : BasePanel
         CanvasGroup.alpha = 1;
         CanvasGroup.blocksRaycasts = true;
         //获取可以攻击的朝向
-        btnUp.enabled = BattleSystem.Instance.IsUpCanAttack();
-        btnDown.enabled = BattleSystem.Instance.IsDownCanAttack();
-        btnLeft.enabled = BattleSystem.Instance.IsLeftCanAttack();
-        btnRight.enabled = BattleSystem.Instance.IsRightCanAttack();
+        btnUp.interactable = BattleSystem.Instance.IsUpCanAttack();
+        btnDown.interactable = BattleSystem.Instance.IsDownCanAttack();
+        btnLeft.interactable = BattleSystem.Instance.IsLeftCanAttack();
+        btnRight.interactable = BattleSystem.Instance.IsRightCanAttack();
         if (!(btnUp.enabled || btnDown.enabled || btnLeft.enabled || btnRight.enabled))
         {
             //TODO 通知玩家这个技能作用不到任何目标

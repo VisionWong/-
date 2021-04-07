@@ -135,11 +135,11 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         }
     }
 
-    //选择让棋子停留原地
-    private void OnSelectChessStay()
-    {
-        ConfirmWalkableGrid(_curPlayerChess.StayGrid);
-    }
+    ////选择让棋子停留原地
+    //private void OnSelectChessStay()
+    //{
+    //    ConfirmWalkableGrid(_curPlayerChess.StayGrid);
+    //}
 
     private void OnSelectIdleGrid(MapGrid grid)
     {
@@ -193,10 +193,12 @@ public class BattleSystem : MonoSingleton<BattleSystem>
             _map.CancelLastHighlightGrids(false);
             //记录初始位置
             _lastOriginGrid = _curPlayerChess.StayGrid;
+            //设置棋子的新位置
+            _curWalkableGrid = grid;
             //获取路径，然后让棋子按路径走过去，走的过程屏蔽操作
             List<MapGrid> path = _map.PathFinding(_curPlayerChess, _lastOriginGrid, grid, new AStarPathFinding());
             MessageCenter.Instance.Broadcast(MessageType.GlobalCantSelect);
-            _curPlayerChess.Move(path, OnChessMoveComplet);
+            _curPlayerChess.Move(path, OnChessMoveComplet);          
         }
     }
 
@@ -220,10 +222,11 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     }
     
     private void OnChessMoveComplet()
-    {
+    {      
         MessageCenter.Instance.Broadcast(MessageType.OnChessAction);
         BattleState = BattleState.WaitAttack;
         _curPlayerChess.ChangeToWaitAttack();
+        _curPlayerChess.SetStayGrid(_curWalkableGrid);
     }
 
     //取消当前棋子的移动操作
