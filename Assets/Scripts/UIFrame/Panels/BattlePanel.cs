@@ -143,7 +143,7 @@ public class BattlePanel : BasePanel
 
     private void OnClickStayBtn()
     {
-        BattleSystem.Instance.ConfirmStayGrid();
+        BattleSystem.Instance.OnChessActionEnd();
         HideActionField();
     }
 

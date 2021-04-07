@@ -31,9 +31,11 @@ public class SelectablePlayerChess : ISelectable
             switch (m_selectedState)
             {
                 case SelectedState.Idle:
+                    Debug.Log("棋子正在等待操作");
                     MessageCenter.Instance.Broadcast(MessageType.OnSelectWalkableChess, m_chess);
                     break;
                 case SelectedState.WaitMove:
+                    Debug.Log("棋子选择停留原地");
                     MessageCenter.Instance.Broadcast(MessageType.OnSelectWalkableGrid, m_chess.StayGrid);
                     break;
                 case SelectedState.WaitAttack:

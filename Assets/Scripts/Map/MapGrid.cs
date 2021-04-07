@@ -33,7 +33,7 @@ public class MapGrid : MonoBehaviour
         m_outline = GetComponent<Outline>();
         m_selectable = GetComponent<SelectableGrid>();
 
-        //todo
+        //TODO
         TypeName = TerrainType.ToString();
         Description = "没有任何效果";
     }
@@ -61,7 +61,11 @@ public class MapGrid : MonoBehaviour
     public void CancelHighlight()
     {
         m_outline.enabled = false;
-        m_selectable.SelectedState = GridSelectedState.Idle;
+        if (StayedChess != null)
+        {
+            m_selectable.SelectedState = GridSelectedState.Unselectable;
+        }
+        else m_selectable.SelectedState = GridSelectedState.Idle;
     }
 
     /// <summary>

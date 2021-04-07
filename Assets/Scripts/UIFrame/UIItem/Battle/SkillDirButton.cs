@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using VFramework.UIManager;
 
 public enum Direction
 {
@@ -21,7 +22,11 @@ public class SkillDirButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     private void Awake()
     {
         _btn = GetComponent<Button>();
-        _btn.onClick.AddListener(() => BattleSystem.Instance.UseSkillToChoosedDir(_dir));
+        _btn.onClick.AddListener(() =>
+        {
+            BattleSystem.Instance.UseSkillToChoosedDir(_dir);
+            UIManager.Instance.PopPanel();
+        });
     }
 
     public void OnPointerEnter(PointerEventData eventData)

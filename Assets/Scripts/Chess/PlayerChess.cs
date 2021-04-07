@@ -22,7 +22,7 @@ public class PlayerChess : IChess
     }
 
     public void ChangeToWaitMove()
-    {
+    {       
         m_selectable.ChangeToWaitMove();
     }
 

@@ -98,13 +98,6 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         return _curPlayerChess;
     }
 
-    //高亮可通行网格
-    private void HighlightWalkableGrids(PlayerChess chess)
-    {
-        _curPlayerChess = chess;
-        _map.HighlightWalkableGrids(chess);
-    }
-
     //取消棋子选中移动行为
     private void CancelMoving()
     {
@@ -127,19 +120,14 @@ public class BattleSystem : MonoSingleton<BattleSystem>
             {
                 CancelMoving();
             }
-            HighlightWalkableGrids(chess);
+            _curPlayerChess = chess;
+            _map.HighlightWalkableGrids(chess);
             //将虚拟棋子设为当前的棋子样式
             _virtualChess.GetComponent<SpriteRenderer>().sprite = ResourceMgr.Instance.Load<Sprite>(_curPlayerChess.PathPack.SpritePath);
             BattleState = BattleState.WaitMove;
             _curPlayerChess.ChangeToWaitMove();
         }
     }
-
-    ////选择让棋子停留原地
-    //private void OnSelectChessStay()
-    //{
-    //    ConfirmWalkableGrid(_curPlayerChess.StayGrid);
-    //}
 
     private void OnSelectIdleGrid(MapGrid grid)
     {
@@ -170,7 +158,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     /// <summary>
     /// 棋子行动回合结束,处理格子停留事件，回合转至下一个棋子
     /// </summary>
-    public void ConfirmStayGrid()
+    public void OnChessActionEnd()
     {
         _curPlayerChess.SetStayGrid(_curWalkableGrid);
         _curPlayerChess.ChangeToActionEnd();
@@ -346,7 +334,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         }
         _curUsedSkill.UseSkill(targets);
         _curUsedSkill = null;
-        //TODO 关掉UI
+        OnChessActionEnd();
     }
     #endregion
 
