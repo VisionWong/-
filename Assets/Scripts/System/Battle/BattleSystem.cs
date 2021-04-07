@@ -19,16 +19,18 @@ public class BattleSystem : MonoSingleton<BattleSystem>
 {
     public BattleState BattleState { get; private set; }
 
-    private Map m_map;
-    private List<IChess> m_playerList = new List<IChess>();
-    private List<IChess> m_enemyList = new List<IChess>();
+    private Map _map;
+    private List<IChess> _playerList = new List<IChess>();
+    private List<IChess> _enemyList = new List<IChess>();
 
-    private ISelectable m_curSelected = null;
-    private PlayerChess m_curPlayerChess = null;
+    private ISelectable _curSelected = null;
+    private PlayerChess _curPlayerChess = null;
 
-    private GameObject m_virtualChess = null;
-    private MapGrid m_curWalkableGrid = null;
-    private MapGrid m_lastOriginGrid = null;
+    private GameObject _virtualChess = null;
+    private MapGrid _curWalkableGrid = null;
+    private MapGrid _lastOriginGrid = null;
+
+    private Skill _curUsedSkill = null;
 
     public void StartBattle()
     {
@@ -44,13 +46,16 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     private void LoadMap()
     {
         Map map = ResourceMgr.Instance.Load<Map>("Map/Map001");
-        m_map = Instantiate(map, Vector3.zero, Quaternion.identity).GetComponent<Map>();
+        _map = Instantiate(map, Vector3.zero, Quaternion.identity).GetComponent<Map>();
         //TODO 根据关卡信息生成地图或随机生成
     }
 
     private void LoadPlayerChess()
     {
         LoadPlayerChess(5, 4);
+        LoadPlayerChess(4, 3);
+        LoadPlayerChess(5, 3);
+        LoadPlayerChess(6, 3);
         LoadPlayerChess(4, 6);
         //TODO 根据玩家背包里的信息生成棋子，位置则根据关卡默认位置，玩家后续可在区域内调整
     }
@@ -71,10 +76,10 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         var skill = Activator.CreateInstance(type, skillData, chess, go.transform);
         chess.LearnSkill(skill as Skill);
 
-        MapGrid grid = m_map.GetGridByCoord(x, y);
+        MapGrid grid = _map.GetGridByCoord(x, y);
         chess.SetStayGrid(grid);
         chess.Attribute.AP = 4;
-        m_playerList.Add(chess);
+        _playerList.Add(chess);
     }
 
     public void LoadEnemyChess()
@@ -84,32 +89,32 @@ public class BattleSystem : MonoSingleton<BattleSystem>
 
     public void SetSelected(ISelectable item)
     {
-        m_curSelected?.CancelSelect();
-        m_curSelected = item;
+        _curSelected?.CancelSelect();
+        _curSelected = item;
     }
 
     public PlayerChess GetCurPlayerChess()
     {
-        return m_curPlayerChess;
+        return _curPlayerChess;
     }
 
     //高亮可通行网格
     private void HighlightWalkableGrids(PlayerChess chess)
     {
-        m_curPlayerChess = chess;
-        m_map.HighlightWalkableGrids(chess);
+        _curPlayerChess = chess;
+        _map.HighlightWalkableGrids(chess);
     }
 
     //取消棋子选中移动行为
     private void CancelMoving()
     {
-        if (m_virtualChess.activeSelf) m_virtualChess.SetActive(false);
-        m_curWalkableGrid = null;
+        if (_virtualChess.activeSelf) _virtualChess.SetActive(false);
+        _curWalkableGrid = null;
 
-        m_curPlayerChess.ChangeToIdle();
-        m_curPlayerChess = null;
+        _curPlayerChess.ChangeToIdle();
+        _curPlayerChess = null;
 
-        m_map.CancelLastHighlightGrids();
+        _map.CancelLastHighlightGrids();
     }
 
     //选中未进行行动的棋子
@@ -118,22 +123,22 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         if (BattleState == BattleState.WaitSelect || BattleState == BattleState.WaitMove)
         {
             //如果之前选中了棋子正在寻路，则取消上个棋子的寻路操作
-            if (m_curPlayerChess != null)
+            if (_curPlayerChess != null)
             {
                 CancelMoving();
             }
             HighlightWalkableGrids(chess);
             //将虚拟棋子设为当前的棋子样式
-            m_virtualChess.GetComponent<SpriteRenderer>().sprite = ResourceMgr.Instance.Load<Sprite>(m_curPlayerChess.PathPack.SpritePath);
+            _virtualChess.GetComponent<SpriteRenderer>().sprite = ResourceMgr.Instance.Load<Sprite>(_curPlayerChess.PathPack.SpritePath);
             BattleState = BattleState.WaitMove;
-            m_curPlayerChess.ChangeToWaitMove();
+            _curPlayerChess.ChangeToWaitMove();
         }
     }
 
     //选择让棋子停留原地
     private void OnSelectChessStay()
     {
-        ConfirmWalkableGrid(m_curPlayerChess.StayGrid);
+        ConfirmWalkableGrid(_curPlayerChess.StayGrid);
     }
 
     private void OnSelectIdleGrid(MapGrid grid)
@@ -150,15 +155,15 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     {
         if (BattleState == BattleState.WaitMove)
         {
-            if (grid == m_curPlayerChess.StayGrid || m_curWalkableGrid == grid) //两次选择了同一个高亮格子或棋子选择停留原地
+            if (grid == _curPlayerChess.StayGrid || _curWalkableGrid == grid) //两次选择了同一个高亮格子或棋子选择停留原地
             {
                 ConfirmWalkableGrid(grid);
             }
-            else if (m_curWalkableGrid == null || m_curWalkableGrid != grid)
+            else if (_curWalkableGrid == null || _curWalkableGrid != grid)
             {
                 LoadVirtualChessOnGrid(grid);
             }
-            m_curWalkableGrid = grid;
+            _curWalkableGrid = grid;
         }
     }
 
@@ -167,11 +172,11 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     /// </summary>
     public void ConfirmStayGrid()
     {
-        m_curPlayerChess.SetStayGrid(m_curWalkableGrid);
-        m_curPlayerChess.ChangeToActionEnd();
+        _curPlayerChess.SetStayGrid(_curWalkableGrid);
+        _curPlayerChess.ChangeToActionEnd();
         //TODO 观察我方是否还有可以行动的棋子
-        m_curWalkableGrid = null;
-        m_curPlayerChess = null;
+        _curWalkableGrid = null;
+        _curPlayerChess = null;
         BattleState = BattleState.WaitSelect;
         MessageCenter.Instance.Broadcast(MessageType.GlobalCanSelect);
     }//未完成
@@ -182,16 +187,16 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     /// <param name="grid"></param>
     private void ConfirmWalkableGrid(MapGrid grid)
     {
-        if (m_curPlayerChess != null)
+        if (_curPlayerChess != null)
         {
-            m_virtualChess.SetActive(false);
-            m_map.CancelLastHighlightGrids(false);
+            _virtualChess.SetActive(false);
+            _map.CancelLastHighlightGrids(false);
             //记录初始位置
-            m_lastOriginGrid = m_curPlayerChess.StayGrid;
+            _lastOriginGrid = _curPlayerChess.StayGrid;
             //获取路径，然后让棋子按路径走过去，走的过程屏蔽操作
-            List<MapGrid> path = m_map.PathFinding(m_curPlayerChess, m_lastOriginGrid, grid, new AStarPathFinding());
+            List<MapGrid> path = _map.PathFinding(_curPlayerChess, _lastOriginGrid, grid, new AStarPathFinding());
             MessageCenter.Instance.Broadcast(MessageType.GlobalCantSelect);
-            m_curPlayerChess.Move(path, OnChessMoveComplet);
+            _curPlayerChess.Move(path, OnChessMoveComplet);
         }
     }
 
@@ -200,40 +205,147 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     /// </summary>
     private void LoadVirtualChessOnGrid(MapGrid grid)
     {
-        if (m_curPlayerChess != null)
+        if (_curPlayerChess != null)
         {
-            m_virtualChess.transform.position = grid.transform.position;
-            m_virtualChess.SetActive(true);
+            _virtualChess.transform.position = grid.transform.position;
+            _virtualChess.SetActive(true);
         }
     }
     private void LoadVirtualChess()
     {
-        m_virtualChess = Instantiate(Resources.Load<GameObject>("Chess/001"));
-        SpriteRenderer m_virtualRenderer = m_virtualChess.GetComponent<SpriteRenderer>();
+        _virtualChess = Instantiate(Resources.Load<GameObject>("Chess/001"));
+        SpriteRenderer m_virtualRenderer = _virtualChess.GetComponent<SpriteRenderer>();
         m_virtualRenderer.color = new Color(m_virtualRenderer.color.r, m_virtualRenderer.color.g, m_virtualRenderer.color.b, 0.5f);
-        m_virtualChess.SetActive(false);
+        _virtualChess.SetActive(false);
     }
     
     private void OnChessMoveComplet()
     {
         MessageCenter.Instance.Broadcast(MessageType.OnChessAction);
         BattleState = BattleState.WaitAttack;
-        m_curPlayerChess.ChangeToWaitAttack();
+        _curPlayerChess.ChangeToWaitAttack();
     }
 
     //取消当前棋子的移动操作
     public void OnCancelMove()
     {
         //将棋子送往原来的位置，重新高亮寻路网络
-        m_curWalkableGrid = null;
-        m_map.ShowLastHighlightGrids();
-        m_curPlayerChess.SetStayGrid(m_lastOriginGrid);
-        m_curPlayerChess.ChangeToWaitMove();
+        _curWalkableGrid = null;
+        _map.ShowLastHighlightGrids();
+        _curPlayerChess.SetStayGrid(_lastOriginGrid);
+        _curPlayerChess.ChangeToWaitMove();
         BattleState = BattleState.WaitMove;
         MessageCenter.Instance.Broadcast(MessageType.OnCancelMove);
         MessageCenter.Instance.Broadcast(MessageType.GlobalCanSelect);
-        Camera.main.GetComponent<CameraController>().MoveToTarget(m_curPlayerChess.StayGrid.transform.position);
+        Camera.main.GetComponent<CameraController>().MoveToTarget(_curPlayerChess.StayGrid.transform.position);
     }
+
+    #region 使用技能
+    private void OnClickSkillBtn(Skill skill)
+    {
+        _curUsedSkill = skill;
+        //通知地图寻找该技能能攻击到的目标
+        _map.SearchAttackableTarget(_curPlayerChess, skill, TagDefine.ENEMY);
+    }
+
+    public bool IsUpCanAttack()
+    {
+        return _map.upAttackableGrids.Count > 0;
+    }
+    public bool IsDownCanAttack()
+    {
+        return _map.downAttackableGrids.Count > 0;
+    }
+    public bool IsLeftCanAttack()
+    {
+        return _map.leftAttackableGrids.Count > 0;
+    }
+    public bool IsRightCanAttack()
+    {
+        return _map.rightAttackableGrids.Count > 0;
+    }
+    
+    public void HighlightAttackableGrids(Direction dir)
+    {
+        switch (dir)
+        {
+            case Direction.Up:
+                _map.HighlightGrids(_map.upAttackableGrids);
+                break;
+            case Direction.Down:
+                _map.HighlightGrids(_map.downAttackableGrids);
+                break;
+            case Direction.Left:
+                _map.HighlightGrids(_map.leftAttackableGrids);
+                break;
+            case Direction.Right:
+                _map.HighlightGrids(_map.rightAttackableGrids);
+                break;
+            default:
+                Debug.LogError("该方向的功能尚未实现！" + dir.ToString());
+                break;
+        }
+    }
+    public void CancelHighlightAttackableGrids(Direction dir)
+    {
+        switch (dir)
+        {
+            case Direction.Up:
+                _map.CancelHighlightGrids(_map.upAttackableGrids);
+                break;
+            case Direction.Down:
+                _map.CancelHighlightGrids(_map.downAttackableGrids);
+                break;
+            case Direction.Left:
+                _map.CancelHighlightGrids(_map.leftAttackableGrids);
+                break;
+            case Direction.Right:
+                _map.CancelHighlightGrids(_map.rightAttackableGrids);
+                break;
+            default:
+                Debug.LogError("该方向的功能尚未实现！" + dir.ToString());
+                break;
+        }
+    }
+
+    public void UseSkillToChoosedDir(Direction dir)
+    {
+        List<IChess> targets = new List<IChess>();
+        switch (dir)
+        {
+            case Direction.Up:
+                foreach (var grid in _map.upAttackableGrids)
+                {
+                    targets.Add(grid.StayedChess);
+                }
+                break;
+            case Direction.Down:
+                foreach (var grid in _map.downAttackableGrids)
+                {
+                    targets.Add(grid.StayedChess);
+                }
+                break;
+            case Direction.Left:
+                foreach (var grid in _map.leftAttackableGrids)
+                {
+                    targets.Add(grid.StayedChess);
+                }
+                break;
+            case Direction.Right:
+                foreach (var grid in _map.rightAttackableGrids)
+                {
+                    targets.Add(grid.StayedChess);
+                }
+                break;
+            default:
+                Debug.LogError("该方向的功能尚未实现！" + dir.ToString());
+                break;
+        }
+        _curUsedSkill.UseSkill(targets);
+        _curUsedSkill = null;
+        //TODO 关掉UI
+    }
+    #endregion
 
     #region 事件注册
     private void RegisterAll()
@@ -241,12 +353,14 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         MessageCenter.Instance.AddListener<MapGrid>(MessageType.OnSelectIdleGrid, OnSelectIdleGrid);
         MessageCenter.Instance.AddListener<MapGrid>(MessageType.OnSelectWalkableGrid, OnSelectWalkableGrid);
         MessageCenter.Instance.AddListener<PlayerChess>(MessageType.OnSelectWalkableChess, OnSelectWalkableChess);
+        MessageCenter.Instance.AddListener<Skill>(MessageType.OnClickSkillBtn, OnClickSkillBtn);
     }
     private void RemoveAll()
     {
         MessageCenter.Instance.RemoveListener<MapGrid>(MessageType.OnSelectIdleGrid, OnSelectIdleGrid);
         MessageCenter.Instance.RemoveListener<MapGrid>(MessageType.OnSelectWalkableGrid, OnSelectWalkableGrid);
         MessageCenter.Instance.RemoveListener<PlayerChess>(MessageType.OnSelectWalkableChess, OnSelectWalkableChess);
+        MessageCenter.Instance.RemoveListener<Skill>(MessageType.OnClickSkillBtn, OnClickSkillBtn);
     }
     #endregion
 }

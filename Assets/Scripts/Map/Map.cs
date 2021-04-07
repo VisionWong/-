@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using VFramework;
 
 public class Map : MonoBehaviour
 {
@@ -22,7 +23,7 @@ public class Map : MonoBehaviour
     public MapGrid GetGridByCoord(int x, int y)
     {
         int index = y * col + x;
-        return grids[index];
+        return index >= grids.Length || index < 0 ? null : grids[index];
     }
 
     public (int x, int y) GetCoordByGrid(MapGrid grid)
@@ -87,6 +88,22 @@ public class Map : MonoBehaviour
         foreach (var grid in lastGrids)
         {
             grid.HighlightWalkable();
+        }
+    }
+
+    public void HighlightGrids(List<MapGrid> grids)
+    {
+        foreach (var grid in grids)
+        {
+            grid.HighlightAttackable();
+        }
+    }
+
+    public void CancelHighlightGrids(List<MapGrid> grids)
+    {
+        foreach (var grid in grids)
+        {
+            grid.CancelHighlight();
         }
     }
 
@@ -176,5 +193,65 @@ public class Map : MonoBehaviour
         }
     }
 
-    
+    #region 技能寻敌
+    public List<MapGrid> upAttackableGrids = new List<MapGrid>();
+    public List<MapGrid> downAttackableGrids = new List<MapGrid>();
+    public List<MapGrid> leftAttackableGrids = new List<MapGrid>();
+    public List<MapGrid> rightAttackableGrids = new List<MapGrid>();
+
+    private void ClearAttackableGrids()
+    {
+        upAttackableGrids.Clear();
+        downAttackableGrids.Clear();
+        leftAttackableGrids.Clear();
+        rightAttackableGrids.Clear();
+    }
+
+    /// <summary>
+    /// 高亮该技能能打到的目标的格子，并通知UI出现选项界面
+    /// </summary>
+    /// <param name="chess"></param>
+    /// <param name="skill"></param>
+    public void SearchAttackableTarget(IChess chess, Skill skill, string tag)
+    {//TODO 目前仅仅实现了非指向性和自身的技能寻标，还有指向性的针对-1坐标做的特殊处理
+        ClearAttackableGrids();
+        if (skill.Data.rangeType == SkillRangeType.自身) tag = chess.Tag;
+        MapGrid origin = chess.StayGrid;
+        var rangeList = skill.Data.range;
+        foreach (var pos in rangeList)
+        {
+            //从四个方向分别搜寻可攻击的目标格子并记录
+            {//up
+                var grid = GetGridByCoord(origin.X + pos.x, origin.Y - pos.y);
+                if (grid != null && grid.StayedChess != null && grid.StayedChess.Tag == tag)
+                {
+                    upAttackableGrids.Add(grid);
+                }
+            }
+            {//down
+                var grid = GetGridByCoord(origin.X - pos.x, origin.Y + pos.y);
+                if (grid != null && grid.StayedChess != null && grid.StayedChess.Tag == tag)
+                {
+                    downAttackableGrids.Add(grid);
+                }
+            }
+            {//left
+                var grid = GetGridByCoord(origin.X - pos.y, origin.Y - pos.x);
+                if (grid != null && grid.StayedChess != null && grid.StayedChess.Tag == tag)
+                {
+                    leftAttackableGrids.Add(grid);
+                }
+            }
+            {//right
+                var grid = GetGridByCoord(origin.X + pos.y, origin.Y + pos.x);
+                if (grid != null && grid.StayedChess != null && grid.StayedChess.Tag == tag)
+                {
+                    rightAttackableGrids.Add(grid);
+                }
+            }
+        }//搜寻完毕
+        //通知UI寻敌完毕
+        MessageCenter.Instance.Broadcast(MessageType.OnSearchAttackableEnd);
+    }
+    #endregion
 }

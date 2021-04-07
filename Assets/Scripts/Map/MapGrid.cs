@@ -22,6 +22,7 @@ public class MapGrid : MonoBehaviour
     public bool CanMove { get; set; }
     public int X { get; private set; }
     public int Y { get; private set; }
+    public IChess StayedChess { get; set; }
 
     private SelectableGrid m_selectable;
     private Outline m_outline = null;
@@ -66,10 +67,11 @@ public class MapGrid : MonoBehaviour
     /// <summary>
     /// 停留棋子，变得无法被选中和通过
     /// </summary>
-    public void StayChess()
+    public void StayChess(IChess chess)
     {
         m_selectable.SelectedState = GridSelectedState.Unselectable;
         CanMove = false;
+        StayedChess = chess;
     }
 
     /// <summary>
@@ -79,5 +81,6 @@ public class MapGrid : MonoBehaviour
     {
         m_selectable.SelectedState = GridSelectedState.Idle;
         CanMove = true;
+        StayedChess = null;
     }
 }

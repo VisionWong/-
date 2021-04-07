@@ -21,5 +21,8 @@ namespace VFramework
         OnChessAction,
         OnCancelMove,
         OnChessMoving,
+        OnClickSkillBtn,
+        OnSearchAttackableEnd,
+        OnClickDirCancelBtn,
     }
 }

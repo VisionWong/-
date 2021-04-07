@@ -16,6 +16,14 @@ public enum SkillType
     Effect, //变化
 }
 
+/// <summary>
+/// 二维坐标
+/// </summary>
+public class Coord
+{
+    public int x, y;
+}
+
 public class SkillData : IData
 {
     public string name;
@@ -25,7 +33,7 @@ public class SkillData : IData
     public SkillRangeType rangeType;
     public int power; //威力，变化类为0
     public int hitRate; //命中率,代表百分数
-    public List<(int x, int y)> range; //范围数组，表示坐标差值
+    public List<Coord> range; //范围数组，表示坐标差值
     public int targetNum;
     public List<SkillEffect> effects;
     public string audioPath;
@@ -90,7 +98,7 @@ public abstract class Skill
         str.Append(Data.skillType + " ");
         str.Append(Data.rangeType + " ");
         str.Append(Data.power + " ");
-        str.Append(Data.range[0].x + " ");
+        str.Append(Data.range[0].x + "," + Data.range[0].y);
         return str.ToString();
     }
 }

@@ -3,27 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using VFramework;
 
 public class SkillButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    private SkillData _data;
-    public SkillData SkillData
+    private Skill _skill;
+    public Skill Skill
     {
-        get { return _data; }
+        get { return _skill; }
         set
         {
-            _data = value;
-            GetComponentInChildren<Text>().text = _data.name;
+            _skill = value;
+            GetComponentInChildren<Text>().text = _skill.Data.name;
         }
     }
 
-    public SkillDesPanel SkillDesPanel { private get; set; }
-
     private void Start()
     {
-        var btn = GetComponent<Button>();    
-        
+        GetComponent<Button>().onClick.AddListener(()=> MessageCenter.Instance.Broadcast(MessageType.OnClickSkillBtn, Skill));
     }
+
+    public SkillDesPanel SkillDesPanel { private get; set; }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -39,7 +39,7 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     {
         SkillDesPanel.gameObject.SetActive(true);
         //更改信息和更新位置
-        SkillDesPanel.UpdateData(SkillData);
+        SkillDesPanel.UpdateData(Skill.Data);
         SkillDesPanel.UpdatePosition(transform.position);
     }
 

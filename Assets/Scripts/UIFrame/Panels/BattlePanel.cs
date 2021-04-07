@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using VFramework;
+using VFramework.UIManager;
 
 public class BattlePanel : BasePanel
 {
@@ -74,13 +75,21 @@ public class BattlePanel : BasePanel
         MessageCenter.Instance.AddListener<MapGrid>(MessageType.OnSelectGrid, OnSelectGrid);
         MessageCenter.Instance.AddListener(MessageType.OnChessAction, ShowActionField);
         MessageCenter.Instance.AddListener(MessageType.OnCancelMove, HideActionField);
+        MessageCenter.Instance.AddListener(MessageType.OnSearchAttackableEnd, ShowSkillDirPanel);
+        MessageCenter.Instance.AddListener(MessageType.OnClickDirCancelBtn, ReShowActionField);
     }
-
-    private void OnDestroy()
+    private void RemoveAll()
     {
         MessageCenter.Instance.RemoveListener<MapGrid>(MessageType.OnSelectGrid, OnSelectGrid);
         MessageCenter.Instance.RemoveListener(MessageType.OnChessAction, ShowActionField);
         MessageCenter.Instance.RemoveListener(MessageType.OnCancelMove, HideActionField);
+        MessageCenter.Instance.RemoveListener(MessageType.OnSearchAttackableEnd, ShowSkillDirPanel);
+        MessageCenter.Instance.RemoveListener(MessageType.OnClickDirCancelBtn, ReShowActionField);
+    }
+
+    private void OnDestroy()
+    {
+        RemoveAll();
     }
 
     private void Update()
@@ -150,6 +159,11 @@ public class BattlePanel : BasePanel
         _actionField.gameObject.SetActive(true);
     }
 
+    private void ReShowActionField()
+    {
+        _actionField.gameObject.SetActive(true);
+    }
+
     private void HideActionField()
     {
         _actionField.gameObject.SetActive(false);
@@ -186,9 +200,15 @@ public class BattlePanel : BasePanel
             for (int i = 0; i < skillList.Count; i++)
             {
                 _skillBtns[i].gameObject.SetActive(true);
-                _skillBtns[i].SkillData = skillList[i].Data;
+                _skillBtns[i].Skill = skillList[i];
             }
         }
         isNewAction = false;
+    }
+
+    private void ShowSkillDirPanel()
+    {
+        UIManager.Instance.PushPanel(UIPanelType.SkillDir, true);
+        HideActionField();
     }
 }

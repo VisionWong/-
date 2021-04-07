@@ -164,9 +164,9 @@ MonoBehaviour:
   lineThickness: 1.25
   lineIntensity: 0.5
   fillAmount: 0.708
-  lineColor0: {r: 1, g: 0.37324363, b: 0, a: 1}
+  lineColor0: {r: 1, g: 0.22024427, b: 0, a: 1}
   lineColor1: {r: 0, g: 0.59798384, b: 1, a: 1}
-  lineColor2: {r: 0, g: 0, b: 1, a: 0}
+  lineColor2: {r: 0, g: 1, b: 0.23713088, a: 1}
   additiveRendering: 0
   backfaceCulling: 1
   fillColor: {r: 0, g: 0, b: 1, a: 1}
