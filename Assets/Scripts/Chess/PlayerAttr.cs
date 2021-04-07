@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class PlayerAttr : IChessAttr
+public class PlayerAttr : ChessAttr
 {
     private string EvoCondition;
 }

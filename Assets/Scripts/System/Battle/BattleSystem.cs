@@ -65,7 +65,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         GameObject go = Instantiate(Resources.Load<GameObject>("Chess/001"));
         PlayerChess chess = new PlayerChess(new PlayerAttr(), go);
 
-        PathPack pathPack = new PathPack(1, "Chess/001", "Sprite/Chess/001");
+        PathPack pathPack = new PathPack("Chess/001", "Sprite/Chess/001");
         chess.SetPathPack(pathPack);
         chess.SetAnimator(go.AddComponent<ChessAnimator>());
         chess.SetSelectableScript(go.AddComponent<SelectablePlayerChess>());

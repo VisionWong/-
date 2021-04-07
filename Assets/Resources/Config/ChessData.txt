@@ -1,0 +1,15 @@
+[{
+	"id": 252,
+	"name": "木守宫",
+	"pmType1": "Grass",
+	"abilityIdList": [1],
+	"evoTaskId": 1,
+	"evoStage": 0,
+	"hp": 0,
+	"ap": 0,
+	"attack": 0,
+	"defence": 0,
+	"spritePath": "Sprite/Chess/001",
+	"prefabPath": "Chess/001",
+	"audioPath": ""
+}]

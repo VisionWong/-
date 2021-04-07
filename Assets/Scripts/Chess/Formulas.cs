@@ -10,7 +10,7 @@ public static class Formulas
     public static int CalSkillDamage(SkillData attr, IChess user)
     {
         float damage = 1;
-        if (attr.pmType == user.Attribute.PMType)
+        if (attr.pmType == user.Attribute.PMType1 || attr.pmType == user.Attribute.PMType2)
         {
             damage *= 1.5f;
         }

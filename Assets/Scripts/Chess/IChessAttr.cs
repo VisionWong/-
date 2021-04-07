@@ -9,9 +9,28 @@ public enum EvolutionStage
     Final,
 }
 
-public abstract class IChessAttr
+public class ChessData : IData
 {
-    public PMType PMType { get; set; }
+    public string name;
+    public PMType pmType1;
+    public PMType pmType2 = PMType.None;
+    public List<int> abilityIdList;
+    public int evoTaskId;//进化条件
+    public EvolutionStage evoStage;
+    public int hp;
+    public int ap;
+    public int attack;
+    public int defence;
+    public string spritePath;
+    public string prefabPath;
+    public string audioPath;
+}
+
+public class ChessAttr
+{
+    public int ID { get; set; }
+    public PMType PMType1 { get; set; }
+    public PMType PMType2 { get; set; }
     public IAbility Ability { get; set; }
 
     /// <summary>
@@ -41,5 +60,5 @@ public abstract class IChessAttr
     public int AvoidRate { get; set; }
 
     //TODO
-    public IChessAttr() { }
+    public ChessAttr() { }
 }

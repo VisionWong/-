@@ -6,7 +6,7 @@ public class PlayerChess : IChess
 {
     private SelectablePlayerChess m_selectable;
 
-    public PlayerChess(IChessAttr attr, GameObject go) : base(attr, go)
+    public PlayerChess(ChessAttr attr, GameObject go) : base(attr, go)
     {
     }
 

@@ -4,6 +4,6 @@ using UnityEngine;
 
 public class EnemyChess : IChess
 {
-    public EnemyChess(IChessAttr attr, GameObject go) : base(attr, go) { }
+    public EnemyChess(ChessAttr attr, GameObject go) : base(attr, go) { }
 
 }

@@ -32,7 +32,7 @@ public enum PMType
 public abstract class IChess : IAttackable
 {
     public PathPack PathPack { get; private set; }
-    public IChessAttr Attribute { get; set; }
+    public ChessAttr Attribute { get; set; }
     public MapGrid StayGrid { get; private set; }
     public List<Skill> SkillList { get; private set; }
 
@@ -47,7 +47,7 @@ public abstract class IChess : IAttackable
     protected GameObject _gameObject;
     protected ChessAnimator _anim = null; 
 
-    public IChess(IChessAttr attr, GameObject go)
+    public IChess(ChessAttr attr, GameObject go)
     {
         Attribute = attr;
         _gameObject = go;

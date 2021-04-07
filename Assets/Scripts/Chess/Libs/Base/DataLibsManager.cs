@@ -7,6 +7,7 @@ public class DataLibsManager : MonoSingleton<DataLibsManager>
 {
     public void InitAllLibs()
     {
+        ChessLib.Instance.ParseInit(PathDefine.CONFIG_CHESS_DATA);
         SkillLib.Instance.ParseInit(PathDefine.CONFIG_SKILL_DATA);
         
     }
