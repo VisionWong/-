@@ -6,4 +6,9 @@ using UnityEngine;
 public class PlayerAttr : ChessAttr
 {
     private string EvoCondition;
+
+    public PlayerAttr(ChessData data) : base(data)
+    {
+        //EvoCondition = data.evoTaskId;
+    }
 }

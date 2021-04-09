@@ -15,6 +15,7 @@ public class ChessData : IData
     public PMType pmType1;
     public PMType pmType2 = PMType.None;
     public List<int> abilityIdList;
+    public int skillId;//自带的技能ID
     public int evoTaskId;//进化条件
     public EvolutionStage evoStage;
     public int hp;
@@ -60,5 +61,21 @@ public class ChessAttr
     public int AvoidRate { get; set; }
 
     //TODO
-    public ChessAttr() { }
+    public ChessAttr(ChessData data)
+    {
+        ID = data.id;
+        PMType1 = data.pmType1;
+        PMType2 = data.pmType2;
+        //选择一个特性
+        //选择一个性别
+        Name = data.name;
+        MaxHP = data.hp;
+        HP = MaxHP;
+        AP = data.ap;
+        Attack = data.attack;
+        Defence = data.defence;
+        //以下取默认值
+        CritRate = 25;
+        AvoidRate = 0;
+    }
 }

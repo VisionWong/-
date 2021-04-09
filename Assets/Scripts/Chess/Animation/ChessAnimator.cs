@@ -7,6 +7,13 @@ using VFramework;
 
 public class ChessAnimator : MonoBehaviour
 {
+    private Animator _anim;
+
+    private void Awake()
+    {
+        _anim = GetComponent<Animator>();
+    }
+
     /// <summary>
     /// 按照给定的格子路径按指定速度移动，移动动画结束后调用回调函数
     /// </summary>
@@ -19,13 +26,19 @@ public class ChessAnimator : MonoBehaviour
 
     private IEnumerator MoveCorou(List<MapGrid> grids, Action callback = null)
     {
-        for (int i = 0; i < grids.Count; i++)
+        MapGrid lastGrid = grids?[0];
+        for (int i = 1; i < grids.Count; i++)
         {
+            _anim.SetInteger("x", grids[i].X - lastGrid.X);
+            _anim.SetInteger("y", lastGrid.Y - grids[i].Y);
+            lastGrid = grids[i];
             var dest = grids[i].transform.position;
             var tweener = transform.DOMove(new Vector3(dest.x, dest.y, transform.position.z), 0.4f);
             MessageCenter.Instance.Broadcast(MessageType.OnChessMoving, dest);
             yield return tweener.WaitForCompletion();
         }
+        _anim.SetInteger("x", 0);
+        _anim.SetInteger("y", 0);
         callback?.Invoke();
     }
 }

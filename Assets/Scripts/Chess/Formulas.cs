@@ -14,7 +14,7 @@ public static class Formulas
         {
             damage *= 1.5f;
         }
-        damage *= attr.power * user.Attribute.Attack / 100;
+        damage *= attr.power * user.Attribute.Attack / 50;
         //TODO 判断是否暴击
         return (int)damage;
     }

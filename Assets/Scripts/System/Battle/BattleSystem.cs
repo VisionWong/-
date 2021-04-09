@@ -62,23 +62,23 @@ public class BattleSystem : MonoSingleton<BattleSystem>
 
     private void LoadPlayerChess(int x, int y)
     {
-        GameObject go = Instantiate(Resources.Load<GameObject>("Chess/001"));
-        PlayerChess chess = new PlayerChess(new PlayerAttr(), go);
+        //GameObject go = Instantiate(Resources.Load<GameObject>("Chess/001"));
+        //PlayerChess chess = new PlayerChess(new PlayerAttr(), go);
 
-        PathPack pathPack = new PathPack("Chess/001", "Sprite/Chess/001");
-        chess.SetPathPack(pathPack);
-        chess.SetAnimator(go.AddComponent<ChessAnimator>());
-        chess.SetSelectableScript(go.AddComponent<SelectablePlayerChess>());
+        //PathPack pathPack = new PathPack("Chess/001", "Sprite/Chess/001");
+        //chess.SetPathPack(pathPack);
+        //chess.SetAnimator(go.AddComponent<ChessAnimator>());
+        //chess.SetSelectableScript(go.AddComponent<SelectablePlayerChess>());
 
-        //技能
-        var skillData = SkillLib.Instance.GetData(1);
-        Type type = Type.GetType(skillData.name);
-        var skill = Activator.CreateInstance(type, skillData, chess, go.transform);
-        chess.LearnSkill(skill as Skill);
-
+        ////技能
+        //var skillData = SkillLib.Instance.GetData(1);
+        //Type type = Type.GetType(skillData.name);
+        //var skill = Activator.CreateInstance(type, skillData, chess, go.transform);
+        //chess.LearnSkill(skill as Skill);
+        ChessFactory factory = new ChessFactory();
+        var chess = factory.ProducePlayer(252);
         MapGrid grid = _map.GetGridByCoord(x, y);
         chess.SetStayGrid(grid);
-        chess.Attribute.AP = 4;
         _playerList.Add(chess);
     }
 
@@ -222,9 +222,9 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     {
         //将棋子送往原来的位置，重新高亮寻路网络
         _curWalkableGrid = null;
-        _map.ShowLastHighlightGrids();
         _curPlayerChess.SetStayGrid(_lastOriginGrid);
         _curPlayerChess.ChangeToWaitMove();
+        _map.ShowLastHighlightGrids();
         BattleState = BattleState.WaitMove;
         MessageCenter.Instance.Broadcast(MessageType.OnCancelMove);
         MessageCenter.Instance.Broadcast(MessageType.GlobalCanSelect);
