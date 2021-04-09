@@ -7,14 +7,16 @@ using UnityEngine;
 /// </summary>
 public static class Formulas
 {
-    public static int CalSkillDamage(SkillData attr, IChess user)
+    public static int CalSkillDamage(SkillData attr, IChess user, IChess target)
     {
         float damage = 1;
         if (attr.pmType == user.Attribute.PMType1 || attr.pmType == user.Attribute.PMType2)
         {
             damage *= 1.5f;
         }
-        damage *= attr.power * user.Attribute.Attack / 50;
+        float num = user.Attribute.Attack - target.Attribute.Defence;
+        if (num <= 0) num = 1;
+        damage *= attr.power * num / 50;
         //TODO 判断是否暴击
         return (int)damage;
     }

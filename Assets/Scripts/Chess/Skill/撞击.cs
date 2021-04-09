@@ -11,6 +11,9 @@ public class 撞击 : Skill
     public override void UseSkill(List<IChess> targets)
     {
         base.UseSkill(targets);
-        targets[0].TakeDamage(Formulas.CalSkillDamage(Data, _chess));
+        foreach (var target in targets)
+        {
+            target.TakeDamage(Formulas.CalSkillDamage(Data, _chess, target));
+        }
     }
 }

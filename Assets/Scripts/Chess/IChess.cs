@@ -45,12 +45,14 @@ public abstract class IChess : IAttackable
     }
 
     protected GameObject _gameObject;
+    protected HUD _hud;//UI显示
     protected ChessAnimator _anim = null; 
 
     public IChess(ChessAttr attr, GameObject go)
     {
         Attribute = attr;
         _gameObject = go;
+        _hud = _gameObject.AddComponent<HUD>();
         SkillList = new List<Skill>();
     }
 
@@ -101,8 +103,9 @@ public abstract class IChess : IAttackable
 
     public void TakeDamage(int damage)
     {
-        Attribute.HP -= Formulas.CalRealDamage(damage, this);
-        //TODO 通知UI更新
+        Attribute.TakeDamage(Formulas.CalRealDamage(damage, this));
+        //TODO 判断是否死亡
+        _hud.ChangeHPValue(Attribute.HP, Attribute.MaxHP);
     }
 
     public void Sleep()

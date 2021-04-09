@@ -129,6 +129,20 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         }
     }
 
+    private void OnSelectUnwalkableChess()
+    {
+        if (BattleState == BattleState.WaitSelect || BattleState == BattleState.WaitMove)
+        {
+            //如果之前选中了棋子正在寻路，则取消上个棋子的寻路操作
+            if (_curPlayerChess != null)
+            {
+                CancelMoving();
+            }
+            _curPlayerChess = null;
+            BattleState = BattleState.WaitSelect;
+        }
+    }
+
     private void OnSelectIdleGrid(MapGrid grid)
     {
         if (BattleState == BattleState.WaitMove)
@@ -345,6 +359,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         MessageCenter.Instance.AddListener<MapGrid>(MessageType.OnSelectWalkableGrid, OnSelectWalkableGrid);
         MessageCenter.Instance.AddListener<PlayerChess>(MessageType.OnSelectWalkableChess, OnSelectWalkableChess);
         MessageCenter.Instance.AddListener<Skill>(MessageType.OnClickSkillBtn, OnClickSkillBtn);
+        MessageCenter.Instance.AddListener(MessageType.OnSelectUnwalkableChess, OnSelectUnwalkableChess);
     }
     private void RemoveAll()
     {
@@ -352,6 +367,8 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         MessageCenter.Instance.RemoveListener<MapGrid>(MessageType.OnSelectWalkableGrid, OnSelectWalkableGrid);
         MessageCenter.Instance.RemoveListener<PlayerChess>(MessageType.OnSelectWalkableChess, OnSelectWalkableChess);
         MessageCenter.Instance.RemoveListener<Skill>(MessageType.OnClickSkillBtn, OnClickSkillBtn);
+        MessageCenter.Instance.RemoveListener(MessageType.OnSelectUnwalkableChess, OnSelectUnwalkableChess);
+
     }
     #endregion
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using VFramework;
+using VFramework.UIManager;
 
 public class SelectablePlayerChess : ISelectable
 {
@@ -43,6 +44,7 @@ public class SelectablePlayerChess : ISelectable
                     break;
                 case SelectedState.ActionEnd:
                     Debug.Log("该棋子已经行动完毕");
+                    MessageCenter.Instance.Broadcast(MessageType.OnSelectUnwalkableChess);
                     break;
                 case SelectedState.Unselectable:
                     Debug.Log("该棋子暂时无法选中");
@@ -51,6 +53,7 @@ public class SelectablePlayerChess : ISelectable
                     Debug.LogWarning("棋子不存在该状态");
                     break;
             }
+            MessageCenter.Instance.Broadcast(MessageType.OnSelectChess);
         }
         base.Selected();
     }
@@ -59,7 +62,7 @@ public class SelectablePlayerChess : ISelectable
     {
         base.CancelSelect();
         //TODO 取消UI显示
-        
+        UIManager.Instance.PopPanel();
     }
 
     public void ChangeToIdle()

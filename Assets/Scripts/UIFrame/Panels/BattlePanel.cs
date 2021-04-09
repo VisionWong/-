@@ -8,7 +8,6 @@ using VFramework.UIManager;
 public class BattlePanel : BasePanel
 {
     private Transform _gridInfo;
-    private Transform _chessInfo;
     private Transform _actionField;
     private Transform _skillField;
     private Transform _skillGroup;
@@ -27,6 +26,9 @@ public class BattlePanel : BasePanel
     private List<SkillButton> _skillBtns = new List<SkillButton>();
     private Transform _skillDesPanel;
 
+    //棋子信息面板
+
+
     public override void OnEnter()
     {
         FindAll();
@@ -36,9 +38,6 @@ public class BattlePanel : BasePanel
 
     private void FindAll()
     {
-        //棋子信息
-        _chessInfo = transform.Find("ChessInfo");
-
         //棋格信息
         _gridInfo = transform.Find("GridInfo");
         _gridDes = _gridInfo.Find("Description");
@@ -77,6 +76,7 @@ public class BattlePanel : BasePanel
         MessageCenter.Instance.AddListener(MessageType.OnCancelMove, HideActionField);
         MessageCenter.Instance.AddListener(MessageType.OnSearchAttackableEnd, ShowSkillDirPanel);
         MessageCenter.Instance.AddListener(MessageType.OnClickDirCancelBtn, ReShowActionField);
+        MessageCenter.Instance.AddListener(MessageType.OnSelectChess, ShowChessInfoPanel);
     }
     private void RemoveAll()
     {
@@ -85,6 +85,7 @@ public class BattlePanel : BasePanel
         MessageCenter.Instance.RemoveListener(MessageType.OnCancelMove, HideActionField);
         MessageCenter.Instance.RemoveListener(MessageType.OnSearchAttackableEnd, ShowSkillDirPanel);
         MessageCenter.Instance.RemoveListener(MessageType.OnClickDirCancelBtn, ReShowActionField);
+        MessageCenter.Instance.RemoveListener(MessageType.OnSelectChess, ShowChessInfoPanel);
     }
 
     private void OnDestroy()
@@ -109,8 +110,6 @@ public class BattlePanel : BasePanel
     {
         _gridDes.gameObject.SetActive(false);
         _gridInfo.gameObject.SetActive(false);
-
-        _chessInfo.gameObject.SetActive(false);
 
         _actionField.gameObject.SetActive(false);
         _skillField.gameObject.SetActive(false);
@@ -210,5 +209,10 @@ public class BattlePanel : BasePanel
     {
         UIManager.Instance.PushPanel(UIPanelType.SkillDir, true);
         HideActionField();
+    }
+
+    private void ShowChessInfoPanel()
+    {
+        UIManager.Instance.PushPanel(UIPanelType.ChessInfo, true);
     }
 }

@@ -18,8 +18,11 @@ public abstract class ISelectable : MonoBehaviour
 
     public void OnMouseDown()
     {
-        BattleSystem.Instance.SetSelected(this);
-        Selected();
+        if (Selectable)
+        {
+            BattleSystem.Instance.SetSelected(this);
+            Selected();
+        }
     }
 
     private void OnDestroy()

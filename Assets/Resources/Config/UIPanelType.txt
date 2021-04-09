@@ -7,4 +7,7 @@
 
 {"panelType":"SkillDir",
 "resPath":"UI/SkillDirPanel"},
+
+{"panelType":"ChessInfo",
+"resPath":"UI/ChessInfoPanel"},
 ]

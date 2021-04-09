@@ -29,36 +29,36 @@ public class ChessData : IData
 
 public class ChessAttr
 {
-    public int ID { get; set; }
-    public PMType PMType1 { get; set; }
-    public PMType PMType2 { get; set; }
-    public IAbility Ability { get; set; }
+    public int ID { get; private set; }
+    public PMType PMType1 { get; private set; }
+    public PMType PMType2 { get; private set; }
+    public IAbility Ability { get; private set; }
 
     /// <summary>
     /// 中文名
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; private set; }
     /// <summary>
     /// 行动力，可移动的步数
     /// </summary>
-    public int AP { get; set; }
+    public int AP { get; private set; }
     /// <summary>
     /// 性别，0为母，1为公
     /// </summary>
-    public int Gender { get; set; }
+    public int Gender { get; private set; }
 
-    public int HP { get; set; }
-    public int MaxHP { get; set; }
-    public int Attack { get; set; }
-    public int Defence { get; set; }
+    public int HP { get; private set; }
+    public int MaxHP { get; private set; }
+    public int Attack { get; private set; }
+    public int Defence { get; private set; }
     /// <summary>
     /// 暴击率
     /// </summary>
-    public int CritRate { get; set; }
+    public int CritRate { get; private set; }
     /// <summary>
     /// 回避率
     /// </summary>
-    public int AvoidRate { get; set; }
+    public int AvoidRate { get; private set; }
 
     //TODO
     public ChessAttr(ChessData data)
@@ -77,5 +77,21 @@ public class ChessAttr
         //以下取默认值
         CritRate = 25;
         AvoidRate = 0;
+    }
+
+    /// <summary>
+    /// 若死亡返回True
+    /// </summary>
+    /// <param name="damage"></param>
+    /// <returns></returns>
+    public bool TakeDamage(int damage)
+    {
+        if (HP - damage <= 0)
+        {
+            HP = 0;
+            return true;
+        }
+        HP -= damage;
+        return false;
     }
 }
