@@ -76,6 +76,7 @@ public class MapGrid : MonoBehaviour
         m_selectable.SelectedState = GridSelectedState.Unselectable;
         CanMove = false;
         StayedChess = chess;
+        OnEnter(chess);
     }
 
     /// <summary>
@@ -83,8 +84,13 @@ public class MapGrid : MonoBehaviour
     /// </summary>
     public void ChessAway()
     {
+        OnExit(StayedChess);
         m_selectable.SelectedState = GridSelectedState.Idle;
         CanMove = true;
         StayedChess = null;
     }
+
+    public virtual void OnEnter(IChess chess) { }
+    public virtual void OnStay() { }
+    public virtual void OnExit(IChess chess) { }
 }
