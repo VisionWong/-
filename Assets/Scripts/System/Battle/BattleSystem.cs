@@ -250,7 +250,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     {
         _curUsedSkill = skill;
         //通知地图寻找该技能能攻击到的目标
-        _map.SearchAttackableTarget(_curPlayerChess, skill, TagDefine.ENEMY);
+        _map.SearchAttackableTarget(_curPlayerChess, skill);
     }
 
     public bool IsUpCanAttack()

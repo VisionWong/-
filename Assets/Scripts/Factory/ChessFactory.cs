@@ -12,7 +12,7 @@ public class ChessFactory
 
         GameObject go = ResourceMgr.Instance.Load<GameObject>(data.prefabPath);
         PlayerChess chess = new PlayerChess(new PlayerAttr(data), go);
-        go.tag = TagDefine.ENEMY;
+        go.tag = TagDefine.PLAYER;
 
         PathPack pathPack = new PathPack(data.prefabPath, data.spritePath);
         chess.SetPathPack(pathPack);

@@ -212,10 +212,55 @@ public class Map : MonoBehaviour
     /// </summary>
     /// <param name="chess"></param>
     /// <param name="skill"></param>
-    public void SearchAttackableTarget(IChess chess, Skill skill, string tag)
+    public void SearchAttackableTarget(IChess chess, Skill skill)
     {//TODO 目前仅仅实现了非指向性和自身的技能寻标，还有指向性的针对-1坐标做的特殊处理
         ClearAttackableGrids();
-        if (skill.Data.rangeType == SkillRangeType.自身) tag = chess.Tag;
+        MapGrid origin = chess.StayGrid;
+        var rangeList = skill.Data.range;
+        foreach (var pos in rangeList)
+        {
+            //从四个方向分别搜寻可攻击的目标格子并记录
+            {//up
+                var grid = GetGridByCoord(origin.X + pos.x, origin.Y - pos.y);
+                if (grid != null && grid.StayedChess != null)
+                {
+                    upAttackableGrids.Add(grid);
+                }
+            }
+            {//down
+                var grid = GetGridByCoord(origin.X - pos.x, origin.Y + pos.y);
+                if (grid != null && grid.StayedChess != null)
+                {
+                    downAttackableGrids.Add(grid);
+                }
+            }
+            {//left
+                var grid = GetGridByCoord(origin.X - pos.y, origin.Y - pos.x);
+                if (grid != null && grid.StayedChess != null)
+                {
+                    leftAttackableGrids.Add(grid);
+                }
+            }
+            {//right
+                var grid = GetGridByCoord(origin.X + pos.y, origin.Y + pos.x);
+                if (grid != null && grid.StayedChess != null)
+                {
+                    rightAttackableGrids.Add(grid);
+                }
+            }
+        }//搜寻完毕
+        //通知UI寻敌完毕
+        MessageCenter.Instance.Broadcast(MessageType.OnSearchAttackableEnd);
+    }
+
+    /// <summary>
+    /// 高亮该技能能打到的目标的格子，并通知UI出现选项界面
+    /// </summary>
+    /// <param name="chess"></param>
+    /// <param name="skill"></param>
+    public void SearchAttackableTargetWithTag(IChess chess, Skill skill, string tag)
+    {//TODO 目前仅仅实现了非指向性和自身的技能寻标，还有指向性的针对-1坐标做的特殊处理
+        ClearAttackableGrids();
         MapGrid origin = chess.StayGrid;
         var rangeList = skill.Data.range;
         foreach (var pos in rangeList)
