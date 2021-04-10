@@ -84,6 +84,11 @@ public abstract class Skill
         PlayAnimation();
     }
 
+    /// <summary>
+    /// 获取技能将要造成的结果，伤害或者回复
+    /// </summary>
+    public abstract int GetPreview(IChess target);//TODO 可能的效果还有击退等，得封装一个技能的效果
+
     public virtual void PlayAnimation()
     {
         //播放默认动画和默认音效

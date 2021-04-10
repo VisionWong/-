@@ -108,6 +108,26 @@ public abstract class IChess : IAttackable
         _hud.ChangeHPValue(Attribute.HP, Attribute.MaxHP);
     }
 
+    //显示可能遭受的伤害
+    public void ShowPreview(int num, bool isDamage)
+    {
+        if (isDamage)
+        {
+            int realNum = Attribute.HP - Formulas.CalRealDamage(num, this);
+            _hud.ShowPreview(realNum < 0 ? 0 : realNum, Attribute.MaxHP);
+        }
+        else
+        {
+            //TODO 可能有治疗增益
+            int realNum = Attribute.HP + num;
+            _hud.ShowPreview(realNum, Attribute.MaxHP);
+        } 
+    }
+    public void HidePreview()
+    {
+        _hud.HidePreview();
+    }
+
     public void Sleep()
     {
         throw new NotImplementedException();

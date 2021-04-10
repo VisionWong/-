@@ -272,44 +272,62 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     
     public void HighlightAttackableGrids(Direction dir)
     {
+        List<MapGrid> targetGirds = null;
         switch (dir)
         {
             case Direction.Up:
                 _map.HighlightGrids(_map.upAttackableGrids);
+                targetGirds = _map.upAttackableGrids;
                 break;
             case Direction.Down:
                 _map.HighlightGrids(_map.downAttackableGrids);
+                targetGirds = _map.downAttackableGrids;
                 break;
             case Direction.Left:
                 _map.HighlightGrids(_map.leftAttackableGrids);
+                targetGirds = _map.leftAttackableGrids;
                 break;
             case Direction.Right:
                 _map.HighlightGrids(_map.rightAttackableGrids);
+                targetGirds = _map.rightAttackableGrids;
                 break;
             default:
                 Debug.LogError("该方向的功能尚未实现！" + dir.ToString());
                 break;
         }
+        foreach (var grid in targetGirds)
+        {
+            grid.StayedChess.ShowPreview(_curUsedSkill.GetPreview(grid.StayedChess), _curUsedSkill.Data.skillType == SkillType.Damage);
+        }
     }
     public void CancelHighlightAttackableGrids(Direction dir)
     {
+        List<MapGrid> targetGirds = null;
         switch (dir)
         {
             case Direction.Up:
                 _map.CancelHighlightGrids(_map.upAttackableGrids);
+                targetGirds = _map.upAttackableGrids;
                 break;
             case Direction.Down:
                 _map.CancelHighlightGrids(_map.downAttackableGrids);
+                targetGirds = _map.downAttackableGrids;
                 break;
             case Direction.Left:
                 _map.CancelHighlightGrids(_map.leftAttackableGrids);
+                targetGirds = _map.leftAttackableGrids;
                 break;
             case Direction.Right:
                 _map.CancelHighlightGrids(_map.rightAttackableGrids);
+                targetGirds = _map.rightAttackableGrids;
                 break;
             default:
                 Debug.LogError("该方向的功能尚未实现！" + dir.ToString());
                 break;
+        }
+        foreach (var grid in targetGirds)
+        {
+            grid.StayedChess.HidePreview();
         }
     }
 

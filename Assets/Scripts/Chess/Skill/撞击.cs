@@ -16,4 +16,9 @@ public class 撞击 : Skill
             target.TakeDamage(Formulas.CalSkillDamage(Data, _chess, target));
         }
     }
+
+    public override int GetPreview(IChess target)
+    {
+        return Formulas.CalSkillDamage(Data, _chess, target);
+    }
 }
