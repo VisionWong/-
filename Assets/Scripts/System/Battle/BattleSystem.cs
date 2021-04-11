@@ -239,6 +239,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         _curWalkableGrid = null;
         _curPlayerChess.SetStayGrid(_lastOriginGrid);
         _curPlayerChess.ChangeToWaitMove();
+        _curPlayerChess.CancelMove();
         _map.ShowLastHighlightGrids();
         BattleState = BattleState.WaitMove;
         MessageCenter.Instance.Broadcast(MessageType.OnCancelMove);

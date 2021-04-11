@@ -102,6 +102,11 @@ public abstract class IChess : IAttackable
         _anim.Move(grids, callback);
     }
 
+    public void CancelMove()
+    {
+        _anim.CancelMove();
+    }
+
     public void TakeDamage(int damage, Direction dir)
     {
         //判断是否死亡

@@ -13,12 +13,6 @@ public class ChessAnimator : MonoBehaviour
     private void Awake()
     {
         _anim = GetComponent<Animator>();
-        MessageCenter.Instance.AddListener(MessageType.OnCancelMove, OnCancelMove);
-    }
-
-    private void OnDestroy()
-    {
-        MessageCenter.Instance.RemoveListener(MessageType.OnCancelMove, OnCancelMove);
     }
 
     /// <summary>
@@ -80,7 +74,7 @@ public class ChessAnimator : MonoBehaviour
         callback?.Invoke();
     }
 
-    private void OnCancelMove()
+    public void CancelMove()
     {
         _anim.SetFloat("x", lastX);
         _anim.SetFloat("y", lastY);
