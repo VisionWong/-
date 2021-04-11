@@ -366,7 +366,6 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         }
         _curUsedSkill.UseSkill(targets, dir);
         _curUsedSkill = null;
-        OnChessActionEnd();
     }
     #endregion
 
@@ -378,6 +377,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         MessageCenter.Instance.AddListener<PlayerChess>(MessageType.OnSelectWalkableChess, OnSelectWalkableChess);
         MessageCenter.Instance.AddListener<Skill>(MessageType.OnClickSkillBtn, OnClickSkillBtn);
         MessageCenter.Instance.AddListener(MessageType.OnSelectUnwalkableChess, OnSelectUnwalkableChess);
+        MessageCenter.Instance.AddListener(MessageType.OnChessActionEnd, OnChessActionEnd);
     }
     private void RemoveAll()
     {
@@ -386,6 +386,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         MessageCenter.Instance.RemoveListener<PlayerChess>(MessageType.OnSelectWalkableChess, OnSelectWalkableChess);
         MessageCenter.Instance.RemoveListener<Skill>(MessageType.OnClickSkillBtn, OnClickSkillBtn);
         MessageCenter.Instance.RemoveListener(MessageType.OnSelectUnwalkableChess, OnSelectUnwalkableChess);
+        MessageCenter.Instance.RemoveListener(MessageType.OnChessActionEnd, OnChessActionEnd);
 
     }
     #endregion
