@@ -46,14 +46,16 @@ public abstract class IChess : IAttackable
 
     protected GameObject _gameObject;
     protected HUD _hud;//UI显示
-    protected ChessAnimator _anim = null; 
+    protected ChessAnimator _anim;
+    private List<IBuff> _buffList;
 
     public IChess(ChessAttr attr, GameObject go)
     {
         Attribute = attr;
+        SkillList = new List<Skill>();
         _gameObject = go;
         _hud = _gameObject.AddComponent<HUD>();
-        SkillList = new List<Skill>();
+        _buffList = new List<IBuff>();
     }
 
     public void SetPathPack(PathPack pack)
@@ -112,7 +114,7 @@ public abstract class IChess : IAttackable
         //判断是否死亡
         if (Attribute.TakeDamage(Formulas.CalRealDamage(damage, this)))
         {
-
+            Dead();
         }
         _anim.TakeDamage(dir);
         _hud.ChangeHPValue(Attribute.HP, Attribute.MaxHP);
@@ -153,36 +155,101 @@ public abstract class IChess : IAttackable
                 break;
         }
         //进一步判断可能有击退等效果
-        
+
     }
     public void HidePreview()
     {
         _hud.HidePreview();
     }
 
+    #region BUFF处理
+    public void AddBuff(IBuff buff)
+    {
+        _buffList.Add(buff);
+        buff.OnBuffBegin();
+    }
+    public void RemoveBuff(IBuff buff)
+    {
+        _buffList.Remove(buff);
+    }
+    public void OnTurnStart()
+    {
+        if (_buffList != null)
+        {
+            foreach (var buff in _buffList)
+            {
+                buff.OnTurnStart();
+            }
+        }
+    }
+    public void OnActionEnd()
+    {
+        if (_buffList != null)
+        {
+            foreach (var buff in _buffList)
+            {
+                buff.OnTurnEnd();
+            }
+        }
+    }
+    #endregion
+
     public void Sleep()
     {
-        throw new NotImplementedException();
+        //跳过该行动回合
+        //TODO 播放睡眠动画
     }
 
     public void Paralyzed()
     {
-        throw new NotImplementedException();
+        //跳过该行动回合
+        //TODO 播放动画
     }
 
     public void Burned()
     {
-        throw new NotImplementedException();
+        //TODO 播放动画
+        if (Attribute.TakeDamage(0.0625f))
+        {
+            Dead();
+        }
+        //TODO 播放中毒受伤动画
+        _hud.ChangeHPValue(Attribute.HP, Attribute.MaxHP);
     }
 
-    public void Poisoned()
+    public void Poisoned(float bloodPer)
     {
-        throw new NotImplementedException();
+        if (Attribute.TakeDamage(bloodPer))
+        {
+            Dead();
+        }
+        //TODO 播放中毒受伤动画
+        _hud.ChangeHPValue(Attribute.HP, Attribute.MaxHP);
     }
 
     public void Freezed()
     {
-        throw new NotImplementedException();
+        //跳过该行动回合
+        //TODO 播放冰冻动画
+    }
+
+    public void Confused()
+    {
+        //跳过该行动回合
+        //攻击自己
+        if (Attribute.TakeDamage(0.0625f))
+        {
+            Dead();
+        }
+        //TODO 播放中毒受伤动画
+        _hud.ChangeHPValue(Attribute.HP, Attribute.MaxHP);
+    }
+
+    public void Dead()
+    {
+        //TODO 通知战斗系统剔除自己
+        //播放死亡动画，死亡特效，演出结束后消失
+
     }
     #endregion
 }

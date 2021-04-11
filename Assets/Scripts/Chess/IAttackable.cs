@@ -8,6 +8,8 @@ public interface IAttackable
     void Paralyzed();
     void Burned();
     void Sleep();
-    void Poisoned();
+    void Poisoned(float bloodPer);
     void Freezed();
+    void Confused();
+    void Dead();
 }

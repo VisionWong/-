@@ -17,7 +17,8 @@ public class 剑舞 : Skill
 
     public override void SkillEffect(List<IChess> targets, Direction dir)
     {
-        targets[0].Attribute.ChangeAttackLevel(Data.effects[0].effectLevel);
+        //TODO 特效和音效
+        targets[0].AddBuff(new ChangeAttackBuff(_chess, Data.effects[0].effectTurns, Data.effects[0].effectLevel));
     }
 
     protected override IEnumerator PlayAnimation(Direction dir)

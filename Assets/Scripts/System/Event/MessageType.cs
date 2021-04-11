@@ -12,7 +12,7 @@ namespace VFramework
         GlobalCantSelect,
         GlobalCanSelect,
 
-        //战斗相关
+        //战斗操作
         OnSelectGrid,
         OnSelectIdleGrid,
         OnSelectWalkableGrid,
@@ -27,5 +27,6 @@ namespace VFramework
         OnSearchAttackableEnd,
         OnClickDirCancelBtn,
         OnChessActionEnd,
+
     }
 }

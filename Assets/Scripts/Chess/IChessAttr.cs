@@ -43,6 +43,9 @@ public class ChessAttr
     public PMType PMType2 { get; private set; }
     public IAbility Ability { get; private set; }
 
+    public bool isBurned = false;
+    public bool isParalyzed = false;
+
     /// <summary>
     /// 中文名
     /// </summary>
@@ -52,7 +55,14 @@ public class ChessAttr
     /// </summary>
     public int AP
     {
-        get { return Mathf.Clamp(_ap + addiAttr.AP, 1, int.MaxValue); }
+        get
+        {
+            if (isParalyzed)
+            {
+                return (int)(0.5f * Mathf.Clamp(_ap + addiAttr.AP, 2, int.MaxValue));
+            }
+            return Mathf.Clamp(_ap + addiAttr.AP, 1, int.MaxValue);
+        }
         private set { _ap = value; }
     }
     /// <summary>
@@ -68,7 +78,11 @@ public class ChessAttr
     }
     public int Attack
     {
-        get { return (int)(_atk * addiAttr.AtkFactor.ToFloat()); }
+        get
+        {
+            if (isBurned) return (int)(0.5f * _atk * addiAttr.AtkFactor.ToFloat());
+            return (int)(_atk * addiAttr.AtkFactor.ToFloat());
+        }
         private set { _atk = value; }
     }
     public int Defence
@@ -127,6 +141,17 @@ public class ChessAttr
             return true;
         }
         HP -= damage;
+        return false;
+    }
+    public bool TakeDamage(float percent)
+    {
+        int realDamage = (int)(MaxHP * percent);
+        if (HP - realDamage <= 0)
+        {
+            HP = 0;
+            return true;
+        }
+        HP -= realDamage;
         return false;
     }
 
