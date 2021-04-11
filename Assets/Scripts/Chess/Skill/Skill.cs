@@ -72,6 +72,7 @@ public abstract class Skill
     public SkillData Data { get; set; }
 
     protected Transform _chessTrans;
+    protected ChessAnimator _anim;
     protected IChess _chess;
 
     public Skill(SkillData data, IChess chess, Transform chessTrans)
@@ -79,6 +80,7 @@ public abstract class Skill
         Data = data;
         _chessTrans = chessTrans;
         _chess = chess;
+        _anim = _chessTrans.GetComponent<ChessAnimator>();
     }
 
     public virtual void UseSkill(List<IChess> targets, Direction dir)
@@ -94,6 +96,7 @@ public abstract class Skill
     protected virtual IEnumerator PlayAnimation(Direction dir)
     {
         //播放默认动画和默认音效
+        _anim.ChangeForward(dir);
         var tee = _chessTrans.DOPunchPosition(EnumTool.DirToVector3(dir) * 0.7f, 1f, 3, 0.2f);
         yield return tee.WaitForCompletion();
         MessageCenter.Instance.Broadcast(MessageType.OnChessActionEnd);

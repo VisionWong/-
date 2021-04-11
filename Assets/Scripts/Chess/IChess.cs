@@ -103,7 +103,7 @@ public abstract class IChess : IAttackable
 
     public void TakeDamage(int damage, Direction dir)
     {
-        //TODO 判断是否死亡
+        //判断是否死亡
         if (Attribute.TakeDamage(Formulas.CalRealDamage(damage, this)))
         {
 

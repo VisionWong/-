@@ -29,4 +29,30 @@ public static class EnumTool
         }
         return v3;
     }
+
+    public static Direction GetOppositeDir(Direction dir)
+    {
+        Direction ret = 0;
+        switch (dir)
+        {
+            case Direction.None:
+                ret = Direction.None;
+                break;
+            case Direction.Up:
+                ret = Direction.Down;
+                break;
+            case Direction.Down:
+                ret = Direction.Up;
+                break;
+            case Direction.Left:
+                ret = Direction.Right;
+                break;
+            case Direction.Right:
+                ret = Direction.Left;
+                break;
+            default:
+                break;
+        }
+        return ret;
+    }
 }
