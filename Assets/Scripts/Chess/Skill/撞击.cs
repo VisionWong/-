@@ -8,12 +8,12 @@ public class 撞击 : Skill
     {
     }
 
-    public override void UseSkill(List<IChess> targets)
+    public override void UseSkill(List<IChess> targets, Direction dir)
     {
-        base.UseSkill(targets);
+        base.UseSkill(targets, dir);
         foreach (var target in targets)
         {
-            target.TakeDamage(Formulas.CalSkillDamage(Data, _chess, target));
+            target.TakeDamage(Formulas.CalSkillDamage(Data, _chess, target), dir);
         }
     }
 

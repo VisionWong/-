@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface IAttackable
 {
-    void TakeDamage(int damage);
+    void TakeDamage(int damage, Direction dir);
     void Paralyzed();
     void Burned();
     void Sleep();

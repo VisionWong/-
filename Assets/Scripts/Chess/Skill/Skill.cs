@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public enum SkillRangeType
 { 
@@ -79,9 +80,9 @@ public abstract class Skill
         _chess = chess;
     }
 
-    public virtual void UseSkill(List<IChess> targets)
+    public virtual void UseSkill(List<IChess> targets, Direction dir)
     {
-        PlayAnimation();
+        PlayAnimation(dir);
     }
 
     /// <summary>
@@ -89,9 +90,10 @@ public abstract class Skill
     /// </summary>
     public abstract int GetPreview(IChess target);//TODO 可能的效果还有击退等，得封装一个技能的效果
 
-    public virtual void PlayAnimation()
+    public virtual void PlayAnimation(Direction dir)
     {
         //播放默认动画和默认音效
+        _chessTrans.DOPunchPosition(EnumTool.DirToVector3(dir) * 0.5f, 1f, 3, 0.2f);
     }
 
     public override string ToString()

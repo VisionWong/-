@@ -24,6 +24,11 @@ public class ChessAnimator : MonoBehaviour
         StartCoroutine(MoveCorou(grids, callback));
     }
 
+    public void TakeDamage(Direction dir)
+    {
+        transform.DOPunchPosition(EnumTool.DirToVector3(dir) * 0.2f, 0.5f, 1, 0);
+    }
+
     private IEnumerator MoveCorou(List<MapGrid> grids, Action callback = null)
     {
         MapGrid lastGrid = grids?[0];

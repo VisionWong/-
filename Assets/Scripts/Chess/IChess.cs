@@ -101,10 +101,14 @@ public abstract class IChess : IAttackable
         _anim.Move(grids, callback);
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage, Direction dir)
     {
-        Attribute.TakeDamage(Formulas.CalRealDamage(damage, this));
         //TODO 判断是否死亡
+        if (Attribute.TakeDamage(Formulas.CalRealDamage(damage, this)))
+        {
+
+        }
+        _anim.TakeDamage(dir);
         _hud.ChangeHPValue(Attribute.HP, Attribute.MaxHP);
     }
 
