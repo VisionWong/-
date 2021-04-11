@@ -77,7 +77,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         //chess.LearnSkill(skill as Skill);
         var chess = ChessFactory.ProducePlayer(252);
         chess.LearnSkill(SkillFactory.Produce(2));
-        //chess.LearnSkill(SkillFactory.Produce(3));
+        chess.LearnSkill(SkillFactory.Produce(4));
         MapGrid grid = _map.GetGridByCoord(x, y);
         chess.SetStayGrid(grid);
         _playerList.Add(chess);
