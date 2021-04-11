@@ -17,6 +17,7 @@ namespace VFramework
         OnSelectIdleGrid,
         OnSelectWalkableGrid,
         OnSelectChess,
+        OnCancelSelectChess,
         OnSelectWalkableChess,
         OnSelectUnwalkableChess,
         OnChessAction,

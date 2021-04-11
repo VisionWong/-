@@ -53,7 +53,7 @@ public class SelectablePlayerChess : ISelectable
                     Debug.LogWarning("棋子不存在该状态");
                     break;
             }
-            MessageCenter.Instance.Broadcast(MessageType.OnSelectChess);
+            MessageCenter.Instance.Broadcast(MessageType.OnSelectChess, m_chess);
         }
         base.Selected();
     }
@@ -61,8 +61,7 @@ public class SelectablePlayerChess : ISelectable
     public override void CancelSelect()
     {
         base.CancelSelect();
-        //TODO 取消UI显示
-        UIManager.Instance.PopPanel();
+        MessageCenter.Instance.Broadcast(MessageType.OnCancelSelectChess);
     }
 
     public void ChangeToIdle()

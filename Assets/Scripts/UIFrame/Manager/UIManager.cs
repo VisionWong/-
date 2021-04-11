@@ -53,7 +53,7 @@ namespace VFramework.UIManager
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        private BasePanel GetPanel(UIPanelType type)
+        public BasePanel GetPanel(UIPanelType type)
         {
             BasePanel panel;
             _panelDict.TryGetValue(type, out panel);

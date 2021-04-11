@@ -34,10 +34,14 @@ public class BattlePanel : BasePanel
         FindAll();
         HideAll();
         RegisterAll();
+        base.OnEnter();
     }
 
     private void FindAll()
     {
+        //棋子信息
+        AddUIItem(UIPanelType.ChessInfo, false);
+
         //棋格信息
         _gridInfo = transform.Find("GridInfo");
         _gridDes = _gridInfo.Find("Description");
@@ -76,7 +80,7 @@ public class BattlePanel : BasePanel
         MessageCenter.Instance.AddListener(MessageType.OnCancelMove, HideActionField);
         MessageCenter.Instance.AddListener(MessageType.OnSearchAttackableEnd, ShowSkillDirPanel);
         MessageCenter.Instance.AddListener(MessageType.OnClickDirCancelBtn, ReShowActionField);
-        MessageCenter.Instance.AddListener(MessageType.OnSelectChess, ShowChessInfoPanel);
+        
     }
     private void RemoveAll()
     {
@@ -85,7 +89,6 @@ public class BattlePanel : BasePanel
         MessageCenter.Instance.RemoveListener(MessageType.OnCancelMove, HideActionField);
         MessageCenter.Instance.RemoveListener(MessageType.OnSearchAttackableEnd, ShowSkillDirPanel);
         MessageCenter.Instance.RemoveListener(MessageType.OnClickDirCancelBtn, ReShowActionField);
-        MessageCenter.Instance.RemoveListener(MessageType.OnSelectChess, ShowChessInfoPanel);
     }
 
     private void OnDestroy()
@@ -211,8 +214,5 @@ public class BattlePanel : BasePanel
         HideActionField();
     }
 
-    private void ShowChessInfoPanel()
-    {
-        UIManager.Instance.PushPanel(UIPanelType.ChessInfo, true);
-    }
+    
 }

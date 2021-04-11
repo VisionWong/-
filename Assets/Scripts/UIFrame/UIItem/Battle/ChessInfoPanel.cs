@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using VFramework;
 using VFramework.UIManager;
 
 public class ChessInfoPanel : BasePanel
@@ -31,24 +32,18 @@ public class ChessInfoPanel : BasePanel
         txtAP = attrValueField.Find("txtAP").GetComponent<Text>();
         txtSkill = attrValueField.Find("txtSkill").GetComponent<Text>();
 
+        MessageCenter.Instance.AddListener<IChess>(MessageType.OnSelectChess, ShowPanel);
+        MessageCenter.Instance.AddListener(MessageType.OnCancelSelectChess, HidePanel);
     }
 
-    public override void OnEnter()
+    private void OnDestroy()
     {
-        CanvasGroup.alpha = 1;
-        CanvasGroup.interactable = true;
-        SetInfo();
+        MessageCenter.Instance.RemoveListener<IChess>(MessageType.OnSelectChess, ShowPanel);
+        MessageCenter.Instance.RemoveListener(MessageType.OnCancelSelectChess, HidePanel);
     }
 
-    public override void OnExit()
+    private void SetInfo(ChessAttr data)
     {
-        CanvasGroup.alpha = 0;
-        CanvasGroup.interactable = false;
-    }
-
-    private void SetInfo()
-    {
-        var data = BattleSystem.Instance.GetCurPlayerChess().Attribute;
         txtName.text = data.Name;
         txtPMType.text = data.PMType1.ToString();
         txtAtk.text = data.Attack.ToString();
@@ -61,5 +56,17 @@ public class ChessInfoPanel : BasePanel
     private void GetPMTypeName()
     {
 
+    }
+
+    private void ShowPanel(IChess chess)
+    {
+        CanvasGroup.alpha = 1;
+        CanvasGroup.interactable = true;
+        SetInfo(chess.Attribute);
+    }
+    private void HidePanel()
+    {
+        CanvasGroup.alpha = 0;
+        CanvasGroup.interactable = false;
     }
 }

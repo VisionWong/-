@@ -11,4 +11,5 @@ public enum UIPanelType
     Battle,  //战斗
     SkillDir,//技能指向
     ChessInfo,
+
 }
