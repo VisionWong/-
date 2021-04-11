@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using VFramework;
 
-public class ChessFactory
+public static class ChessFactory
 {
-    public PlayerChess ProducePlayer(int id)
+    public static PlayerChess ProducePlayer(int id)
     {
         var data = ChessLib.Instance.GetData(id);
 
@@ -20,10 +20,7 @@ public class ChessFactory
         chess.SetSelectableScript(go.AddComponent<SelectablePlayerChess>());
 
         //技能
-        var skillData = SkillLib.Instance.GetData(data.skillId);
-        Type type = Type.GetType(skillData.name);
-        var skill = Activator.CreateInstance(type, skillData, chess, go.transform);
-        chess.LearnSkill(skill as Skill);
+        chess.LearnSkill(SkillFactory.Produce(data.skillId));
         return chess;
     }
 

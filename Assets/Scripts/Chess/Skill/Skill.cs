@@ -63,6 +63,7 @@ public class SkillEffect
     //public List<EffectType> effects;
     public int probability; //概率
     public int fixedDamage; //固定伤害
+    public float fixedPercent;//固定百分比
     public int effectLevel; //作用的能力等级
     public int effectTurns; //作用的回合数
 }
@@ -75,18 +76,25 @@ public abstract class Skill
     protected ChessAnimator _anim;
     protected IChess _chess;
 
-    public Skill(SkillData data, IChess chess, Transform chessTrans)
+    public Skill(SkillData data)
     {
         Data = data;
+    }
+
+    public void SetChess(IChess chess, Transform chessTrans)
+    {
         _chessTrans = chessTrans;
         _chess = chess;
         _anim = _chessTrans.GetComponent<ChessAnimator>();
     }
 
-    public virtual void UseSkill(List<IChess> targets, Direction dir)
+    public void UseSkill(List<IChess> targets, Direction dir)
     {
+        SkillEffect(targets, dir);
         MonoMgr.Instance.StartCoroutine(PlayAnimation(dir));
     }
+
+    public abstract void SkillEffect(List<IChess> targets, Direction dir);
 
     /// <summary>
     /// 获取技能将要造成的结果，伤害或者回复

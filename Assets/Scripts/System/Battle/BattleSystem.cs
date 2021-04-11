@@ -75,8 +75,9 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         //Type type = Type.GetType(skillData.name);
         //var skill = Activator.CreateInstance(type, skillData, chess, go.transform);
         //chess.LearnSkill(skill as Skill);
-        ChessFactory factory = new ChessFactory();
-        var chess = factory.ProducePlayer(252);
+        var chess = ChessFactory.ProducePlayer(252);
+        chess.LearnSkill(SkillFactory.Produce(2));
+        //chess.LearnSkill(SkillFactory.Produce(3));
         MapGrid grid = _map.GetGridByCoord(x, y);
         chess.SetStayGrid(grid);
         _playerList.Add(chess);
@@ -297,7 +298,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         }
         foreach (var grid in targetGirds)
         {
-            grid.StayedChess.ShowPreview(_curUsedSkill.GetPreview(grid.StayedChess), _curUsedSkill.Data.skillType == SkillType.Damage);
+            grid.StayedChess.ShowPreview(_curUsedSkill.GetPreview(grid.StayedChess), _curUsedSkill);
         }
     }
     public void CancelHighlightAttackableGrids(Direction dir)

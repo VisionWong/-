@@ -82,6 +82,7 @@ public abstract class IChess : IAttackable
     {
         if (SkillList.Count < 3)
         {
+            skill.SetChess(this, _gameObject.transform);
             SkillList.Add(skill);
             //TODO 提示UI
         }
@@ -112,20 +113,42 @@ public abstract class IChess : IAttackable
         _hud.ChangeHPValue(Attribute.HP, Attribute.MaxHP);
     }
 
-    //显示可能遭受的伤害
-    public void ShowPreview(int num, bool isDamage)
+    public void Healing(int num)
     {
-        if (isDamage)
+        Attribute.Healing(num);
+        _anim.Healing();
+        _hud.ChangeHPValue(Attribute.HP, Attribute.MaxHP);
+    }
+    public void Healing(float percent)
+    {
+        Attribute.Healing(percent);
+        _anim.Healing();
+        _hud.ChangeHPValue(Attribute.HP, Attribute.MaxHP);
+    }
+
+    //显示收到技能可能出现的效果
+    public void ShowPreview(int num, Skill skill)
+    {
+        switch (skill.Data.skillType)
         {
-            int realNum = Attribute.HP - Formulas.CalRealDamage(num, this);
-            _hud.ShowPreview(realNum < 0 ? 0 : realNum, Attribute.MaxHP);
+            case SkillType.Damage:
+                int realNum = Attribute.HP - Formulas.CalRealDamage(num, this);
+                _hud.ShowPreview(realNum < 0 ? 0 : realNum, Attribute.MaxHP);
+                break;
+            case SkillType.Heal:
+                //TODO 可能有治疗增益
+                int realNum2 = Attribute.HP + num;
+                _hud.ShowPreview(realNum2, Attribute.MaxHP);
+                break;
+            case SkillType.Effect:
+                //暂时不做任何提示
+                break;
+            default:
+                Debug.LogError("该技能类型还未实现");
+                break;
         }
-        else
-        {
-            //TODO 可能有治疗增益
-            int realNum = Attribute.HP + num;
-            _hud.ShowPreview(realNum, Attribute.MaxHP);
-        } 
+        //进一步判断可能有击退等效果
+        
     }
     public void HidePreview()
     {

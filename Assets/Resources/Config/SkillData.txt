@@ -1,22 +1,63 @@
-[{
-	"id": 1,
-	"name": "撞击",
-	"description": "用整个身体撞向对手进行攻击。",
-	"pmType": "Common",
-	"skillType": "Damage",
-	"rangeType": "非指向性",
-	"power": 50,
-	"hitRate": 100,
-	"range": [{
-		"x": 0,
-		"y": 1
-	},
-	{
-		"x": -1,
-		"y": 1
-	},
-	{
-		"x": 1,
-		"y": 1
-	}]
-}]
+[
+    {
+        "id": 1,
+        "name": "撞击",
+        "description": "用整个身体撞向对手进行攻击。",
+        "pmType": "Common",
+        "skillType": "Damage",
+        "rangeType": "非指向性",
+        "power": 50,
+        "hitRate": 100,
+        "range": [
+            {
+                "x": 0,
+                "y": 1
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "name": "治疗",
+        "description": "为目标回复最大生命值1/4的生命。",
+        "pmType": "Common",
+        "skillType": "Heal",
+        "rangeType": "非指向性",
+        "power": 0,
+        "hitRate": 100,
+        "range": [
+            {
+                "x": 0,
+                "y": 2
+            }
+        ],
+        "effects": [
+            {
+                "fixedPercent": 0.25
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "name": "水流尾",
+        "description": "如惊涛骇浪般挥动大尾巴攻击对手。将对手击退一格",
+        "pmType": "Water",
+        "skillType": "Damage",
+        "rangeType": "非指向性",
+        "power": 90,
+        "hitRate": 90,
+        "range": [
+            {
+                "x": 0,
+                "y": 1
+            },
+            {
+                "x": -1,
+                "y": 1
+            },
+            {
+                "x": 1,
+                "y": 1
+            }
+        ]
+    }
+]

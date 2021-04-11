@@ -94,4 +94,16 @@ public class ChessAttr
         HP -= damage;
         return false;
     }
+
+    public void Healing(int num)
+    {
+        HP += num;
+        if (HP > MaxHP) HP = MaxHP;
+    }
+    public void Healing(float percent)
+    {
+        float num = percent * MaxHP;
+        HP += (int)num;
+        if (HP > MaxHP) HP = MaxHP;
+    }
 }
