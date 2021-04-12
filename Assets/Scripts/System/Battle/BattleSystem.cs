@@ -52,15 +52,15 @@ public class BattleSystem : MonoSingleton<BattleSystem>
 
     private void LoadPlayerChess()
     {
-        LoadPlayerChess(5, 4);
-        LoadPlayerChess(4, 3);
-        LoadPlayerChess(5, 3);
-        LoadPlayerChess(6, 3);
-        LoadPlayerChess(4, 6);
+        LoadPlayerChess(5, 4, 252);
+        LoadPlayerChess(4, 3, 252);
+        LoadPlayerChess(5, 3, 252);
+        LoadPlayerChess(6, 3, 252);
+        LoadPlayerChess(4, 6, 255);
         //TODO 根据玩家背包里的信息生成棋子，位置则根据关卡默认位置，玩家后续可在区域内调整
     }
 
-    private void LoadPlayerChess(int x, int y)
+    private void LoadPlayerChess(int x, int y, int id)
     {
         //GameObject go = Instantiate(Resources.Load<GameObject>("Chess/001"));
         //PlayerChess chess = new PlayerChess(new PlayerAttr(), go);
@@ -75,7 +75,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         //Type type = Type.GetType(skillData.name);
         //var skill = Activator.CreateInstance(type, skillData, chess, go.transform);
         //chess.LearnSkill(skill as Skill);
-        var chess = ChessFactory.ProducePlayer(252);
+        var chess = ChessFactory.ProducePlayer(id);
         chess.LearnSkill(SkillFactory.Produce(2));
         //chess.LearnSkill(SkillFactory.Produce(3));
         chess.LearnSkill(SkillFactory.Produce(4));

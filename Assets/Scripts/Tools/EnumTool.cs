@@ -55,4 +55,94 @@ public static class EnumTool
         }
         return ret;
     }
+
+    public static string GetPMTypeName(PMType type)
+    {
+        string str = null;
+        switch (type)
+        {
+            case PMType.None:
+                str = "无";
+                break;
+            case PMType.Grass:
+                str = "草";
+                break;
+            case PMType.Fire:
+                str = "火";
+                break;
+            case PMType.Water:
+                str = "水";
+                break;
+            case PMType.Electric:
+                str = "电";
+                break;
+            case PMType.Fight:
+                str = "格斗";
+                break;
+            case PMType.Ground:
+                str = "地面";
+                break;
+            case PMType.Rock:
+                str = "岩石";
+                break;
+            case PMType.Metal:
+                str = "钢";
+                break;
+            case PMType.Bug:
+                str = "虫";
+                break;
+            case PMType.Poison:
+                str = "毒";
+                break;
+            case PMType.Fly:
+                str = "飞行";
+                break;
+            case PMType.Ghost:
+                str = "幽灵";
+                break;
+            case PMType.Psychic:
+                str = "超能";
+                break;
+            case PMType.Common:
+                str = "一般";
+                break;
+            case PMType.Dragon:
+                str = "龙";
+                break;
+            case PMType.Dark:
+                str = "恶";
+                break;
+            case PMType.Fairy:
+                str = "妖精";
+                break;
+            case PMType.Ice:
+                str = "冰";
+                break;
+            default:
+                Debug.LogError("尚不存在该类型" + type.ToString());
+                break;
+        }
+        return str;
+    }
+
+    public static string GetSkillTypeName(SkillType type)
+    {
+        string str = null;
+        switch (type)
+        {
+            case SkillType.Damage:
+                str = "伤害";
+                break;
+            case SkillType.Heal:
+                str = "治疗";
+                break;
+            case SkillType.Effect:
+                str = "变化";
+                break;
+            default:
+                Debug.LogError("尚不存在该类型" + type.ToString());
+                break;
+        }
+        return str;
+    }
 }
