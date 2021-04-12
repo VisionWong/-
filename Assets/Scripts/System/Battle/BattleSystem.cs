@@ -77,6 +77,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         //chess.LearnSkill(skill as Skill);
         var chess = ChessFactory.ProducePlayer(252);
         chess.LearnSkill(SkillFactory.Produce(2));
+        //chess.LearnSkill(SkillFactory.Produce(3));
         chess.LearnSkill(SkillFactory.Produce(4));
         MapGrid grid = _map.GetGridByCoord(x, y);
         chess.SetStayGrid(grid);
@@ -257,19 +258,19 @@ public class BattleSystem : MonoSingleton<BattleSystem>
 
     public bool IsUpCanAttack()
     {
-        return _map.upAttackableGrids.Count > 0;
+        return _map.upAttackableTargets.Count > 0;
     }
     public bool IsDownCanAttack()
     {
-        return _map.downAttackableGrids.Count > 0;
+        return _map.downAttackableTargets.Count > 0;
     }
     public bool IsLeftCanAttack()
     {
-        return _map.leftAttackableGrids.Count > 0;
+        return _map.leftAttackableTargets.Count > 0;
     }
     public bool IsRightCanAttack()
     {
-        return _map.rightAttackableGrids.Count > 0;
+        return _map.rightAttackableTargets.Count > 0;
     }
     
     public void HighlightAttackableGrids(Direction dir)
@@ -299,7 +300,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         }
         foreach (var grid in targetGirds)
         {
-            grid.StayedChess.ShowPreview(_curUsedSkill.GetPreview(grid.StayedChess), _curUsedSkill);
+            grid.StayedChess?.ShowPreview(_curUsedSkill.GetPreview(grid.StayedChess), _curUsedSkill);
         }
     }
     public void CancelHighlightAttackableGrids(Direction dir)
@@ -329,38 +330,26 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         }
         foreach (var grid in targetGirds)
         {
-            grid.StayedChess.HidePreview();
+            grid.StayedChess?.HidePreview();
         }
     }
 
     public void UseSkillToChoosedDir(Direction dir)
     {
-        List<IChess> targets = new List<IChess>();
+        List<IChess> targets = null;
         switch (dir)
         {
             case Direction.Up:
-                foreach (var grid in _map.upAttackableGrids)
-                {
-                    targets.Add(grid.StayedChess);
-                }
+                targets = _map.upAttackableTargets;
                 break;
             case Direction.Down:
-                foreach (var grid in _map.downAttackableGrids)
-                {
-                    targets.Add(grid.StayedChess);
-                }
+                targets = _map.downAttackableTargets;
                 break;
             case Direction.Left:
-                foreach (var grid in _map.leftAttackableGrids)
-                {
-                    targets.Add(grid.StayedChess);
-                }
+                targets = _map.leftAttackableTargets;
                 break;
             case Direction.Right:
-                foreach (var grid in _map.rightAttackableGrids)
-                {
-                    targets.Add(grid.StayedChess);
-                }
+                targets = _map.rightAttackableTargets;
                 break;
             default:
                 Debug.LogError("该方向的功能尚未实现！" + dir.ToString());

@@ -204,6 +204,11 @@ public class Map : MonoBehaviour
     public List<MapGrid> downAttackableGrids = new List<MapGrid>();
     public List<MapGrid> leftAttackableGrids = new List<MapGrid>();
     public List<MapGrid> rightAttackableGrids = new List<MapGrid>();
+    public List<IChess> upAttackableTargets = new List<IChess>();
+    public List<IChess> downAttackableTargets = new List<IChess>();
+    public List<IChess> leftAttackableTargets = new List<IChess>();
+    public List<IChess> rightAttackableTargets = new List<IChess>();
+
 
     private void ClearAttackableGrids()
     {
@@ -211,6 +216,10 @@ public class Map : MonoBehaviour
         downAttackableGrids.Clear();
         leftAttackableGrids.Clear();
         rightAttackableGrids.Clear();
+        upAttackableTargets.Clear();
+        downAttackableTargets.Clear();
+        leftAttackableTargets.Clear();
+        rightAttackableTargets.Clear();
     }
 
     /// <summary>
@@ -228,30 +237,34 @@ public class Map : MonoBehaviour
             //从四个方向分别搜寻可攻击的目标格子并记录
             {//up
                 var grid = GetGridByCoord(origin.X + pos.x, origin.Y - pos.y);
-                if (grid != null && grid.StayedChess != null)
+                if (grid != null)
                 {
                     upAttackableGrids.Add(grid);
+                    if (grid.StayedChess != null) upAttackableTargets.Add(grid.StayedChess);
                 }
             }
             {//down
                 var grid = GetGridByCoord(origin.X - pos.x, origin.Y + pos.y);
-                if (grid != null && grid.StayedChess != null)
+                if (grid != null)
                 {
                     downAttackableGrids.Add(grid);
+                    if (grid.StayedChess != null) downAttackableTargets.Add(grid.StayedChess);
                 }
             }
             {//left
                 var grid = GetGridByCoord(origin.X - pos.y, origin.Y - pos.x);
-                if (grid != null && grid.StayedChess != null)
+                if (grid != null)
                 {
                     leftAttackableGrids.Add(grid);
+                    if (grid.StayedChess != null) leftAttackableTargets.Add(grid.StayedChess);
                 }
             }
             {//right
                 var grid = GetGridByCoord(origin.X + pos.y, origin.Y + pos.x);
-                if (grid != null && grid.StayedChess != null)
+                if (grid != null)
                 {
                     rightAttackableGrids.Add(grid);
+                    if (grid.StayedChess != null) rightAttackableTargets.Add(grid.StayedChess);
                 }
             }
         }//搜寻完毕
