@@ -32,6 +32,7 @@ public class HUD : MonoBehaviour
         var tw = _hpBar2.DOFillAmount(hp / maxHp, duration * 2f);
         yield return tw.WaitForCompletion();
         callback?.Invoke();
+        _lastBar1FillAmount = _hpBar1.fillAmount;
     }
 
     public void ShowPreview(float hp, float maxHp)
