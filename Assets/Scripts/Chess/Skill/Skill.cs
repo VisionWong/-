@@ -89,6 +89,9 @@ public class Skill
     protected List<IChess> _effectableList = new List<IChess>();
     protected int _damage = 0;
 
+    private int _lockNum = 0;
+    private int _lockTarget = 0;
+
     public Skill(SkillData data)
     {
         Data = data;
@@ -105,17 +108,17 @@ public class Skill
     public void UseSkill(List<IChess> targets, Direction dir)
     {
         _hitTimes = Data.hitTimes;
-        _effectableList = targets;
         UseSkillRepeat(targets, dir);
     }
 
     protected void UseSkillRepeat(List<IChess> targets, Direction dir)
     {
-        if (_hitTimes-- == 0)
+        if (_hitTimes-- == 0 || targets.Count == 0)
         {
             MessageCenter.Instance.Broadcast(MessageType.OnChessActionEnd);
             return;
         }
+        _effectableList = new List<IChess>(targets);
         SkillEffect(targets, dir);
         MonoMgr.Instance.StartCoroutine(PlayAnimation(dir));
     }
@@ -125,18 +128,19 @@ public class Skill
         switch (Data.skillType)
         {
             case SkillType.Damage:
+                _lockTarget = targets.Count;
                 foreach (var target in targets)
                 {
-                    if (!_effectableList.Contains(target)) continue;
                     if (target.CanAvoid(_chess, Data, dir))
                     {
                         _effectableList.Remove(target);
+                        ReadyToDoEffect(dir);
                     }
                     else
                     {
                         int damage = Formulas.CalSkillDamage(Data, _chess, target);
                         _damage = damage;
-                        target.TakeDamage(damage, dir, ()=> DoSkillEffect(dir));
+                        target.TakeDamage(damage, dir, ()=> ReadyToDoEffect(dir));
                     }
                 }
                 break;
@@ -191,6 +195,16 @@ public class Skill
             var tee = _chessTrans.DOPunchScale(new Vector3(1, 1, 1), 0.5f, 1, 0.5f);
             yield return tee.WaitForCompletion();
             //MessageCenter.Instance.Broadcast(MessageType.OnChessActionEnd);
+        }
+    }
+
+    private void ReadyToDoEffect(Direction dir)
+    {
+        _lockNum++;
+        if (_lockNum == _lockTarget)
+        {
+            _lockNum = 0;
+            DoSkillEffect(dir);
         }
     }
 

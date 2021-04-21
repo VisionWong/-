@@ -98,6 +98,23 @@
         ]
     },
     {
+        "id": 6,
+        "name": "二连踢",
+        "description": "用2只脚踢飞对手进行攻击。连续2次给予伤害。",
+        "pmType": "Fight",
+        "skillType": "Damage",
+        "rangeType": "非指向性",
+        "power": 30,
+        "hitTimes": 2,
+        "hitRate": 100,
+        "range": [
+            {
+                "x": 0,
+                "y": 1
+            }
+        ]
+    },
+    {
         "id": 99,
         "name": "剑舞",
         "description": "挥舞传说之剑，使自身攻击上升2级",
