@@ -22,6 +22,8 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     private Map _map;
     private List<IChess> _playerList = new List<IChess>();
     private List<IChess> _enemyList = new List<IChess>();
+    private AutoActionController _enemyController;
+    private int _actionedNum;//已经行动完毕的玩家棋子数
 
     private ISelectable _curSelected = null;
     private PlayerChess _curPlayerChess = null;
@@ -39,7 +41,12 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         LoadPlayerChess();
         LoadEnemyChess();
         LoadVirtualChess();
-        BattleState = BattleState.WaitSelect;
+        //TODO 我方布阵
+        //TODO 敌方特性触发
+        //TODO 我方特性触发
+        //我方回合开始
+        OnPlayerTurn();
+        
 
         RegisterAll();
     }
@@ -76,9 +83,12 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     public void LoadEnemyChess()
     {
         //TODO 据关卡信息生成
+
+        _enemyController = new AutoActionController(_playerList, _enemyList);
     }
     #endregion
 
+    #region 棋子操作
     public void SetSelected(ISelectable item)
     {
         _curSelected?.CancelSelect();
@@ -169,12 +179,19 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         _curPlayerChess.SetStayGrid(_curWalkableGrid);
         _curPlayerChess.ChangeToActionEnd();
         _curPlayerChess.OnActionEnd();
-        //TODO 观察我方是否还有可以行动的棋子
         _curWalkableGrid = null;
         _curPlayerChess = null;
-        BattleState = BattleState.WaitSelect;
-        MessageCenter.Instance.Broadcast(MessageType.GlobalCanSelect);
-    }//未完成
+        //观察我方是否还有可以行动的棋子
+        if (++_actionedNum == _playerList.Count)
+        {
+            OnEnemyTurn();
+        }
+        else
+        {
+            BattleState = BattleState.WaitSelect;
+            MessageCenter.Instance.Broadcast(MessageType.GlobalCanSelect);
+        }
+    }
 
     /// <summary>
     /// 将虚像解除，将棋子送往该格子位置，期间无法选中其他格子
@@ -238,6 +255,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         MessageCenter.Instance.Broadcast(MessageType.GlobalCanSelect);
         Camera.main.GetComponent<CameraController>().MoveToTarget(_curPlayerChess.StayGrid.transform.position);
     }
+    #endregion
 
     #region 使用技能
     private void OnClickSkillBtn(Skill skill)
@@ -351,19 +369,65 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     }
     #endregion
 
+    #region 流程控制
     public void OnEnemyDead(IChess chess)
     {
         _enemyList.Remove(chess);
+        if (_enemyList.Count == 0)
+        {
+            //游戏胜利
+            Victory();
+        }
     }
     public void OnPlayerDead(IChess chess)
     {
         _playerList.Remove(chess);
+        if (_playerList.Count == 0)
+        {
+            //游戏失败
+            Defeat();
+        }
     }
     public bool IsChessAlive(IChess chess)
     {
         if (chess.Tag == TagDefine.ENEMY) return _enemyList.Contains(chess);
         else return _playerList.Contains(chess);
     }
+
+    private void OnPlayerTurn()
+    {
+        MessageCenter.Instance.Broadcast(MessageType.OnPlayerTurn);
+        _actionedNum = 0;
+        foreach (var chess in _playerList)
+        {
+            chess.OnTurnStart();
+        }
+        BattleState = BattleState.WaitSelect;
+    }
+    private void OnEnemyTurn()
+    {
+        MessageCenter.Instance.Broadcast(MessageType.GlobalCantSelect);
+        MessageCenter.Instance.Broadcast(MessageType.OnEnemyTurn);
+        BattleState = BattleState.EnemyTurn;
+        foreach (var chess in _enemyList)
+        {
+            chess.OnTurnStart();
+        }
+        //启动敌人策略AI
+
+    }
+
+    private void Victory()
+    {
+        Debug.Log("游戏胜利");
+        MessageCenter.Instance.Broadcast(MessageType.OnVictory);
+    }
+    private void Defeat()
+    {
+        Debug.Log("游戏失败");
+        MessageCenter.Instance.Broadcast(MessageType.OnDefeat);
+    }
+    #endregion
 
     #region 事件注册
     private void RegisterAll()

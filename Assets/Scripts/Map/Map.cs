@@ -317,5 +317,10 @@ public class Map : MonoBehaviour
         //通知UI寻敌完毕
         MessageCenter.Instance.Broadcast(MessageType.OnSearchAttackableEnd);
     }
+
+    public void SearchAttackableTargetByBFS(IChess chess, Skill skill)
+    {
+
+    }
     #endregion
 }

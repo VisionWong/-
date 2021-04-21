@@ -31,6 +31,7 @@ namespace VFramework
         //战斗回合
         OnPlayerTurn,
         OnEnemyTurn,
-
+        OnVictory,
+        OnDefeat,
     }
 }

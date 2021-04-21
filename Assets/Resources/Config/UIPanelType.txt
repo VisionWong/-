@@ -10,4 +10,7 @@
 
 {"panelType":"ChessInfo",
 "resPath":"UI/Item/ChessInfoPanel"},
+
+{"panelType":"TurnTipBoard",
+"resPath":"UI/Item/TurnTipBoard"},
 ]

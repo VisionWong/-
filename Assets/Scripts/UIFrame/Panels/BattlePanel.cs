@@ -41,6 +41,7 @@ public class BattlePanel : BasePanel
     {
         //棋子信息
         AddUIItem(UIPanelType.ChessInfo, false);
+        AddUIItem(UIPanelType.TurnTipBoard);
 
         //棋格信息
         _gridInfo = transform.Find("GridInfo");
