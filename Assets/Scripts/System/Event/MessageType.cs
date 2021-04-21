@@ -28,5 +28,9 @@ namespace VFramework
         OnClickDirCancelBtn,
         OnChessActionEnd,
 
+        //战斗回合
+        OnPlayerTurn,
+        OnEnemyTurn,
+
     }
 }

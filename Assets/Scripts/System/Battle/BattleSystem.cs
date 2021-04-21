@@ -32,6 +32,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
 
     private Skill _curUsedSkill = null;
 
+    #region 战斗准备
     public void StartBattle()
     {
         LoadMap();
@@ -58,27 +59,15 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         LoadPlayerChess(6, 3, 252);
         LoadPlayerChess(4, 6, 255);
         //TODO 根据玩家背包里的信息生成棋子，位置则根据关卡默认位置，玩家后续可在区域内调整
-    }
+    }   
 
     private void LoadPlayerChess(int x, int y, int id)
     {
-        //GameObject go = Instantiate(Resources.Load<GameObject>("Chess/001"));
-        //PlayerChess chess = new PlayerChess(new PlayerAttr(), go);
-
-        //PathPack pathPack = new PathPack("Chess/001", "Sprite/Chess/001");
-        //chess.SetPathPack(pathPack);
-        //chess.SetAnimator(go.AddComponent<ChessAnimator>());
-        //chess.SetSelectableScript(go.AddComponent<SelectablePlayerChess>());
-
-        ////技能
-        //var skillData = SkillLib.Instance.GetData(1);
-        //Type type = Type.GetType(skillData.name);
-        //var skill = Activator.CreateInstance(type, skillData, chess, go.transform);
-        //chess.LearnSkill(skill as Skill);
         var chess = ChessFactory.ProducePlayer(id);
-        chess.LearnSkill(SkillFactory.Produce(2));
-        //chess.LearnSkill(SkillFactory.Produce(3));
+        chess.LearnSkill(SkillFactory.Produce(5));
+        chess.LearnSkill(SkillFactory.Produce(99));
         chess.LearnSkill(SkillFactory.Produce(4));
+        //chess.LearnSkill(SkillFactory.Produce(5));
         MapGrid grid = _map.GetGridByCoord(x, y);
         chess.SetStayGrid(grid);
         _playerList.Add(chess);
@@ -88,6 +77,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     {
         //TODO 据关卡信息生成
     }
+    #endregion
 
     public void SetSelected(ISelectable item)
     {
@@ -178,6 +168,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     {
         _curPlayerChess.SetStayGrid(_curWalkableGrid);
         _curPlayerChess.ChangeToActionEnd();
+        _curPlayerChess.OnActionEnd();
         //TODO 观察我方是否还有可以行动的棋子
         _curWalkableGrid = null;
         _curPlayerChess = null;
@@ -359,6 +350,20 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         _curUsedSkill = null;
     }
     #endregion
+
+    public void OnEnemyDead(IChess chess)
+    {
+        _enemyList.Remove(chess);
+    }
+    public void OnPlayerDead(IChess chess)
+    {
+        _playerList.Remove(chess);
+    }
+    public bool IsChessAlive(IChess chess)
+    {
+        if (chess.Tag == TagDefine.ENEMY) return _enemyList.Contains(chess);
+        else return _playerList.Contains(chess);
+    }
 
     #region 事件注册
     private void RegisterAll()

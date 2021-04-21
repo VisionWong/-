@@ -82,7 +82,7 @@ public abstract class IChess : IAttackable
 
     public void LearnSkill(Skill skill)
     {
-        if (SkillList.Count < 3)
+        if (SkillList.Count < 4)
         {
             skill.SetChess(this, _gameObject.transform);
             SkillList.Add(skill);
@@ -109,15 +109,27 @@ public abstract class IChess : IAttackable
         _anim.CancelMove();
     }
 
-    public void TakeDamage(int damage, Direction dir)
+    public bool CanAvoid(IChess attacker, SkillData data, Direction dir)
+    {
+        //根据攻击者的命中等级计算自身回避等级
+        if (UnityEngine.Random.Range(0, 100) < Attribute.AvoidRate || UnityEngine.Random.Range(0, 100) >= data.hitRate)
+        {
+            //播放闪避动画
+            _anim.AvoidDamage(dir);
+            return true;
+        }
+        return false;
+    }
+
+    public void TakeDamage(int damage, Direction dir, Action callback = null)
     {
         //判断是否死亡
-        if (Attribute.TakeDamage(Formulas.CalRealDamage(damage, this)))
+        if (Attribute.TakeDamage(damage))
         {
             Dead();
         }
         _anim.TakeDamage(dir);
-        _hud.ChangeHPValue(Attribute.HP, Attribute.MaxHP);
+        _hud.ChangeHPValue(Attribute.HP, Attribute.MaxHP, callback);
     }
 
     public void Healing(int num)
@@ -139,7 +151,7 @@ public abstract class IChess : IAttackable
         switch (skill.Data.skillType)
         {
             case SkillType.Damage:
-                int realNum = Attribute.HP - Formulas.CalRealDamage(num, this);
+                int realNum = Attribute.HP - num;
                 _hud.ShowPreview(realNum < 0 ? 0 : realNum, Attribute.MaxHP);
                 break;
             case SkillType.Heal:
@@ -165,6 +177,8 @@ public abstract class IChess : IAttackable
     #region BUFF处理
     public void AddBuff(IBuff buff)
     {
+        //TODO 不能出现重复异常BUFF
+        Debug.Log(string.Format("buff:{0}添加成功", buff.ToString()));
         _buffList.Add(buff);
         buff.OnBuffBegin();
     }

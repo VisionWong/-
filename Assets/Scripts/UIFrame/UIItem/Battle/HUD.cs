@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using System;
 
 public class HUD : MonoBehaviour
 {
@@ -19,17 +20,18 @@ public class HUD : MonoBehaviour
         _lastBar1FillAmount = _hpBar1.fillAmount;
     }
 
-    public void ChangeHPValue(float hp, float maxHp, float duration = 1f)
+    public void ChangeHPValue(float hp, float maxHp, Action callback = null, float duration = 1f)
     {
         HidePreview();
-        StartCoroutine(WaitForHpLose(hp, maxHp, duration));
+        StartCoroutine(WaitForHpLose(hp, maxHp, duration, callback));
     }
 
-    private IEnumerator WaitForHpLose(float hp, float maxHp, float duration)
+    private IEnumerator WaitForHpLose(float hp, float maxHp, float duration, Action callback = null)
     {
         _hpBar1.DOFillAmount(hp / maxHp, duration);
         var tw = _hpBar2.DOFillAmount(hp / maxHp, duration * 2f);
         yield return tw.WaitForCompletion();
+        callback?.Invoke();
     }
 
     public void ShowPreview(float hp, float maxHp)

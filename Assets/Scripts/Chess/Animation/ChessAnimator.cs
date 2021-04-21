@@ -31,6 +31,13 @@ public class ChessAnimator : MonoBehaviour
         ChangeForward(EnumTool.GetOppositeDir(dir));
     }
 
+    public void AvoidDamage(Direction dir)
+    {
+        //TODO 显示特效
+        transform.DOPunchPosition(EnumTool.DirToVector3(dir) * 0.5f, 0.5f, 1, 0);
+        ChangeForward(EnumTool.GetOppositeDir(dir));
+    }
+
     public void Healing()
     {
         transform.DOPunchScale(new Vector3(1, 1, 1), 0.5f, 1, 0.5f);

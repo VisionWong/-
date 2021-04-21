@@ -7,24 +7,27 @@ using UnityEngine;
 /// </summary>
 public static class Formulas
 {
-    public static int CalSkillDamage(SkillData attr, IChess user, IChess target)
+    public static int CalSkillDamage(SkillData attr, IChess user, IChess target, bool canCrit = true)
     {
         float damage = 1;
         if (attr.pmType == user.Attribute.PMType1 || attr.pmType == user.Attribute.PMType2)
         {
             damage *= 1.5f;
         }
+        //计算属性克制
+        damage *= GetPMTypeRestraint(attr.pmType, target.Attribute.PMType1);
+        if (target.Attribute.PMType2 != PMType.None) damage *= GetPMTypeRestraint(attr.pmType, target.Attribute.PMType2);
+        if (damage == 0) return 0;
+        //判断是否暴击
+        if (canCrit && Random.Range(0, 100) < user.Attribute.CritRate) damage *= 1.5f;
         float num = user.Attribute.Attack - target.Attribute.Defence;
         if (num <= 0) num = 1;
         damage *= attr.power * num / 50;
-        //TODO 判断是否暴击
         return (int)damage;
     }
 
-    public static int CalRealDamage(int damage, IChess target)
+    public static float GetPMTypeRestraint(PMType userType, PMType targetType)
     {
-        float realDamage = damage;
-        //TODO 计算属性克制和是否回避
-        return (int)realDamage;
+        return 1;
     }
 }

@@ -23,6 +23,46 @@
         "skillType": "Heal",
         "rangeType": "非指向性",
         "power": 0,
+        "fixedPercent": 0.25,
+        "hitRate": 100,
+        "range": [
+            {
+                "x": 0,
+                "y": 1
+            }
+        ],
+        
+    },
+    {
+        "id": 3,
+        "name": "火花",
+        "description": "向对手发射小型火焰进行攻击。10%概率让对手陷入灼伤状态。",
+        "pmType": "Fire",
+        "skillType": "Damage",
+        "rangeType": "非指向性",
+        "power": 40,
+        "hitRate": 100,
+        "range": [
+            {
+                "x": 0,
+                "y": 1
+            }
+        ],
+        "effects": [
+            {
+                "effectType": "Burn",
+                "probability": 0.1
+            }
+        ]
+    },
+    {
+        "id": 4,
+        "name": "超级吸取",
+        "description": "吸取对手的养分进行攻击。可以回复给予对手伤害的一半HP。",
+        "pmType": "Grass",
+        "skillType": "Damage",
+        "rangeType": "非指向性",
+        "power": 40,
         "hitRate": 100,
         "range": [
             {
@@ -32,36 +72,33 @@
         ],
         "effects": [
             {
-                "fixedPercent": 0.25
+                "effectType": "SuckBlood",
+                "fixedPercent": 0.5
             }
         ]
     },
     {
-        "id": 3,
-        "name": "水流尾",
-        "description": "如惊涛骇浪般挥动大尾巴攻击对手。将对手击退一格",
+        "id": 5,
+        "name": "水枪",
+        "description": "向对手猛烈地喷射水流进行攻击。",
         "pmType": "Water",
         "skillType": "Damage",
         "rangeType": "非指向性",
-        "power": 90,
-        "hitRate": 90,
+        "power": 40,
+        "hitRate": 100,
         "range": [
             {
                 "x": 0,
                 "y": 1
             },
             {
-                "x": -1,
-                "y": 1
-            },
-            {
-                "x": 1,
-                "y": 1
+                "x": 0,
+                "y": 2
             }
         ]
     },
     {
-        "id": 4,
+        "id": 99,
         "name": "剑舞",
         "description": "挥舞传说之剑，使自身攻击上升2级",
         "pmType": "Common",
@@ -77,8 +114,10 @@
         ],
         "effects": [
             {
+                "effectType": "AtkUp",
+                "probability": 1,
                 "effectLevel": 2,
-                "effectTurns": 3
+                "effectTurns": 99
             }
         ]
     }
