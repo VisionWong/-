@@ -26,6 +26,25 @@ public static class Formulas
         return (int)damage;
     }
 
+    public static int CalHealingNum(SkillData attr, IChess user, IChess target)
+    {
+        float weight = 1;
+        //TODO 计算特性和道具的影响
+        if (attr.power != 0) return (int)(attr.power * weight);
+        return (int)(attr.fixedPercent * target.Attribute.MaxHP * weight);
+    }
+
+    /// <summary>
+    /// 获取治疗技能的权重，低于半血时权重超过1，血越低权重越高
+    /// </summary>
+    /// <param name="target"></param>
+    /// <returns></returns>
+    public static float GetHealingWeight(IChess target)
+    {
+        var attr = target.Attribute;
+        return ((float)attr.MaxHP / attr.HP) * 0.5f;
+    }
+
     public static float GetPMTypeRestraint(PMType userType, PMType targetType)
     {
         return 1;

@@ -369,6 +369,13 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     }
     #endregion
 
+    #region AI使用技能
+    public List<IChess> GetAttackableTargetsByBFS(IChess chess, Skill skill, string tag)
+    {
+        return _map.GetAttackableTargetsByBFS(chess, skill, tag);
+    }
+    #endregion
+
     #region 流程控制
     public void OnEnemyDead(IChess chess)
     {

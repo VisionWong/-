@@ -41,7 +41,7 @@ public enum SkillEffectType
 /// <summary>
 /// 二维坐标
 /// </summary>
-public class Coord
+public struct Coord
 {
     public int x, y;
 }
