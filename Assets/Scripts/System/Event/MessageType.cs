@@ -29,6 +29,7 @@ namespace VFramework
         OnChessActionEnd,
 
         //战斗回合
+        OnEnemyChessActionEnd,
         OnPlayerTurn,
         OnEnemyTurn,
         OnVictory,

@@ -145,4 +145,37 @@ public static class EnumTool
         }
         return str;
     }
+
+    public static BuffType EffectTypeToBuffType(SkillEffectType effectType)
+    {
+        switch (effectType)
+        {
+            case SkillEffectType.Burn:
+                return BuffType.Burn;
+            case SkillEffectType.Sleep:
+                return BuffType.Sleep;
+            case SkillEffectType.Freeze:
+                return BuffType.Freeze;
+            case SkillEffectType.Paralysis:
+                return BuffType.Paralysis;
+            case SkillEffectType.Poison:
+                return BuffType.Posion;
+            case SkillEffectType.Confusion:
+                return BuffType.Confusion;
+            case SkillEffectType.AtkUp:
+                return BuffType.AtkUp;
+            case SkillEffectType.AtkDown:
+                return BuffType.AtkDown;
+            case SkillEffectType.DefUp:
+                return BuffType.DefUp;
+            case SkillEffectType.DefDown:
+                return BuffType.DefDown;
+            case SkillEffectType.APDown:
+                return BuffType.APDown;
+            case SkillEffectType.APUp:
+                return BuffType.APUp;
+            default:
+                return BuffType.None;
+        }
+    }
 }

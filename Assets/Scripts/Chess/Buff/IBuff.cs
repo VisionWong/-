@@ -2,8 +2,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum BuffType
+{
+    None,
+    Burn,
+    Sleep,
+    Freeze,
+    Posion,
+    Paralysis,
+    Confusion,
+    AtkUp,      //上升攻击,
+    DefUp,      //上升防御,
+    APUp,       //上升行动力,
+    AtkDown,    //下降攻击,
+    DefDown,    //下降防御,
+    APDown,     //下降行动力,
+}
+
 public abstract class IBuff
 {
+    public BuffType BuffType { get; set; }
+
     protected IChess _chess;
     protected int _turns;
     protected int _leftTurns;

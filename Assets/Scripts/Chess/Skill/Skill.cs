@@ -26,6 +26,7 @@ public enum SkillEffectType
     Poison,     //中毒,
     Paralysis,  //麻痹,
     Freeze,     //冰冻,
+    Confusion,  //混乱
     //击退,
     FixedDamge, //固定伤害,
     AtkUp,      //上升攻击,
@@ -54,6 +55,7 @@ public class SkillData : IData
     public SkillType skillType;
     public SkillRangeType rangeType;
     public int power; //威力，变化类为0
+    public bool isDebuff = false;
     public float fixedPercent;  //固定百分比
     public int hitTimes = 1; //攻击次数
     public int hitRate; //命中率,代表百分数

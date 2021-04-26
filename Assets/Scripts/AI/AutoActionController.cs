@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using VFramework;
 
 /// <summary>
 /// 控制指定的棋子自动行动
@@ -9,6 +10,7 @@ public class AutoActionController
 {
     private List<IChess> _chessList;
     private List<IChess> _enemyList;
+    private int _actionIndex = 0;
 
     public AutoActionController(List<IChess> chessList, List<IChess> enemyList)
     {
@@ -20,12 +22,28 @@ public class AutoActionController
     {
         //获取离敌对方距离最短的棋子先行动
         _chessList.Sort(new DistAscComparer(_enemyList));
-        foreach (var chess in _chessList)
-        {
-
-        }
+        
         //结束行动
 
+    }
+
+    private void AutoAction(int index)
+    {
+        if (index >= _chessList.Count)
+        {
+            //结束敌方行动
+            MessageCenter.Instance.Broadcast(MessageType.OnPlayerTurn);
+        }
+        else
+        {
+            
+        }
+    }
+
+    private void OnAutoChessActionEnd()
+    {
+        _actionIndex++;
+        AutoAction(_actionIndex);
     }
 }
 

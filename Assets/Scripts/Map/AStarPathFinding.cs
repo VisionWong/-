@@ -30,15 +30,15 @@ public class AStarPathFinding : IPathFindingStrategy
         }
     }
 
-    public override List<MapGrid> PathFinding(IChess chess, MapGrid origin, MapGrid dest, Map map)
+    public override List<MapGrid> PathFinding(IChess chess, MapGrid origin, MapGrid dest, Map map, int stepLimit = int.MaxValue)
     {
-        if (origin == dest) return new List<MapGrid>() { origin };
+        if (origin == dest || stepLimit <= 0) return new List<MapGrid>() { origin };
         int sh = HeuristicFunc(origin, origin, dest).h;
         AStarGrid start = new AStarGrid(origin, null, sh, 0, sh);
         List<AStarGrid> open = new List<AStarGrid>();
         HashSet<MapGrid> close = new HashSet<MapGrid>();
         open.Add(start);
-        while (open.Count > 0)
+        for (int i = 0; open.Count > 0;)
         {
             AStarGrid cur = GetMinFGrid(open);
             close.Add(cur.grid);
@@ -50,20 +50,12 @@ public class AStarPathFinding : IPathFindingStrategy
                 CheckWalkable(chess, origin, dest, map, map.GetRightGrid(cur.grid), cur, open, close))
             {
                 //已经到达终点，终点上一个格子即是cur，返回整个路径列表
-                List<MapGrid> path = new List<MapGrid>();
-                path.Add(dest);
-                AStarGrid curGrid = cur;
-                while (curGrid != null)
-                {
-                    path.Add(curGrid.grid);
-                    curGrid = curGrid.lastGrid;
-                }
-                path.Reverse();
-                for (int i = 0; i < path.Count; i++)
-                {
-                    Debug.Log(string.Format("路径第{0}个格子坐标为（{1}，{2}）", i, path[i].X, path[i].Y));
-                }
-                return path;
+                return GetPath(cur, dest);
+            }
+            if (i++ == stepLimit)
+            {
+                //步数用完，当前的格子即是终点
+                return GetPath(cur.lastGrid, cur.grid);
             }
         }
         //未能抵达终点，返回空路径
@@ -75,6 +67,24 @@ public class AStarPathFinding : IPathFindingStrategy
         int g = Math.Abs(cur.X - origin.X) + Math.Abs(cur.Y - origin.Y);
         int h = Math.Abs(dest.X - cur.X) + Math.Abs(dest.Y - cur.Y);
         return (g, h);
+    }
+
+    private List<MapGrid> GetPath(AStarGrid cur, MapGrid dest)
+    {
+        List<MapGrid> path = new List<MapGrid>();
+        path.Add(dest);
+        AStarGrid curGrid = cur;
+        while (curGrid != null)
+        {
+            path.Add(curGrid.grid);
+            curGrid = curGrid.lastGrid;
+        }
+        path.Reverse();
+        for (int i = 0; i < path.Count; i++)
+        {
+            Debug.Log(string.Format("路径第{0}个格子坐标为（{1}，{2}）", i, path[i].X, path[i].Y));
+        }
+        return path;
     }
 
     //能移动的格子不多，不需要特地使用堆

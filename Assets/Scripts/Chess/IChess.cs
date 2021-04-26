@@ -186,6 +186,14 @@ public abstract class IChess : IAttackable
     {
         _buffList.Remove(buff);
     }
+    public bool ContainsBuff(BuffType type)
+    {
+        foreach (var buff in _buffList)
+        {
+            
+        }
+        return false;
+    }
     public void OnTurnStart()
     {
         if (_buffList != null)

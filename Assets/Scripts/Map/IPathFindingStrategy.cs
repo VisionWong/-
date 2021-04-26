@@ -5,5 +5,5 @@ using UnityEngine;
 
 public abstract class IPathFindingStrategy
 {
-    public abstract List<MapGrid> PathFinding(IChess chess, MapGrid origin, MapGrid dest, Map map);
+    public abstract List<MapGrid> PathFinding(IChess chess, MapGrid origin, MapGrid dest, Map map, int step = int.MaxValue);
 }

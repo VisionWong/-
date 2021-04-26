@@ -119,9 +119,9 @@ public class Map : MonoBehaviour
     /// <param name="origin">起点</param>
     /// <param name="dest">终点</param>
     /// <returns></returns>
-    public List<MapGrid> PathFinding(IChess chess, MapGrid origin, MapGrid dest, IPathFindingStrategy strategy)
+    public List<MapGrid> PathFinding(IChess chess, MapGrid origin, MapGrid dest, IPathFindingStrategy strategy, int step = int.MaxValue)
     {
-        return strategy.PathFinding(chess, origin, dest, this);
+        return strategy.PathFinding(chess, origin, dest, this, step);
     }
 
     #region 获取四周的格子
@@ -316,86 +316,6 @@ public class Map : MonoBehaviour
         }//搜寻完毕
         //通知UI寻敌完毕
         MessageCenter.Instance.Broadcast(MessageType.OnSearchAttackableEnd);
-    }
-
-    public List<IChess> GetAttackableTargetsByBFS(IChess chess, Skill skill, string tag)
-    {
-        List<IChess> targetList = new List<IChess>();
-        int pathNum = chess.Attribute.AP;
-        var rangeList = skill.Data.range;
-        Queue<MapGrid> open = new Queue<MapGrid>();
-        HashSet<(int x, int y)> close = new HashSet<(int x, int y)>();      
-        MapGrid oriGrid = chess.StayGrid;
-        open.Enqueue(oriGrid);
-        close.Add((oriGrid.X, oriGrid.Y));
-        for (int i = 0; i < pathNum; i++)
-        {
-            int gridNum = open.Count;
-            for (int j = 0; j < gridNum; j++)
-            {
-                //每次抵达格子，查看技能是否能够作用
-                MapGrid curGrid = open.Dequeue();
-                var coord = GetCoordByGrid(curGrid);
-                int x = coord.x;
-                int y = coord.y;
-                #region 技能搜索
-                foreach (var pos in rangeList)
-                {
-                    //从四个方向分别搜寻可攻击的目标格子并记录
-                    {//up
-                        var grid = GetGridByCoord(curGrid.X + pos.x, curGrid.Y - pos.y);
-                        if (grid != null && !close.Contains((grid.X, grid.Y)) && grid.StayedChess != null && grid.StayedChess.Tag == tag)
-                        {
-                            targetList.Add(grid.StayedChess);
-                            close.Add((grid.X, grid.Y));
-                        }
-                    }
-                    {//down
-                        var grid = GetGridByCoord(curGrid.X - pos.x, curGrid.Y + pos.y);
-                        if (grid != null && !close.Contains((grid.X, grid.Y)) && grid.StayedChess != null && grid.StayedChess.Tag == tag)
-                        {
-                            targetList.Add(grid.StayedChess);
-                            close.Add((grid.X, grid.Y));
-                        }
-                    }
-                    {//left
-                        var grid = GetGridByCoord(curGrid.X - pos.y, curGrid.Y - pos.x);
-                        if (grid != null && !close.Contains((grid.X, grid.Y)) && grid.StayedChess != null && grid.StayedChess.Tag == tag)
-                        {
-                            targetList.Add(grid.StayedChess);
-                            close.Add((grid.X, grid.Y));
-                        }
-                    }
-                    {//right
-                        var grid = GetGridByCoord(curGrid.X + pos.y, curGrid.Y + pos.x);
-                        if (grid != null && !close.Contains((grid.X, grid.Y)) && grid.StayedChess != null && grid.StayedChess.Tag == tag)
-                        {
-                            targetList.Add(grid.StayedChess);
-                            close.Add((grid.X, grid.Y));
-                        }
-                    }
-                }
-                #endregion
-                //向外广搜
-                if (i == pathNum - 1) break;
-                if (x + 1 < col) SearchTheWalkableGridByCoord(chess, open, close, x + 1, y);
-                if (y + 1 < row) SearchTheWalkableGridByCoord(chess, open, close, x, y + 1);
-                if (x - 1 >= 0) SearchTheWalkableGridByCoord(chess, open, close, x - 1, y);
-                if (y - 1 >= 0) SearchTheWalkableGridByCoord(chess, open, close, x, y - 1);
-            }
-        }
-        Debug.Log("技能寻敌完毕，总共搜寻到目标个数:" + targetList.Count);
-        return targetList;
-    }
-    private void SearchTheWalkableGridByCoord(IChess chess, Queue<MapGrid> open, HashSet<(int, int)> close, int x, int y)
-    {
-        if (close.Contains((x, y))) return;
-        MapGrid temp = GetGridByCoord(x, y);
-        close.Add((x, y));
-        if (IsWalkable(chess, temp))
-        {
-            open.Enqueue(temp);
-        }
-    }
+    }   
     #endregion
 }
