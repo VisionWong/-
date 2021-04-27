@@ -8,7 +8,7 @@ public abstract class IAIController
     protected List<IChess> _targetList;
     protected Map _map;
 
-    protected (IChess chess, MapGrid grid) _target;
+    protected (List<IChess> chessList, MapGrid grid, Direction dir) _target;
     protected Skill _skillToUse = null;
     protected MapGrid _stayGrid = null;//用于储存追逐目标但无法到达的寻路路径终点格子
 
@@ -25,8 +25,35 @@ public abstract class IAIController
 
     }
 
-    //寻敌逻辑
-    protected abstract List<(IChess chess, MapGrid grid)> SearchTarget(IChess chess, Skill skill, string tag);
+    public void OnActionEnd()
+    {
+        if (_stayGrid != null)
+            _chess.SetStayGrid(_stayGrid);
+        _chess.OnActionEnd();
 
+        _skillToUse = null;
+        _stayGrid = null;
+    }
 
+    /// <summary>
+    /// 寻敌逻辑，返回该技能能作用到的所有目标群与其对应的使用位置和使用方向
+    /// </summary>
+    /// <param name="chess"></param>
+    /// <param name="skill"></param>
+    /// <returns></returns>
+    protected abstract List<(List<IChess> chessList, MapGrid grid, Direction dir)> SearchTarget(IChess chess, Skill skill);
+
+    /// <summary>
+    /// 获取无法使用技能时选择靠近的目标
+    /// </summary>
+    /// <returns></returns>
+    protected abstract IChess GetTheTargetToClose();
+
+    protected void UseSkill(Skill skill)
+    {
+        if (skill.Data.rangeType == SkillRangeType.自身)
+            skill.UseSkill(new List<IChess> { _chess }, Direction.Down);
+        else
+            skill.UseSkill(_target.chessList, _target.dir);
+    }
 }

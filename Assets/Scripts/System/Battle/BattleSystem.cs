@@ -176,20 +176,27 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     /// </summary>
     public void OnChessActionEnd()
     {
-        _curPlayerChess.SetStayGrid(_curWalkableGrid);
-        _curPlayerChess.ChangeToActionEnd();
-        _curPlayerChess.OnActionEnd();
-        _curWalkableGrid = null;
-        _curPlayerChess = null;
-        //观察我方是否还有可以行动的棋子
-        if (++_actionedNum == _playerList.Count)
+        if (BattleState == BattleState.EnemyTurn)
         {
-            OnEnemyTurn();
+            _enemyController.NextAction();
         }
-        else
+        else//玩家回合
         {
-            BattleState = BattleState.WaitSelect;
-            MessageCenter.Instance.Broadcast(MessageType.GlobalCanSelect);
+            _curPlayerChess.SetStayGrid(_curWalkableGrid);
+            _curPlayerChess.ChangeToActionEnd();
+            _curPlayerChess.OnActionEnd();
+            _curWalkableGrid = null;
+            _curPlayerChess = null;
+            //观察我方是否还有可以行动的棋子
+            if (++_actionedNum == _playerList.Count)
+            {
+                OnEnemyTurn();
+            }
+            else
+            {
+                BattleState = BattleState.WaitSelect;
+                MessageCenter.Instance.Broadcast(MessageType.GlobalCanSelect);
+            }
         }
     }
 

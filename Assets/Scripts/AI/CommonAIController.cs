@@ -23,17 +23,24 @@ public class CommonAIController : IAIController
         //根据拥有的技能搜索可以作用到的目标，并计算权重，决定使用哪个技能
         foreach (var skill in _chess.SkillList)
         {
-            (IChess chess, MapGrid grid) tempTarget = (null, null);
+            (List<IChess> chessList, MapGrid grid, Direction dir) tempTarget = (null, null, Direction.None);
             switch (skill.Data.skillType)
             {
                 case SkillType.Damage:
                     //根据技能的范围搜索可以作用的目标，计算可以造成的最高伤害，权重为1
-                    var targets = SearchTarget(_chess, skill, TagDefine.PLAYER);
+                    var targets = SearchTarget(_chess, skill);
                     if (targets == null) break;
-                    int maxDamage = int.MinValue;
-                    foreach (var target in targets)
+                    int maxDamage = 0;
+                    foreach (var target in targets)//每个target包含这个技能在某个格子朝某个方向能作用到的所有棋子
                     {
-                        int damage = Formulas.CalSkillDamage(skill.Data, _chess, target.chess);
+                        int damage = 0;
+                        foreach (var chess in target.chessList)
+                        {
+                            if (chess.Tag == TagDefine.PLAYER)
+                                damage += Formulas.CalSkillDamage(skill.Data, _chess, chess);
+                            else
+                                damage -= Formulas.CalSkillDamage(skill.Data, _chess, chess);
+                        }
                         if (damage > maxDamage)
                         {
                             maxDamage = damage;
@@ -49,12 +56,19 @@ public class CommonAIController : IAIController
                     break;
                 case SkillType.Heal:
                     //根据技能的范围搜索可以作用的目标，计算可以造成的最高治疗，越残血权重越高
-                    var healTargets = SearchTarget(_chess, skill, TagDefine.ENEMY);
-                    int maxHeal = int.MinValue;
+                    var healTargets = SearchTarget(_chess, skill);
+                    int maxHeal = 0;
                     if (healTargets == null) break;
-                    foreach (var target in healTargets)
+                    foreach (var target in healTargets)//决定这个技能能造成最高收益治疗的位置
                     {
-                        int heal = (int)(Formulas.CalHealingNum(skill.Data, _chess, target.chess) * Formulas.GetHealingWeight(target.chess));
+                        int heal = 0;
+                        foreach (var chess in target.chessList)
+                        {
+                            if (chess.Tag == TagDefine.ENEMY)
+                                heal += (int)(Formulas.CalHealingNum(skill.Data, _chess, chess) * Formulas.GetHealingWeight(chess));
+                            else
+                                heal -= (int)(Formulas.CalHealingNum(skill.Data, _chess, chess) * Formulas.GetHealingWeight(chess));
+                        }
                         if (heal > maxHeal)
                         {
                             maxHeal = heal;
@@ -82,24 +96,35 @@ public class CommonAIController : IAIController
                     {
                         if (skill.Data.isDebuff)
                         {
-                            //Debuff技能与伤害技能一样，固定权重(暂定为自身血量一半
-                            var effectTargets = SearchTarget(_chess, skill, TagDefine.PLAYER);
+                            //Debuff技能与伤害技能一样，固定权重(暂定为每个单位自身血量四分之一
+                            var effectTargets = SearchTarget(_chess, skill);
                             if (effectTargets == null) break;
+                            int maxEffectNum = 0;
                             foreach (var target in effectTargets)
                             {
-                                //TODO 只要有一个debuff状态能作用即可
-                                foreach (var effect in skill.Data.effects)
+                                int effectNum = 0;
+                                foreach (var chess in target.chessList)
                                 {
-                                    if (!target.chess.ContainsBuff(EnumTool.EffectTypeToBuffType(effect.effectType)))
+                                    //TODO 棋子是否存在该debuff
+                                    foreach (var effect in skill.Data.effects)
                                     {
-                                        tempTarget = target;
-                                        break;
+                                        if (!chess.ContainsBuff(EnumTool.EffectTypeToBuffType(effect.effectType)))
+                                        {
+                                            if (chess.Tag == TagDefine.PLAYER)
+                                                effectNum += 1;
+                                            else
+                                                effectNum -= 1;
+                                            break;//只要有一个debuff状态能作用即可
+                                        }
                                     }
                                 }
+                                if (effectNum > maxEffectNum)
+                                {
+                                    maxEffectNum = effectNum;
+                                    tempTarget = target;
+                                }
                             }
-                            //不存在Debuff能作用的棋子
-                            if (tempTarget == (null, null)) break;
-                            int effectWeight = _chess.Attribute.MaxHP / 2;
+                            int effectWeight = maxEffectNum * _chess.Attribute.MaxHP / 4;
                             if (effectWeight > curWeight)
                             {
                                 curWeight = effectWeight;
@@ -135,24 +160,15 @@ public class CommonAIController : IAIController
                     UseSkill(item.Key);
                     return;
                 }
-            }//没有能使用的增益技能，选择靠近目标
-            var path = _map.PathFinding(_chess, _chess.StayGrid, _target.grid, new AStarPathFinding(), _chess.Attribute.AP);
+            }//没有能使用的增益技能，选择靠近最近的目标
+            var path = _map.PathFinding(_chess, _chess.StayGrid, GetTheTargetToClose().StayGrid, new AStarPathFinding(), _chess.Attribute.AP);
             _stayGrid = path[path.Count - 1];//获取终点格子
             _chess.Move(path, OnActionEnd);
             return;
         }
         //否则前往目标使用技能
+        _stayGrid = _target.grid;
         _chess.Move(_map.PathFinding(_chess, _chess.StayGrid, _target.grid, new AStarPathFinding()), OnMoveEnd);
-    }
-
-    private void UseSkill(Skill skill)
-    {
-        if (skill.Data.rangeType == SkillRangeType.自身)
-        {
-            skill.UseSkill(new List<IChess> { _chess }, Direction.None);
-        }
-        //技能结束
-        //skill.UseSkill()
     }
 
     private void OnMoveEnd()
@@ -160,17 +176,25 @@ public class CommonAIController : IAIController
         UseSkill(_skillToUse);
     }
 
-    private void OnActionEnd()
+    protected override IChess GetTheTargetToClose()
     {
-        _chess.SetStayGrid(_stayGrid);
-        //_chess.ChangeToActionEnd();
-        _chess.OnActionEnd();
-        MessageCenter.Instance.Broadcast(MessageType.OnEnemyChessActionEnd);
+        IChess ret = null;
+        int minDist = int.MaxValue;
+        foreach (var chess in _targetList)
+        {
+            int dist = Mathf.Abs(chess.StayGrid.X - _chess.StayGrid.X) + Mathf.Abs(chess.StayGrid.Y - _chess.StayGrid.Y);
+            if (dist < minDist)
+            {
+                minDist = dist;
+                ret = chess;
+            }
+        }
+        return ret;
     }
 
-    protected override List<(IChess chess, MapGrid grid)> SearchTarget(IChess chess, Skill skill, string tag)
+    protected override List<(List<IChess> chessList, MapGrid grid, Direction dir)> SearchTarget(IChess chess, Skill skill)
     {
-        List<(IChess, MapGrid)> targetList = new List<(IChess, MapGrid)>();
+        List<(List<IChess>, MapGrid, Direction)> returnList = new List<(List<IChess>, MapGrid, Direction)>();
         int pathNum = chess.Attribute.AP;
         var rangeList = skill.Data.range;
         Queue<MapGrid> open = new Queue<MapGrid>();
@@ -189,42 +213,11 @@ public class CommonAIController : IAIController
                 int x = coord.x;
                 int y = coord.y;
                 #region 技能搜索
-                foreach (var pos in rangeList)
-                {
-                    //从四个方向分别搜寻可攻击的目标格子并记录
-                    {//up
-                        var grid = _map.GetGridByCoord(curGrid.X + pos.x, curGrid.Y - pos.y);
-                        if (grid != null && !close.Contains((grid.X, grid.Y)) && grid.StayedChess != null && grid.StayedChess.Tag == tag)
-                        {
-                            targetList.Add((grid.StayedChess, curGrid));
-                            close.Add((grid.X, grid.Y));
-                        }
-                    }
-                    {//down
-                        var grid = _map.GetGridByCoord(curGrid.X - pos.x, curGrid.Y + pos.y);
-                        if (grid != null && !close.Contains((grid.X, grid.Y)) && grid.StayedChess != null && grid.StayedChess.Tag == tag)
-                        {
-                            targetList.Add((grid.StayedChess, curGrid));
-                            close.Add((grid.X, grid.Y));
-                        }
-                    }
-                    {//left
-                        var grid = _map.GetGridByCoord(curGrid.X - pos.y, curGrid.Y - pos.x);
-                        if (grid != null && !close.Contains((grid.X, grid.Y)) && grid.StayedChess != null && grid.StayedChess.Tag == tag)
-                        {
-                            targetList.Add((grid.StayedChess, curGrid));
-                            close.Add((grid.X, grid.Y));
-                        }
-                    }
-                    {//right
-                        var grid = _map.GetGridByCoord(curGrid.X + pos.y, curGrid.Y + pos.x);
-                        if (grid != null && !close.Contains((grid.X, grid.Y)) && grid.StayedChess != null && grid.StayedChess.Tag == tag)
-                        {
-                            targetList.Add((grid.StayedChess, curGrid));
-                            close.Add((grid.X, grid.Y));
-                        }
-                    }
-                }
+                //从四个方向分别搜寻可攻击的目标格子并记录
+                CheckTargetByDir(1, -1, Direction.Up, rangeList, close, curGrid, returnList);
+                CheckTargetByDir(-1, 1, Direction.Down, rangeList, close, curGrid, returnList);
+                CheckTargetByDir(-1, -1, Direction.Left, rangeList, close, curGrid, returnList);
+                CheckTargetByDir(1, 1, Direction.Right, rangeList, close, curGrid, returnList);
                 #endregion
                 //向外广搜
                 if (i == pathNum - 1) break;
@@ -234,8 +227,8 @@ public class CommonAIController : IAIController
                 if (y - 1 >= 0) SearchTheWalkableGridByCoord(chess, open, close, x, y - 1);
             }
         }
-        Debug.Log("技能寻敌完毕，总共搜寻到目标个数:" + targetList.Count);
-        return targetList;
+        Debug.Log("技能寻敌完毕，总共搜寻到目标群个数:" + returnList.Count);
+        return returnList;
     }
     private void SearchTheWalkableGridByCoord(IChess chess, Queue<MapGrid> open, HashSet<(int, int)> close, int x, int y)
     {
@@ -245,6 +238,23 @@ public class CommonAIController : IAIController
         if (_map.IsWalkable(chess, temp))
         {
             open.Enqueue(temp);
+        }
+    }
+    private void CheckTargetByDir(int x, int y, Direction dir, List<Coord> rangeList, HashSet<(int, int)> close, MapGrid curGrid, List<(List<IChess>, MapGrid, Direction)> returnList)
+    {
+        List<IChess> targetList = new List<IChess>();
+        foreach (var pos in rangeList)
+        {
+            var grid = _map.GetGridByCoord(curGrid.X + pos.x * x, curGrid.Y + pos.y * y);
+            if (grid != null && !close.Contains((grid.X, grid.Y)) && grid.StayedChess != null)
+            {
+                targetList.Add(grid.StayedChess);
+                close.Add((grid.X, grid.Y));
+            }
+        }
+        if (targetList.Count > 0)
+        {
+            returnList.Add((targetList, curGrid, dir));
         }
     }
 }

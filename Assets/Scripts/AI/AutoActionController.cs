@@ -27,9 +27,12 @@ public class AutoActionController
 
     }
 
-    private void AutoAction(int index)
+    public void NextAction()
     {
-        if (index >= _chessList.Count)
+        //TODO 让上一个棋子停止
+
+        _actionIndex++;
+        if (_actionIndex >= _chessList.Count)
         {
             //结束敌方行动
             MessageCenter.Instance.Broadcast(MessageType.OnPlayerTurn);
@@ -38,12 +41,6 @@ public class AutoActionController
         {
             
         }
-    }
-
-    private void OnAutoChessActionEnd()
-    {
-        _actionIndex++;
-        AutoAction(_actionIndex);
     }
 }
 
