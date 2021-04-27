@@ -8,11 +8,11 @@ using VFramework;
 /// </summary>
 public class AutoActionController
 {
-    private List<IChess> _chessList;
+    private List<EnemyChess> _chessList;
     private List<IChess> _enemyList;
     private int _actionIndex = 0;
 
-    public AutoActionController(List<IChess> chessList, List<IChess> enemyList)
+    public AutoActionController(List<EnemyChess> chessList, List<IChess> enemyList)
     {
         _chessList = chessList;
         _enemyList = enemyList;
@@ -22,24 +22,22 @@ public class AutoActionController
     {
         //获取离敌对方距离最短的棋子先行动
         _chessList.Sort(new DistAscComparer(_enemyList));
-        
-        //结束行动
-
+        _chessList[_actionIndex].AI.StartAction();
     }
 
     public void NextAction()
     {
         //TODO 让上一个棋子停止
-
+        _chessList[_actionIndex].AI.OnActionEnd();
         _actionIndex++;
         if (_actionIndex >= _chessList.Count)
         {
             //结束敌方行动
-            MessageCenter.Instance.Broadcast(MessageType.OnPlayerTurn);
+            MessageCenter.Instance.Broadcast(MessageType.OnEnemyTurnEnd);
         }
         else
         {
-            
+            _chessList[_actionIndex].AI.StartAction();
         }
     }
 }

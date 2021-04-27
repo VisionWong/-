@@ -21,7 +21,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
 
     private Map _map;
     private List<IChess> _playerList = new List<IChess>();
-    private List<IChess> _enemyList = new List<IChess>();
+    private List<EnemyChess> _enemyList = new List<EnemyChess>();
     private AutoActionController _enemyController;
     private int _actionedNum;//已经行动完毕的玩家棋子数
 
@@ -37,6 +37,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     #region 战斗准备
     public void StartBattle()
     {
+        RegisterAll();
         LoadMap();
         LoadPlayerChess();
         LoadEnemyChess();
@@ -48,7 +49,6 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         OnPlayerTurn();
         
 
-        RegisterAll();
     }
 
     private void LoadMap()
@@ -62,8 +62,6 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     {
         LoadPlayerChess(5, 4, 252);
         LoadPlayerChess(4, 3, 252);
-        LoadPlayerChess(5, 3, 252);
-        LoadPlayerChess(6, 3, 252);
         LoadPlayerChess(4, 6, 255);
         //TODO 根据玩家背包里的信息生成棋子，位置则根据关卡默认位置，玩家后续可在区域内调整
     }   
@@ -83,8 +81,20 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     public void LoadEnemyChess()
     {
         //TODO 据关卡信息生成
+        LoadEnemyChess(5, 3, 252);
+        LoadEnemyChess(6, 3, 252);
+        _enemyController = new AutoActionController(_enemyList, _playerList);
+    }
 
-        _enemyController = new AutoActionController(_playerList, _enemyList);
+    private void LoadEnemyChess(int x, int y, int id)
+    {
+        var chess = ChessFactory.ProduceEnemy(id, new CommonAIController(_playerList, _map));
+        chess.LearnSkill(SkillFactory.Produce(5));
+        chess.LearnSkill(SkillFactory.Produce(6));
+        chess.LearnSkill(SkillFactory.Produce(4));
+        MapGrid grid = _map.GetGridByCoord(x, y);
+        chess.SetStayGrid(grid);
+        _enemyList.Add(chess);
     }
     #endregion
 
@@ -384,7 +394,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     #endregion
 
     #region 流程控制
-    public void OnEnemyDead(IChess chess)
+    public void OnEnemyDead(EnemyChess chess)
     {
         _enemyList.Remove(chess);
         if (_enemyList.Count == 0)
@@ -404,7 +414,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     }
     public bool IsChessAlive(IChess chess)
     {
-        if (chess.Tag == TagDefine.ENEMY) return _enemyList.Contains(chess);
+        if (chess.Tag == TagDefine.ENEMY) return _enemyList.Contains(chess as EnemyChess);
         else return _playerList.Contains(chess);
     }
 
@@ -428,9 +438,14 @@ public class BattleSystem : MonoSingleton<BattleSystem>
             chess.OnTurnStart();
         }
         //启动敌人策略AI
-
+        _enemyController.StartAction();
     }
-
+    private void OnEnemyTurnEnd()
+    {
+        //TODO 判断是否回合数超出关卡限制，是则判负
+        MessageCenter.Instance.Broadcast(MessageType.GlobalCanSelect);
+        OnPlayerTurn();
+    }
     private void Victory()
     {
         Debug.Log("游戏胜利");
@@ -452,6 +467,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         MessageCenter.Instance.AddListener<Skill>(MessageType.OnClickSkillBtn, OnClickSkillBtn);
         MessageCenter.Instance.AddListener(MessageType.OnSelectUnwalkableChess, OnSelectUnwalkableChess);
         MessageCenter.Instance.AddListener(MessageType.OnChessActionEnd, OnChessActionEnd);
+        MessageCenter.Instance.AddListener(MessageType.OnEnemyTurnEnd, OnEnemyTurnEnd);
     }
     private void RemoveAll()
     {
@@ -461,7 +477,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         MessageCenter.Instance.RemoveListener<Skill>(MessageType.OnClickSkillBtn, OnClickSkillBtn);
         MessageCenter.Instance.RemoveListener(MessageType.OnSelectUnwalkableChess, OnSelectUnwalkableChess);
         MessageCenter.Instance.RemoveListener(MessageType.OnChessActionEnd, OnChessActionEnd);
-
+        MessageCenter.Instance.RemoveListener(MessageType.OnEnemyTurnEnd, OnEnemyTurnEnd);
     }
     #endregion
 }

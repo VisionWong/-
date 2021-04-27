@@ -19,7 +19,6 @@ public class SelectablePlayerChess : ISelectable
         WaitMove,
         WaitAttack,
         ActionEnd,
-        Unselectable,
     }
 
     private SelectedState m_selectedState = SelectedState.Idle;
@@ -45,9 +44,6 @@ public class SelectablePlayerChess : ISelectable
                 case SelectedState.ActionEnd:
                     Debug.Log("该棋子已经行动完毕");
                     MessageCenter.Instance.Broadcast(MessageType.OnSelectUnwalkableChess);
-                    break;
-                case SelectedState.Unselectable:
-                    Debug.Log("该棋子暂时无法选中");
                     break;
                 default:
                     Debug.LogWarning("棋子不存在该状态");

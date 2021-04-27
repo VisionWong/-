@@ -11,7 +11,7 @@ public class CommonAIController : IAIController
     private HashSet<Skill> _buffSkillSet;
     private Dictionary<Skill, int> _buffToTimesDict;//增益技能限制使用3次
 
-    public CommonAIController(IChess chess, List<IChess> targetList, Map map) : base(chess, targetList, map)
+    public CommonAIController(List<IChess> targetList, Map map) : base(targetList, map)
     {
         _buffSkillSet = new HashSet<Skill>();
         _buffToTimesDict = new Dictionary<Skill, int>();

@@ -12,11 +12,15 @@ public abstract class IAIController
     protected Skill _skillToUse = null;
     protected MapGrid _stayGrid = null;//用于储存追逐目标但无法到达的寻路路径终点格子
 
-    public IAIController(IChess chess, List<IChess> targetList, Map map)
+    public IAIController(List<IChess> targetList, Map map)
     {
-        _chess = chess;
         _targetList = targetList;
         _map = map;
+    }
+
+    public void SetChess(IChess chess)
+    {
+        _chess = chess;
     }
 
     //行动逻辑 寻敌、技能选择、移动、(使用技能)
