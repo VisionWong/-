@@ -381,6 +381,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
                 Debug.LogError("该方向的功能尚未实现！" + dir.ToString());
                 break;
         }
+        _curPlayerChess.OnUseSkill(_curUsedSkill);
         _curUsedSkill.UseSkill(targets, dir);
         _curUsedSkill = null;
     }

@@ -12,12 +12,18 @@ public class HUD : MonoBehaviour
     private Image _hpBar2;//血条下层慢放
     private float _lastBar1FillAmount;
 
+    private Text _txtMsg;
+
     private void Awake()
     {
-        _hpBarBg = transform.Find("Canvas").Find("hpbg");
+        var canvas = transform.Find("Canvas");
+        _hpBarBg = canvas.Find("hpbg");
         _hpBar1 = _hpBarBg.Find("hpBar1").GetComponent<Image>();
         _hpBar2 = _hpBarBg.Find("hpBar2").GetComponent<Image>();
         _lastBar1FillAmount = _hpBar1.fillAmount;
+
+        _txtMsg = canvas.Find("txtMsg").GetComponent<Text>();
+        _txtMsg.enabled = false;
     }
 
     public void ChangeHPValue(float hp, float maxHp, Action callback = null, float duration = 1f)
@@ -45,5 +51,23 @@ public class HUD : MonoBehaviour
     public void HidePreview()
     {
         _hpBar1.fillAmount = _lastBar1FillAmount;
+    }
+
+    public void NoticeAvoid()
+    {
+        _txtMsg.enabled = true;
+        _txtMsg.text = "闪避";
+        Invoke("HideNotice", 1f);
+    }
+    public void NoticeUseSkill(string name)
+    {
+        _txtMsg.enabled = true;
+        _txtMsg.text = " " + name + "!";
+        Invoke("HideNotice", 1.5f);
+    }
+
+    public void HideNotice()
+    {
+        _txtMsg.enabled = false;
     }
 }

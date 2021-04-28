@@ -55,6 +55,7 @@ public abstract class IAIController
 
     protected void UseSkill(Skill skill)
     {
+        _chess.OnUseSkill(skill);
         if (skill.Data.rangeType == SkillRangeType.自身)
             skill.UseSkill(new List<IChess> { _chess }, Direction.Down);
         else

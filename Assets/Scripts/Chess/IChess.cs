@@ -116,6 +116,7 @@ public abstract class IChess : IAttackable
         {
             //播放闪避动画
             _anim.AvoidDamage(dir);
+            _hud.NoticeAvoid();
             return true;
         }
         return false;
@@ -172,6 +173,11 @@ public abstract class IChess : IAttackable
     public void HidePreview()
     {
         _hud.HidePreview();
+    }
+
+    public void OnUseSkill(Skill skill)
+    {
+        _hud.NoticeUseSkill(skill.Data.name);
     }
 
     #region BUFF处理
