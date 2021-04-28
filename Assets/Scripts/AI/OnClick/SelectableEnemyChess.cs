@@ -24,10 +24,12 @@ public class SelectableEnemyChess : ISelectable
         if (Selectable && !m_isSelected)
         {
             Camera.main.GetComponent<CameraController>().MoveToTarget(transform.position);
+            MessageCenter.Instance.Broadcast(MessageType.OnSelectChess, _chess);
+            //若
             switch (_selectedState)
             {
                 case SelectedState.Idle:
-                    MessageCenter.Instance.Broadcast(MessageType.OnSelectChess, _chess);
+                    
                     break;
                 case SelectedState.OnAction:
                     Debug.Log("该棋子因行动中暂时无法选中");

@@ -22,13 +22,25 @@ public class AutoActionController
     {
         //获取离敌对方距离最短的棋子先行动
         _enemyList.Sort(new DistAscComparer(_playerList));
-        _enemyList[_actionIndex].AI.StartAction();
+        MonoMgr.Instance.StartCoroutine(WaitForTurnChange());
     }
 
     public void NextAction()
     {
         //TODO 让上一个棋子停止
         _enemyList[_actionIndex].AI.OnActionEnd();
+        MonoMgr.Instance.StartCoroutine(WaitForNextAction());
+    }
+
+    private IEnumerator WaitForTurnChange()
+    {
+        yield return new WaitForSeconds(1.5f);
+        _enemyList[_actionIndex].AI.StartAction();
+    }
+
+    private IEnumerator WaitForNextAction()
+    {
+        yield return new WaitForSeconds(1f);
         _actionIndex++;
         if (_actionIndex >= _enemyList.Count)
         {

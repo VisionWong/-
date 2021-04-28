@@ -205,7 +205,6 @@ public class Skill
         _lockNum++;
         if (_lockNum == _lockTarget)
         {
-            Debug.Log(1);
             _lockNum = 0;
             DoSkillEffect(dir);
         }

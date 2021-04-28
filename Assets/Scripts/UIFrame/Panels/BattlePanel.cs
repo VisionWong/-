@@ -81,7 +81,8 @@ public class BattlePanel : BasePanel
         MessageCenter.Instance.AddListener(MessageType.OnCancelMove, HideActionField);
         MessageCenter.Instance.AddListener(MessageType.OnSearchAttackableEnd, ShowSkillDirPanel);
         MessageCenter.Instance.AddListener(MessageType.OnClickDirCancelBtn, ReShowActionField);
-        
+        MessageCenter.Instance.AddListener(MessageType.OnVictory, OnVictory);
+        MessageCenter.Instance.AddListener(MessageType.OnDefeat, OnDefeat);
     }
     private void RemoveAll()
     {
@@ -215,5 +216,6 @@ public class BattlePanel : BasePanel
         HideActionField();
     }
 
-    
+    private void OnVictory() { }
+    private void OnDefeat() { }
 }
