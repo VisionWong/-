@@ -26,7 +26,7 @@ public abstract class IAIController
     //行动逻辑 寻敌、技能选择、移动、(使用技能)
     public virtual void StartAction()
     {
-
+        Camera.main.GetComponent<CameraController>().MoveToTarget(_chess.GameObject.transform.position);
     }
 
     public void OnActionEnd()

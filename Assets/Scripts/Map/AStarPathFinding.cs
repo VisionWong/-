@@ -80,10 +80,10 @@ public class AStarPathFinding : IPathFindingStrategy
             curGrid = curGrid.lastGrid;
         }
         path.Reverse();
-        for (int i = 0; i < path.Count; i++)
-        {
-            Debug.Log(string.Format("路径第{0}个格子坐标为（{1}，{2}）", i, path[i].X, path[i].Y));
-        }
+        //for (int i = 0; i < path.Count; i++)
+        //{
+        //    Debug.Log(string.Format("路径第{0}个格子坐标为（{1}，{2}）", i, path[i].X, path[i].Y));
+        //}
         return path;
     }
 

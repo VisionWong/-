@@ -22,8 +22,8 @@ public static class Formulas
         if (canCrit && Random.Range(0, 100) < user.Attribute.CritRate) damage *= 1.5f;
         float num = user.Attribute.Attack - target.Attribute.Defence;
         if (num <= 0) num = 1;
-        damage *= attr.power * num / 50;
-        return (int)damage;
+        damage *= attr.power * num / 50f;
+        return Mathf.RoundToInt(damage);
     }
 
     public static int CalHealingNum(SkillData attr, IChess user, IChess target)

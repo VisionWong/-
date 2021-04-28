@@ -36,15 +36,15 @@ public abstract class IChess : IAttackable
     public MapGrid StayGrid { get; private set; }
     public List<Skill> SkillList { get; private set; }
 
+    public GameObject GameObject { get; set; }
     public string Tag
     {
         get
         {
-            return _gameObject?.tag;
+            return GameObject?.tag;
         }
     }
 
-    protected GameObject _gameObject;
     protected HUD _hud;//UI显示
     protected ChessAnimator _anim;
     private List<IBuff> _buffList;
@@ -53,8 +53,8 @@ public abstract class IChess : IAttackable
     {
         Attribute = attr;
         SkillList = new List<Skill>();
-        _gameObject = go;
-        _hud = _gameObject.AddComponent<HUD>();
+        GameObject = go;
+        _hud = GameObject.AddComponent<HUD>();
         _buffList = new List<IBuff>();
     }
 
@@ -77,14 +77,14 @@ public abstract class IChess : IAttackable
         StayGrid?.ChessAway();
         StayGrid = grid;
         StayGrid.StayChess(this);
-        if (isChangePos) _gameObject.transform.position = grid.transform.position;
+        if (isChangePos) GameObject.transform.position = grid.transform.position;
     }
 
     public void LearnSkill(Skill skill)
     {
         if (SkillList.Count < 4)
         {
-            skill.SetChess(this, _gameObject.transform);
+            skill.SetChess(this, GameObject.transform);
             SkillList.Add(skill);
             //TODO 提示UI
         }
@@ -95,7 +95,7 @@ public abstract class IChess : IAttackable
 
     public void Release()
     {
-        GameObject.Destroy(_gameObject);
+        GameObject.Destroy(GameObject);
     }
 
     #region 战斗相关
