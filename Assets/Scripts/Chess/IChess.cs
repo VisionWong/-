@@ -55,6 +55,7 @@ public abstract class IChess : IAttackable
         SkillList = new List<Skill>();
         GameObject = go;
         _hud = GameObject.AddComponent<HUD>();
+        _hud.SetHPBarColor(Tag);
         _buffList = new List<IBuff>();
     }
 

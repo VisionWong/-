@@ -7,6 +7,10 @@ using System;
 
 public class HUD : MonoBehaviour
 {
+    //private readonly Color PLAYER_COLOR = new Color(0f, 163f, 209f);
+    public Color PLAYER_COLOR = new Color(34 / 255f, 209 / 255f, 0f);
+    public Color ENEMY_COLOR = new Color(255 / 255f, 198 / 255f, 0f);
+
     private Transform _hpBarBg;
     private Image _hpBar1;//血条上层
     private Image _hpBar2;//血条下层慢放
@@ -16,6 +20,9 @@ public class HUD : MonoBehaviour
 
     private void Awake()
     {
+        //PLAYER_COLOR = new Color(0f, 255f, 16f);
+        //ENEMY_COLOR = new Color(255f, 198f, 0f);
+
         var canvas = transform.Find("Canvas");
         _hpBarBg = canvas.Find("hpbg");
         _hpBar1 = _hpBarBg.Find("hpBar1").GetComponent<Image>();
@@ -24,6 +31,14 @@ public class HUD : MonoBehaviour
 
         _txtMsg = canvas.Find("txtMsg").GetComponent<Text>();
         _txtMsg.enabled = false;
+    }
+    
+    public void SetHPBarColor(string tag)
+    {
+        if (tag == TagDefine.PLAYER)
+            _hpBar1.color = PLAYER_COLOR;
+        else
+            _hpBar1.color = ENEMY_COLOR;
     }
 
     public void ChangeHPValue(float hp, float maxHp, Action callback = null, float duration = 1f)
