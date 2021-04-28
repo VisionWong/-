@@ -133,7 +133,7 @@ public class Skill
                 _lockTarget = targets.Count;
                 foreach (var target in targets)
                 {
-                    if (target.CanAvoid(_chess, Data, dir))
+                    if (!BattleSystem.Instance.IsChessAlive(target) || target.CanAvoid(_chess, Data, dir))
                     {
                         _effectableList.Remove(target);
                         ReadyToDoEffect(dir);
@@ -142,7 +142,7 @@ public class Skill
                     {
                         int damage = Formulas.CalSkillDamage(Data, _chess, target);
                         _damage = damage;
-                        target.TakeDamage(damage, dir, ()=> ReadyToDoEffect(dir));
+                        target.TakeDamage(damage, dir, () => ReadyToDoEffect(dir));
                     }
                 }
                 break;
@@ -205,6 +205,7 @@ public class Skill
         _lockNum++;
         if (_lockNum == _lockTarget)
         {
+            Debug.Log(1);
             _lockNum = 0;
             DoSkillEffect(dir);
         }

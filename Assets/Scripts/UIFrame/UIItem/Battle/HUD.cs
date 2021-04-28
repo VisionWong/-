@@ -34,11 +34,12 @@ public class HUD : MonoBehaviour
 
     private IEnumerator WaitForHpLose(float hp, float maxHp, float duration, Action callback = null)
     {
-        _hpBar1.DOFillAmount(hp / maxHp, duration);
-        var tw = _hpBar2.DOFillAmount(hp / maxHp, duration * 2f);
+        var endValue = hp / maxHp;
+        _hpBar1.DOFillAmount(endValue, duration);
+        var tw = _hpBar2.DOFillAmount(endValue, duration * 2f);
+        _lastBar1FillAmount = endValue;
         yield return tw.WaitForCompletion();
         callback?.Invoke();
-        _lastBar1FillAmount = _hpBar1.fillAmount;
     }
 
     public void ShowPreview(float hp, float maxHp)

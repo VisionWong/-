@@ -7,12 +7,14 @@ using VFramework;
 
 public class ChessAnimator : MonoBehaviour
 {
+    private SpriteRenderer _render;
     private Animator _anim;
     private float lastX, lastY;
 
     private void Awake()
     {
         _anim = GetComponent<Animator>();
+        _render = GetComponent<SpriteRenderer>();
     }
 
     /// <summary>
@@ -29,6 +31,11 @@ public class ChessAnimator : MonoBehaviour
     {
         transform.DOPunchPosition(EnumTool.DirToVector3(dir) * 0.2f, 0.5f, 1, 0);
         ChangeForward(EnumTool.GetOppositeDir(dir));
+    }
+
+    public void Dead(Action callback = null)
+    {
+        StartCoroutine(DoDead(callback));
     }
 
     public void AvoidDamage(Direction dir)
@@ -85,5 +92,12 @@ public class ChessAnimator : MonoBehaviour
     {
         _anim.SetFloat("x", lastX);
         _anim.SetFloat("y", lastY);
+    }
+
+    private IEnumerator DoDead(Action callback = null)
+    {
+        var tween = _render.DOFade(0, 1.5f);
+        yield return tween.WaitForCompletion();
+        callback?.Invoke();
     }
 }

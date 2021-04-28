@@ -5,14 +5,14 @@ using UnityEngine;
 public abstract class IAIController
 {
     protected IChess _chess;
-    protected List<IChess> _targetList;
+    protected List<PlayerChess> _targetList;
     protected Map _map;
 
     protected (List<IChess> chessList, MapGrid grid, Direction dir) _target;
     protected Skill _skillToUse = null;
     protected MapGrid _stayGrid = null;//用于储存追逐目标但无法到达的寻路路径终点格子
 
-    public IAIController(List<IChess> targetList, Map map)
+    public IAIController(List<PlayerChess> targetList, Map map)
     {
         _targetList = targetList;
         _map = map;

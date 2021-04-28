@@ -128,6 +128,8 @@ public abstract class IChess : IAttackable
         if (Attribute.TakeDamage(damage))
         {
             Dead();
+            callback?.Invoke();
+            callback = null;
         }
         _anim.TakeDamage(dir);
         _hud.ChangeHPValue(Attribute.HP, Attribute.MaxHP, callback);
@@ -276,8 +278,10 @@ public abstract class IChess : IAttackable
     public void Dead()
     {
         //TODO 通知战斗系统剔除自己
+        BattleSystem.Instance.OnChessDead(this);
         //播放死亡动画，死亡特效，演出结束后消失
-
+        StayGrid.ChessAway();
+        _anim.Dead(() => GameObject.SetActive(false));
     }
     #endregion
 }

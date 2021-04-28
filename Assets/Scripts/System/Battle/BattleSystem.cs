@@ -20,7 +20,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     public BattleState BattleState { get; private set; }
 
     private Map _map;
-    private List<IChess> _playerList = new List<IChess>();
+    private List<PlayerChess> _playerList = new List<PlayerChess>();
     private List<EnemyChess> _enemyList = new List<EnemyChess>();
     private AutoActionController _enemyController;
     private int _actionedNum;//已经行动完毕的玩家棋子数
@@ -395,7 +395,14 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     #endregion
 
     #region 流程控制
-    public void OnEnemyDead(EnemyChess chess)
+    public void OnChessDead(IChess chess)
+    {
+        if (chess.Tag == TagDefine.PLAYER)
+            OnPlayerDead(chess as PlayerChess);
+        else
+            OnEnemyDead(chess as EnemyChess);
+    }
+    private void OnEnemyDead(EnemyChess chess)
     {
         _enemyList.Remove(chess);
         if (_enemyList.Count == 0)
@@ -404,7 +411,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
             Victory();
         }
     }
-    public void OnPlayerDead(IChess chess)
+    private void OnPlayerDead(PlayerChess chess)
     {
         _playerList.Remove(chess);
         if (_playerList.Count == 0)
@@ -416,7 +423,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     public bool IsChessAlive(IChess chess)
     {
         if (chess.Tag == TagDefine.ENEMY) return _enemyList.Contains(chess as EnemyChess);
-        else return _playerList.Contains(chess);
+        else return _playerList.Contains(chess as PlayerChess);
     }
 
     private void OnPlayerTurn()
@@ -425,6 +432,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         _actionedNum = 0;
         foreach (var chess in _playerList)
         {
+            chess.ChangeToIdle();
             chess.OnTurnStart();
         }
         BattleState = BattleState.WaitSelect;
