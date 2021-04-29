@@ -9,6 +9,6 @@ public class DataLibsManager : MonoSingleton<DataLibsManager>
     {
         ChessLib.Instance.ParseInit(PathDefine.CONFIG_CHESS_DATA);
         SkillLib.Instance.ParseInit(PathDefine.CONFIG_SKILL_DATA);
-        
+        PMTypeLib.Instance.ParseInit(PathDefine.CONFIG_PMTYPE_DATA);
     }
 }

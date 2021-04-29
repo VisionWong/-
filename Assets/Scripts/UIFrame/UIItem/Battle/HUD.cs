@@ -7,8 +7,8 @@ using System;
 
 public class HUD : MonoBehaviour
 {
-    //private readonly Color PLAYER_COLOR = new Color(0f, 163f, 209f);
-    public Color PLAYER_COLOR = new Color(34 / 255f, 209 / 255f, 0f);
+    //public Color PLAYER_COLOR = new Color(34 / 255f, 209 / 255f, 0f);
+    public Color PLAYER_COLOR = new Color(0f, 176 / 255f, 209 / 255f);
     public Color ENEMY_COLOR = new Color(255 / 255f, 198 / 255f, 0f);
 
     private Transform _hpBarBg;
@@ -20,8 +20,6 @@ public class HUD : MonoBehaviour
 
     private void Awake()
     {
-        //PLAYER_COLOR = new Color(0f, 255f, 16f);
-        //ENEMY_COLOR = new Color(255f, 198f, 0f);
 
         var canvas = transform.Find("Canvas");
         _hpBarBg = canvas.Find("hpbg");

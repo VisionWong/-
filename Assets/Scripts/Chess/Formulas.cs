@@ -45,8 +45,19 @@ public static class Formulas
         return ((float)attr.MaxHP / attr.HP) * 0.5f;
     }
 
-    public static float GetPMTypeRestraint(PMType userType, PMType targetType)
+
+    //private static Dictionary<PMType, HashSet<PMType>> effectiveDict;
+    //private static Dictionary<PMType, HashSet<PMType>> halfEffectiveDict;
+    //private static Dictionary<PMType, HashSet<PMType>> noEffectiveDict;
+    public static float GetPMTypeRestraint(PMType attackerType, PMType targetType)
     {
-        return 1;
+        var typeData = PMTypeLib.Instance.GetData((int)attackerType);
+        if (typeData.effectiveSet.Contains(targetType))
+            return 2f;
+        else if (typeData.halfEffectiveSet.Contains(targetType))
+            return 0.5f;
+        else if (typeData.noEffectiSet.Contains(targetType))
+            return 0f;
+        return 1f;
     }
 }

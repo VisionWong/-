@@ -8,7 +8,7 @@ using UnityEngine;
 /// </summary>
 public enum PMType
 {
-    None,
+    None = 0,
     Common,
     Grass,
     Fire,
