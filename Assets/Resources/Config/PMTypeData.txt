@@ -27,5 +27,254 @@
             "Dragon",
             "Metal"            
         ]
+    },
+    {
+        "id": 3,
+        "name": "火",
+        "effectiveSet":[
+            "Grass",
+            "Ice",
+            "Bug",
+            "Metal"
+        ],
+        "halfEffectiveSet":[
+            "Fire",
+            "Water",
+            "Rock",
+            "Dragon"         
+        ]
+    },
+    {
+        "id": 4,
+        "name": "水",
+        "effectiveSet":[
+            "Fire",
+            "Rock",
+            "Ground"
+        ],
+        "halfEffectiveSet":[
+            "Water",
+            "Grass",
+            "Dragon"         
+        ]
+    },
+    {
+        "id": 5,
+        "name": "电",
+        "effectiveSet":[
+            "Water",
+            "Fly"
+        ],
+        "halfEffectiveSet":[
+            "Water",
+            "Grass",
+            "Dragon"         
+        ],
+        "noEffectSet": [
+            "Ground"
+        ]
+    },
+    {
+        "id": 6,
+        "name": "飞行",
+        "effectiveSet":[
+            "Fight",
+            "Grass",
+            "Bug"
+        ],
+        "halfEffectiveSet":[
+            "Rock",
+            "Metal",
+            "Electric"       
+        ]
+    },
+    {
+        "id": 7,
+        "name": "格斗",
+        "effectiveSet":[
+            "Common",
+            "Ice",
+            "Dark",
+            "Rock",
+            "Metal"
+        ],
+        "halfEffectiveSet":[
+            "Poison",
+            "Fly",
+            "Psychic",
+            "Bug",
+            "Fairy"         
+        ],
+        "noEffectSet": [
+            "Ghost"
+        ]
+    },
+    {
+        "id": 8,
+        "name": "地面",
+        "effectiveSet":[
+            "Fire",
+            "Electric",
+            "Poison",
+            "Rock",
+            "Metal"
+        ],
+        "halfEffectiveSet":[
+            "Grass",
+            "Bug"
+        ],
+        "noEffectSet": [
+            "Fly"
+        ]
+    },
+    {
+        "id": 9,
+        "name": "岩石",
+        "effectiveSet":[
+            "Fire",
+            "Fly",
+            "Bug",
+            "Ice"
+        ],
+        "halfEffectiveSet":[
+            "Ground",
+            "Metal",
+            "Fight"
+        ]
+    },
+    {
+        "id": 10,
+        "name": "虫",
+        "effectiveSet":[
+            "Grass",
+            "Psychic",
+            "Dark"
+        ],
+        "halfEffectiveSet":[
+            "Ghost",
+            "Metal",
+            "Fire",
+            "Fight",
+            "Poison",
+            "Fly",
+            "Fairy"
+        ]
+    },
+    {
+        "id": 11,
+        "name": "冰",
+        "effectiveSet":[
+            "Ground",
+            "Grass",
+            "Dragon",  
+            "Fly"
+        ],
+        "halfEffectiveSet":[
+            "Water",
+            "Fire",
+            "Ice",
+            "Metal"         
+        ]
+    },
+    {
+        "id": 12,
+        "name": "鬼",
+        "effectiveSet":[
+            "Psychic",
+            "Ghost"
+        ],
+        "halfEffectiveSet":[
+            "Dark"
+        ],
+        "noEffectSet": [
+            "Common"
+        ]
+    },
+    {
+        "id": 13,
+        "name": "超能",
+        "effectiveSet":[
+            "Fight",
+            "Poison"
+        ],
+        "halfEffectiveSet":[
+            "Psychic",
+            "Metal"
+        ],
+        "noEffectSet": [
+            "Dark"
+        ]
+    },
+    {
+        "id": 14,
+        "name": "毒",
+        "effectiveSet":[
+            "Grass",
+            "Fairy"
+        ],
+        "halfEffectiveSet":[
+            "Poison",
+            "Ground",
+            "Rock",
+            "Ghost"
+        ],
+        "noEffectSet": [
+            "Metal"
+        ]
+    },
+    {
+        "id": 15,
+        "name": "恶",
+        "effectiveSet":[
+            "Psychic",
+            "Ghost"
+        ],
+        "halfEffectiveSet":[
+            "Fight",
+            "Dark",
+            "Fairy"
+        ]
+    },
+    {
+        "id": 16,
+        "name": "龙",
+        "effectiveSet":[
+            "Dragon"
+        ],
+        "halfEffectiveSet":[
+            "Metal"
+        ],
+        "noEffectSet": [
+            "Fairy"
+        ]
+    },
+    {
+        "id": 17,
+        "name": "钢",
+        "effectiveSet":[
+            "Ice",
+            "Rock",
+            "Fairy"
+        ],
+        "halfEffectiveSet":[
+            "Fire",
+            "Water",
+            "Electric",
+            "Metal"
+        ]
+    },
+    {
+        "id": 18,
+        "name": "妖精",
+        "effectiveSet":[
+            "Dragon",
+            "Dark",
+            "Fight"
+        ],
+        "halfEffectiveSet":[
+            "Fire",
+            "Poison",
+            "Metal"
+        ]
     }
 ]
