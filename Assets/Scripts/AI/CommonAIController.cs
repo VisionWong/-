@@ -38,9 +38,9 @@ public class CommonAIController : IAIController
                         foreach (var chess in target.chessList)
                         {
                             if (chess.Tag == TagDefine.PLAYER)
-                                damage += Formulas.CalSkillDamage(skill.Data, _chess, chess, false) * skill.Data.hitTimes;
+                                damage += Formulas.CalSkillDamage(skill.Data, _chess, chess, false).num * skill.Data.hitTimes;
                             else
-                                damage -= Formulas.CalSkillDamage(skill.Data, _chess, chess, false) * skill.Data.hitTimes;
+                                damage -= Formulas.CalSkillDamage(skill.Data, _chess, chess, false).num * skill.Data.hitTimes;
                         }
                         if (damage > maxDamage)
                         {

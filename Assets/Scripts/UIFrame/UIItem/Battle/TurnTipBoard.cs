@@ -44,7 +44,10 @@ public class TurnTipBoard : BasePanel
     {
         _txtTurnChangeNotice.color = playerTurn;
         _txtTurnChangeNotice.text = "我方回合";
-        _txtTurnChangeNotice.DOFade(0, 1.5f);
+        _txtTurnChangeNotice.DOColor(new Color(playerTurn.r, playerTurn.g, playerTurn.b, 1f), 1f).OnComplete(()=>
+        {
+            _txtTurnChangeNotice.DOFade(0, 1f);
+        });
         _enemyField.SetActive(false);
         _playerField.SetActive(true);
     }
@@ -52,7 +55,10 @@ public class TurnTipBoard : BasePanel
     {
         _txtTurnChangeNotice.color = enemyTurn;
         _txtTurnChangeNotice.text = "敌方回合";
-        _txtTurnChangeNotice.DOFade(0, 1.5f);
+        _txtTurnChangeNotice.DOColor(new Color(enemyTurn.r, enemyTurn.g, enemyTurn.b, 1f), 1f).OnComplete(() =>
+        {
+            _txtTurnChangeNotice.DOFade(0, 1f);
+        });
         _playerField.SetActive(false);
         _enemyField.SetActive(true);
     }

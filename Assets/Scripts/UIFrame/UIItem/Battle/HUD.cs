@@ -11,6 +11,11 @@ public class HUD : MonoBehaviour
     public Color PLAYER_COLOR = new Color(0f, 176 / 255f, 209 / 255f);
     public Color ENEMY_COLOR = new Color(255 / 255f, 198 / 255f, 0f);
 
+    public Color EFFECTIVE_COLOR = Color.red;
+    public Color HALF_EFFECTIVE_COLOR = Color.blue;
+    public Color COMMON_DAMAGE_COLOR = Color.yellow;
+    public Color ORIGIN_COLOR = Color.white;
+
     private Transform _hpBarBg;
     private Image _hpBar1;//血条上层
     private Image _hpBar2;//血条下层慢放
@@ -55,16 +60,69 @@ public class HUD : MonoBehaviour
         callback?.Invoke();
     }
 
-    public void ShowPreview(float hp, float maxHp)
+    public void ShowDamagePreview(float hp, float maxHp, int damage, DamageType type)
     {
         //TODO 根据克制效果显示不同标志
+        switch (type)
+        {
+            case DamageType.NoEffect:
+                NoticeNoEffective();
+                break;
+            case DamageType.HalfEffective:
+                NoticeHalfEffective(damage, false);
+                break;
+            case DamageType.Common:
+                NoticeCommonDamage(damage, false);
+                break;
+            case DamageType.Effective:
+                NoticeEffective(damage, false);
+                break;
+        }
         _lastBar1FillAmount = _hpBar1.fillAmount;
         _hpBar1.fillAmount = hp / maxHp;
         //TODO 若死亡，则出现死亡标志
     }
+    public void ShowHealPreview(float hp, float maxHp, int healNum)
+    {
+        _txtMsg.enabled = true;
+        _txtMsg.color = Color.green;
+        _txtMsg.text = healNum.ToString();
+        _lastBar1FillAmount = _hpBar1.fillAmount;
+        _hpBar1.fillAmount = hp / maxHp;
+    }
     public void HidePreview()
     {
+        HideNotice();
         _hpBar1.fillAmount = _lastBar1FillAmount;
+    }
+
+    public void NoticeEffective(int num, bool isHide = true)
+    {
+        _txtMsg.enabled = true;
+        _txtMsg.color = EFFECTIVE_COLOR;
+        _txtMsg.text = num.ToString();
+        if (isHide) Invoke("HideNotice", 1f);
+    }
+    public void NoticeHalfEffective(int num, bool isHide = true)
+    {
+        _txtMsg.enabled = true;
+        _txtMsg.color = HALF_EFFECTIVE_COLOR;
+        _txtMsg.text = num.ToString();
+        if (isHide) Invoke("HideNotice", 1f);
+    }
+    public void NoticeCommonDamage(int num, bool isHide = true)
+    {
+        _txtMsg.enabled = true;
+        _txtMsg.color = COMMON_DAMAGE_COLOR;
+        _txtMsg.text = num.ToString();
+        if (isHide) Invoke("HideNotice", 1f);
+    }
+    public void NoticeNoEffective(bool isHide = true)
+    {
+        _txtMsg.enabled = true;
+        _txtMsg.color = Color.gray;
+        _txtMsg.text = "没有效果";
+        if (isHide) Invoke("HideNotice", 1f);
     }
 
     public void NoticeAvoid()
@@ -82,6 +140,7 @@ public class HUD : MonoBehaviour
 
     public void HideNotice()
     {
+        _txtMsg.color = ORIGIN_COLOR;
         _txtMsg.enabled = false;
     }
 }

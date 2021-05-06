@@ -123,8 +123,23 @@ public abstract class IChess : IAttackable
         return false;
     }
 
-    public void TakeDamage(int damage, Direction dir, Action callback = null)
+    public void TakeDamage(int damage, DamageType type, Direction dir, Action callback = null)
     {
+        switch (type)
+        {
+            case DamageType.NoEffect:
+                _hud.NoticeNoEffective();
+                break;
+            case DamageType.HalfEffective:
+                _hud.NoticeHalfEffective(damage);
+                break;
+            case DamageType.Common:
+                _hud.NoticeCommonDamage(damage);
+                break;
+            case DamageType.Effective:
+                _hud.NoticeEffective(damage);
+                break;
+        }
         //判断是否死亡
         if (Attribute.TakeDamage(damage))
         {
@@ -150,18 +165,18 @@ public abstract class IChess : IAttackable
     }
 
     //显示收到技能可能出现的效果
-    public void ShowPreview(int num, Skill skill)
+    public void ShowPreview((int num, DamageType type) effect, Skill skill)
     {
         switch (skill.Data.skillType)
         {
             case SkillType.Damage:
-                int realNum = Attribute.HP - num;
-                _hud.ShowPreview(realNum < 0 ? 0 : realNum, Attribute.MaxHP);
+                int realNum = Attribute.HP - effect.num;
+                _hud.ShowDamagePreview(realNum < 0 ? 0 : realNum, Attribute.MaxHP, effect.num, effect.type);
                 break;
             case SkillType.Heal:
                 //TODO 可能有治疗增益
-                int realNum2 = Attribute.HP + num;
-                _hud.ShowPreview(realNum2, Attribute.MaxHP);
+                int realNum2 = Attribute.HP + effect.num;
+                _hud.ShowHealPreview(realNum2, Attribute.MaxHP, effect.num);
                 break;
             case SkillType.Effect:
                 //暂时不做任何提示

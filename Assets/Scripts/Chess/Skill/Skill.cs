@@ -140,9 +140,9 @@ public class Skill
                     }
                     else
                     {
-                        int damage = Formulas.CalSkillDamage(Data, _chess, target);
-                        _damage = damage;
-                        target.TakeDamage(damage, dir, () => ReadyToDoEffect(dir));
+                        var damage = Formulas.CalSkillDamage(Data, _chess, target);
+                        _damage = damage.num;
+                        target.TakeDamage(damage.num, damage.type, dir, () => ReadyToDoEffect(dir));
                     }
                 }
                 break;
@@ -167,19 +167,19 @@ public class Skill
     /// <summary>
     /// 获取技能将要造成的结果，伤害或者回复
     /// </summary>
-    public virtual int GetPreview(IChess target)
+    public virtual (int num, DamageType type) GetPreview(IChess target)
     {
         switch (Data.skillType)
         {
             case SkillType.Damage:
                 return Formulas.CalSkillDamage(Data, _chess, target, false);
             case SkillType.Heal:
-                return (int)(target.Attribute.MaxHP * (Data.power == 0 ? Data.fixedPercent : Data.power));
+                return ((int)(target.Attribute.MaxHP * (Data.power == 0 ? Data.fixedPercent : Data.power)), 0);
             case SkillType.Effect:
-                return 0;
+                return (0, 0);
             default:
                 Debug.LogError("该类型尚未实现" + Data.skillType);
-                return 0;
+                return (0, 0);
         }
     }
 

@@ -2,28 +2,49 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum DamageType
+{
+    NoEffect,
+    HalfEffective,
+    Common,
+    Effective
+}
+
 /// <summary>
 /// 公式计算类
 /// </summary>
 public static class Formulas
 {
-    public static int CalSkillDamage(SkillData attr, IChess user, IChess target, bool canCrit = true)
+    /// <summary>
+    /// 计算技能伤害，返回伤害数字和伤害克制类别
+    /// </summary>
+    /// <param name="attr"></param>
+    /// <param name="user"></param>
+    /// <param name="target"></param>
+    /// <param name="canCrit"></param>
+    /// <returns>克制类别0为无效，1为不是很有效，2为正常，3为效果拔群</returns>
+    public static (int num, DamageType type) CalSkillDamage(SkillData attr, IChess user, IChess target, bool canCrit = true)
     {
         float damage = 1;
+        DamageType type = DamageType.NoEffect;
+        //计算属性克制
+        damage *= GetPMTypeRestraint(attr.pmType, target.Attribute.PMType1);
+        if (target.Attribute.PMType2 != PMType.None) damage *= GetPMTypeRestraint(attr.pmType, target.Attribute.PMType2);
+        if (Mathf.Abs(damage) <= float.Epsilon) return (0, type);
+        else if (Mathf.Abs(damage - 0.5f) <= float.Epsilon) type = DamageType.HalfEffective;
+        else if (Mathf.Abs(damage - 1f) <= float.Epsilon) type = DamageType.Common;
+        else type = DamageType.Effective;
+        //计算本属性加成
         if (attr.pmType == user.Attribute.PMType1 || attr.pmType == user.Attribute.PMType2)
         {
             damage *= 1.5f;
         }
-        //计算属性克制
-        damage *= GetPMTypeRestraint(attr.pmType, target.Attribute.PMType1);
-        if (target.Attribute.PMType2 != PMType.None) damage *= GetPMTypeRestraint(attr.pmType, target.Attribute.PMType2);
-        if (damage == 0) return 0;
         //判断是否暴击
         if (canCrit && Random.Range(0, 100) < user.Attribute.CritRate) damage *= 1.5f;
         float num = user.Attribute.Attack - target.Attribute.Defence;
         if (num <= 0) num = 1;
         damage *= attr.power * num / 50f;
-        return Mathf.RoundToInt(damage);
+        return (Mathf.RoundToInt(damage), type);
     }
 
     public static int CalHealingNum(SkillData attr, IChess user, IChess target)
@@ -61,3 +82,4 @@ public static class Formulas
         return 1f;
     }
 }
+

@@ -624,5 +624,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 4
-  playerTurn: {r: 0, g: 0.5624962, b: 1, a: 1}
-  enemyTurn: {r: 1, g: 0, b: 0.039215688, a: 1}
+  playerTurn: {r: 0, g: 0.5624962, b: 1, a: 0}
+  enemyTurn: {r: 1, g: 0, b: 0.039215688, a: 0}
