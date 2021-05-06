@@ -86,7 +86,7 @@ public class HUD : MonoBehaviour
     {
         _txtMsg.enabled = true;
         _txtMsg.color = Color.green;
-        _txtMsg.text = healNum.ToString();
+        _txtMsg.text = "+" + healNum.ToString();
         _lastBar1FillAmount = _hpBar1.fillAmount;
         _hpBar1.fillAmount = hp / maxHp;
     }
@@ -100,21 +100,21 @@ public class HUD : MonoBehaviour
     {
         _txtMsg.enabled = true;
         _txtMsg.color = EFFECTIVE_COLOR;
-        _txtMsg.text = num.ToString();
+        _txtMsg.text = "-" + num.ToString();
         if (isHide) Invoke("HideNotice", 1f);
     }
     public void NoticeHalfEffective(int num, bool isHide = true)
     {
         _txtMsg.enabled = true;
         _txtMsg.color = HALF_EFFECTIVE_COLOR;
-        _txtMsg.text = num.ToString();
+        _txtMsg.text = "-" + num.ToString();
         if (isHide) Invoke("HideNotice", 1f);
     }
     public void NoticeCommonDamage(int num, bool isHide = true)
     {
         _txtMsg.enabled = true;
         _txtMsg.color = COMMON_DAMAGE_COLOR;
-        _txtMsg.text = num.ToString();
+        _txtMsg.text = "-" + num.ToString();
         if (isHide) Invoke("HideNotice", 1f);
     }
     public void NoticeNoEffective(bool isHide = true)
