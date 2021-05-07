@@ -24,8 +24,10 @@ public class SkillDirButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         _btn = GetComponent<Button>();
         _btn.onClick.AddListener(() =>
         {
-            BattleSystem.Instance.UseSkillToChoosedDir(_dir);
+            OnPointerExit(null);
+            _btn.interactable = false;
             UIManager.Instance.PopPanel();
+            BattleSystem.Instance.UseSkillToChoosedDir(_dir);
         });
     }
 
