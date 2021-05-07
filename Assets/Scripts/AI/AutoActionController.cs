@@ -34,7 +34,7 @@ public class AutoActionController
 
     private IEnumerator WaitForTurnChange()
     {
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(2f);
         _enemyList[_actionIndex].AI.StartAction();
     }
 

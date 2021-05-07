@@ -71,7 +71,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         var chess = ChessFactory.ProducePlayer(id);
         chess.LearnSkill(SkillFactory.Produce(5));
         chess.LearnSkill(SkillFactory.Produce(6));
-        chess.LearnSkill(SkillFactory.Produce(4));
+        chess.LearnSkill(SkillFactory.Produce(2));
         //chess.LearnSkill(SkillFactory.Produce(5));
         MapGrid grid = _map.GetGridByCoord(x, y);
         chess.SetStayGrid(grid);
@@ -91,7 +91,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         var chess = ChessFactory.ProduceEnemy(id, new CommonAIController(_playerList, _map));
         chess.LearnSkill(SkillFactory.Produce(5));
         chess.LearnSkill(SkillFactory.Produce(6));
-        chess.LearnSkill(SkillFactory.Produce(4));
+        chess.LearnSkill(SkillFactory.Produce(2));
         MapGrid grid = _map.GetGridByCoord(x, y);
         chess.SetStayGrid(grid);
         _enemyList.Add(chess);
@@ -439,6 +439,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     }
     private void OnEnemyTurn()
     {
+        if (_enemyList.Count == 0) return;
         MessageCenter.Instance.Broadcast(MessageType.GlobalCantSelect);
         MessageCenter.Instance.Broadcast(MessageType.OnEnemyTurn);
         BattleState = BattleState.EnemyTurn;
@@ -458,11 +459,13 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     private void Victory()
     {
         Debug.Log("游戏胜利");
+        MessageCenter.Instance.Broadcast(MessageType.GlobalCantSelect);
         MessageCenter.Instance.Broadcast(MessageType.OnVictory);
     }
     private void Defeat()
     {
         Debug.Log("游戏失败");
+        MessageCenter.Instance.Broadcast(MessageType.GlobalCantSelect);
         MessageCenter.Instance.Broadcast(MessageType.OnDefeat);
     }
     #endregion
