@@ -125,21 +125,6 @@ public abstract class IChess : IAttackable
 
     public void TakeDamage(int damage, DamageType type, Direction dir, Action callback = null)
     {
-        switch (type)
-        {
-            case DamageType.NoEffect:
-                _hud.NoticeNoEffective();
-                break;
-            case DamageType.HalfEffective:
-                _hud.NoticeHalfEffective(damage);
-                break;
-            case DamageType.Common:
-                _hud.NoticeCommonDamage(damage);
-                break;
-            case DamageType.Effective:
-                _hud.NoticeEffective(damage);
-                break;
-        }
         //判断是否死亡
         if (Attribute.TakeDamage(damage))
         {
@@ -148,20 +133,20 @@ public abstract class IChess : IAttackable
             callback = null;
         }
         _anim.TakeDamage(dir);
-        _hud.ChangeHPValue(Attribute.HP, Attribute.MaxHP, callback);
+        _hud.ChangeHPValueByDamage(Attribute.HP, Attribute.MaxHP, damage, type, callback);
     }
 
     public void Healing(int num)
     {
         Attribute.Healing(num);
         _anim.Healing();
-        _hud.ChangeHPValue(Attribute.HP, Attribute.MaxHP);
+        _hud.ChangeHPValueByHealing(Attribute.HP, Attribute.MaxHP, num);
     }
     public void Healing(float percent)
     {
         Attribute.Healing(percent);
         _anim.Healing();
-        _hud.ChangeHPValue(Attribute.HP, Attribute.MaxHP);
+        _hud.ChangeHPValueByHealing(Attribute.HP, Attribute.MaxHP, (int)(percent * Attribute.MaxHP));
     }
 
     //显示收到技能可能出现的效果
@@ -260,7 +245,7 @@ public abstract class IChess : IAttackable
             Dead();
         }
         //TODO 播放中毒受伤动画
-        _hud.ChangeHPValue(Attribute.HP, Attribute.MaxHP);
+        _hud.ChangeHPValueByDamage(Attribute.HP, Attribute.MaxHP, (int)(0.0625f * Attribute.MaxHP), DamageType.Burn);
     }
 
     public void Poisoned(float bloodPer)
@@ -270,7 +255,7 @@ public abstract class IChess : IAttackable
             Dead();
         }
         //TODO 播放中毒受伤动画
-        _hud.ChangeHPValue(Attribute.HP, Attribute.MaxHP);
+        _hud.ChangeHPValueByDamage(Attribute.HP, Attribute.MaxHP, (int)(bloodPer * Attribute.MaxHP), DamageType.Poison);
     }
 
     public void Freezed()
@@ -288,7 +273,7 @@ public abstract class IChess : IAttackable
             Dead();
         }
         //TODO 播放中毒受伤动画
-        _hud.ChangeHPValue(Attribute.HP, Attribute.MaxHP);
+        _hud.ChangeHPValueByDamage(Attribute.HP, Attribute.MaxHP, (int)(0.0625f * Attribute.MaxHP), DamageType.Common);
     }
 
     public void Dead()

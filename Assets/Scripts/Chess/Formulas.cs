@@ -7,7 +7,9 @@ public enum DamageType
     NoEffect,
     HalfEffective,
     Common,
-    Effective
+    Effective,
+    Poison,
+    Burn
 }
 
 /// <summary>

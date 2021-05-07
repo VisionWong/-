@@ -11,6 +11,10 @@ public class HUD : MonoBehaviour
     public Color PLAYER_COLOR = new Color(0f, 176 / 255f, 209 / 255f);
     public Color ENEMY_COLOR = new Color(255 / 255f, 198 / 255f, 0f);
 
+    public Color BURN_COLOR = new Color(209 / 255f, 48 / 255f, 0f);
+    public Color POISON_COLOR = new Color(123 / 255f, 0f, 209 / 255f);
+    public Color HEAL_COLOR = Color.green;
+    public Color NO_EFFECT_COLOR = Color.gray;
     public Color EFFECTIVE_COLOR = Color.red;
     public Color HALF_EFFECTIVE_COLOR = Color.blue;
     public Color COMMON_DAMAGE_COLOR = Color.yellow;
@@ -44,9 +48,39 @@ public class HUD : MonoBehaviour
             _hpBar1.color = ENEMY_COLOR;
     }
 
-    public void ChangeHPValue(float hp, float maxHp, Action callback = null, float duration = 1f)
+    public void ChangeHPValueByDamage(float hp, float maxHp, int damage, DamageType type, Action callback = null, float duration = 1f)
     {
         HidePreview();
+        switch (type)
+        {
+            case DamageType.NoEffect:
+                NoticeNoEffective();
+                break;
+            case DamageType.HalfEffective:
+                NoticeDamageNum(damage, HALF_EFFECTIVE_COLOR);
+                break;
+            case DamageType.Common:
+                NoticeDamageNum(damage, COMMON_DAMAGE_COLOR);
+                break;
+            case DamageType.Effective:
+                NoticeDamageNum(damage, EFFECTIVE_COLOR);
+                break;
+            case DamageType.Poison:
+                NoticeDamageNum(damage, POISON_COLOR);
+                break;
+            case DamageType.Burn:
+                NoticeDamageNum(damage, BURN_COLOR);
+                break;
+            default:
+                Debug.LogError("该类型还未实现" + type.ToString());
+                break;
+        }
+        StartCoroutine(WaitForHpLose(hp, maxHp, duration, callback));
+    }
+    public void ChangeHPValueByHealing(float hp, float maxHp, int healNum, Action callback = null, float duration = 1f)
+    {
+        HidePreview();
+        NoticeHealNum(healNum);
         StartCoroutine(WaitForHpLose(hp, maxHp, duration, callback));
     }
 
@@ -66,16 +100,25 @@ public class HUD : MonoBehaviour
         switch (type)
         {
             case DamageType.NoEffect:
-                NoticeNoEffective();
+                NoticeNoEffective(false);
                 break;
             case DamageType.HalfEffective:
-                NoticeHalfEffective(damage, false);
+                NoticeDamageNum(damage, HALF_EFFECTIVE_COLOR, false);
                 break;
             case DamageType.Common:
-                NoticeCommonDamage(damage, false);
+                NoticeDamageNum(damage, COMMON_DAMAGE_COLOR, false);
                 break;
             case DamageType.Effective:
-                NoticeEffective(damage, false);
+                NoticeDamageNum(damage, EFFECTIVE_COLOR, false);
+                break;
+            case DamageType.Poison:
+                NoticeDamageNum(damage, POISON_COLOR, false);
+                break;
+            case DamageType.Burn:
+                NoticeDamageNum(damage, BURN_COLOR, false);
+                break;
+            default:
+                Debug.LogError("该类型还未实现" + type.ToString());
                 break;
         }
         _lastBar1FillAmount = _hpBar1.fillAmount;
@@ -84,9 +127,7 @@ public class HUD : MonoBehaviour
     }
     public void ShowHealPreview(float hp, float maxHp, int healNum)
     {
-        _txtMsg.enabled = true;
-        _txtMsg.color = Color.green;
-        _txtMsg.text = "+" + healNum.ToString();
+        NoticeHealNum(healNum, false);
         _lastBar1FillAmount = _hpBar1.fillAmount;
         _hpBar1.fillAmount = hp / maxHp;
     }
@@ -96,32 +137,25 @@ public class HUD : MonoBehaviour
         _hpBar1.fillAmount = _lastBar1FillAmount;
     }
 
-    public void NoticeEffective(int num, bool isHide = true)
+    private void NoticeDamageNum(int damage, Color color, bool isHide = true)
     {
         _txtMsg.enabled = true;
-        _txtMsg.color = EFFECTIVE_COLOR;
-        _txtMsg.text = "-" + num.ToString();
-        if (isHide) Invoke("HideNotice", 1f);
-    }
-    public void NoticeHalfEffective(int num, bool isHide = true)
-    {
-        _txtMsg.enabled = true;
-        _txtMsg.color = HALF_EFFECTIVE_COLOR;
-        _txtMsg.text = "-" + num.ToString();
-        if (isHide) Invoke("HideNotice", 1f);
-    }
-    public void NoticeCommonDamage(int num, bool isHide = true)
-    {
-        _txtMsg.enabled = true;
-        _txtMsg.color = COMMON_DAMAGE_COLOR;
-        _txtMsg.text = "-" + num.ToString();
+        _txtMsg.color = color;
+        _txtMsg.text = "-" + damage.ToString();
         if (isHide) Invoke("HideNotice", 1f);
     }
     public void NoticeNoEffective(bool isHide = true)
     {
         _txtMsg.enabled = true;
-        _txtMsg.color = Color.gray;
+        _txtMsg.color = NO_EFFECT_COLOR;
         _txtMsg.text = "没有效果";
+        if (isHide) Invoke("HideNotice", 1f);
+    }
+    public void NoticeHealNum(int healNum, bool isHide = true)
+    {
+        _txtMsg.enabled = true;
+        _txtMsg.color = HEAL_COLOR;
+        _txtMsg.text = "+" + healNum.ToString();
         if (isHide) Invoke("HideNotice", 1f);
     }
 
