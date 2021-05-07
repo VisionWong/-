@@ -25,7 +25,7 @@ public class SelectableEnemyChess : ISelectable
         {
             Camera.main.GetComponent<CameraController>().MoveToTarget(transform.position);
             MessageCenter.Instance.Broadcast(MessageType.OnSelectChess, _chess);
-            //若
+            MessageCenter.Instance.Broadcast(MessageType.OnSelectEnemyChess, _chess);
             switch (_selectedState)
             {
                 case SelectedState.Idle:
@@ -42,13 +42,18 @@ public class SelectableEnemyChess : ISelectable
         base.Selected();
     }
 
-    public void ChangeToIdle()
-    {
-        _selectedState = SelectedState.Idle;
-    }
-    public void ChangeToOnAction()
-    {
-        _selectedState = SelectedState.OnAction;
-    }
+    //public void ChangeToIdle()
+    //{
+    //    _selectedState = SelectedState.Idle;
+    //}
+    //public void ChangeToOnAction()
+    //{
+    //    _selectedState = SelectedState.OnAction;
+    //}
 
+    public override void CancelSelect()
+    {
+        base.CancelSelect();
+        BattleSystem.Instance.CancelEnemyHighlight();
+    }
 }

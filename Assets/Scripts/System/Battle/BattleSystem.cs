@@ -27,6 +27,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
 
     private ISelectable _curSelected = null;
     private PlayerChess _curPlayerChess = null;
+    private EnemyChess _curEnemyChess = null;
 
     private GameObject _virtualChess = null;
     private MapGrid _curWalkableGrid = null;
@@ -111,7 +112,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     }
 
     //取消棋子选中移动行为
-    private void CancelMoving()
+    private void CancelPlayerMoving()
     {
         if (_virtualChess.activeSelf) _virtualChess.SetActive(false);
         _curWalkableGrid = null;
@@ -119,6 +120,11 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         _curPlayerChess.ChangeToIdle();
         _curPlayerChess = null;
 
+        _map.CancelLastHighlightGrids();
+    }
+    public void CancelEnemyHighlight()
+    {
+        _curEnemyChess = null;
         _map.CancelLastHighlightGrids();
     }
 
@@ -130,7 +136,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
             //如果之前选中了棋子正在寻路，则取消上个棋子的寻路操作
             if (_curPlayerChess != null)
             {
-                CancelMoving();
+                CancelPlayerMoving();
             }
             _curPlayerChess = chess;
             _map.HighlightWalkableGrids(chess);
@@ -148,18 +154,28 @@ public class BattleSystem : MonoSingleton<BattleSystem>
             //如果之前选中了棋子正在寻路，则取消上个棋子的寻路操作
             if (_curPlayerChess != null)
             {
-                CancelMoving();
+                CancelPlayerMoving();
             }
             _curPlayerChess = null;
             BattleState = BattleState.WaitSelect;
         }
     }
 
+    private void OnSelectEnemyChess(EnemyChess chess)
+    {
+        if (_curPlayerChess != null)
+        {
+            CancelPlayerMoving();
+            BattleState = BattleState.WaitSelect;
+        }
+        _map.HighlightWalkableGrids(chess);
+    }
+
     private void OnSelectIdleGrid(MapGrid grid)
     {
         if (BattleState == BattleState.WaitMove)
         {
-            CancelMoving();
+            CancelPlayerMoving();
             BattleState = BattleState.WaitSelect;
         }
     }
@@ -387,13 +403,6 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     }
     #endregion
 
-    #region AI使用技能
-    //public List<IChess> GetAttackableTargetsByBFS(IChess chess, Skill skill, string tag)
-    //{
-    //    return _map.GetAttackableTargetsByBFS(chess, skill, tag);
-    //}
-    #endregion
-
     #region 流程控制
     public void OnChessDead(IChess chess)
     {
@@ -476,6 +485,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         MessageCenter.Instance.AddListener<MapGrid>(MessageType.OnSelectIdleGrid, OnSelectIdleGrid);
         MessageCenter.Instance.AddListener<MapGrid>(MessageType.OnSelectWalkableGrid, OnSelectWalkableGrid);
         MessageCenter.Instance.AddListener<PlayerChess>(MessageType.OnSelectWalkableChess, OnSelectWalkableChess);
+        MessageCenter.Instance.AddListener<EnemyChess>(MessageType.OnSelectEnemyChess, OnSelectEnemyChess);
         MessageCenter.Instance.AddListener<Skill>(MessageType.OnClickSkillBtn, OnClickSkillBtn);
         MessageCenter.Instance.AddListener(MessageType.OnSelectUnwalkableChess, OnSelectUnwalkableChess);
         MessageCenter.Instance.AddListener(MessageType.OnChessActionEnd, OnChessActionEnd);
@@ -486,6 +496,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         MessageCenter.Instance.RemoveListener<MapGrid>(MessageType.OnSelectIdleGrid, OnSelectIdleGrid);
         MessageCenter.Instance.RemoveListener<MapGrid>(MessageType.OnSelectWalkableGrid, OnSelectWalkableGrid);
         MessageCenter.Instance.RemoveListener<PlayerChess>(MessageType.OnSelectWalkableChess, OnSelectWalkableChess);
+        MessageCenter.Instance.RemoveListener<EnemyChess>(MessageType.OnSelectEnemyChess, OnSelectEnemyChess);
         MessageCenter.Instance.RemoveListener<Skill>(MessageType.OnClickSkillBtn, OnClickSkillBtn);
         MessageCenter.Instance.RemoveListener(MessageType.OnSelectUnwalkableChess, OnSelectUnwalkableChess);
         MessageCenter.Instance.RemoveListener(MessageType.OnChessActionEnd, OnChessActionEnd);

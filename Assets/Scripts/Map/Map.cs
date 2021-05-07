@@ -93,7 +93,7 @@ public class Map : MonoBehaviour
     {
         foreach (var grid in lastGrids)
         {
-            grid.HighlightWalkable();
+            grid.HighlightPlayerWalkable();
         }
     }
 
@@ -101,7 +101,7 @@ public class Map : MonoBehaviour
     {
         foreach (var grid in grids)
         {
-            grid.HighlightAttackable();
+            grid.HighlightEnemyWalkable();
         }
     }
 
@@ -193,7 +193,8 @@ public class Map : MonoBehaviour
         close.Add((x, y));
         if (IsWalkable(chess, temp))
         {
-            temp.HighlightWalkable();
+            if (chess is PlayerChess) temp.HighlightPlayerWalkable();
+            else temp.HighlightEnemyWalkable();
             lastGrids.Add(temp);
             open.Enqueue(temp);
         }

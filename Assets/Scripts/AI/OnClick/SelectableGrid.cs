@@ -7,8 +7,7 @@ public enum GridSelectedState
 {
     Unselectable,
     Idle,
-    Moveable,
-    Attackable
+    Moveable
 }
 
 public class SelectableGrid : ISelectable
@@ -36,8 +35,6 @@ public class SelectableGrid : ISelectable
                     break;
                 case GridSelectedState.Moveable:
                     MessageCenter.Instance.Broadcast(MessageType.OnSelectWalkableGrid, m_grid);
-                    break;
-                case GridSelectedState.Attackable:
                     break;
                 case GridSelectedState.Unselectable:
                     //什么也不做

@@ -44,18 +44,17 @@ public class MapGrid : MonoBehaviour
         Y = y;
     }
 
-    public void HighlightWalkable()
+    public void HighlightPlayerWalkable()
     {
         m_outline.enabled = true;
         m_outline.color = 1;
         m_selectable.SelectedState = GridSelectedState.Moveable;
     }
 
-    public void HighlightAttackable()
+    public void HighlightEnemyWalkable()
     {
         m_outline.enabled = true;
         m_outline.color = 0;
-        m_selectable.SelectedState = GridSelectedState.Attackable;
     }
 
     public void CancelHighlight()
