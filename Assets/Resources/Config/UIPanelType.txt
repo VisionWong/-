@@ -13,4 +13,10 @@
 
 {"panelType":"TurnTipBoard",
 "resPath":"UI/Item/TurnTipBoard"},
+
+{"panelType":"SelectChess",
+"resPath":"UI/SelectChessPanel"},
+
+{"panelType":"SelectEnemy",
+"resPath":"UI/SelectEnemyPanel"},
 ]

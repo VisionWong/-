@@ -12,5 +12,6 @@ public enum UIPanelType
     SkillDir,//技能指向
     ChessInfo,
     TurnTipBoard,
-
+    SelectChess,
+    SelectEnemy,
 }
