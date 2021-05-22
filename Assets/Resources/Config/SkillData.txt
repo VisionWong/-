@@ -115,7 +115,68 @@
         ]
     },
     {
-        "id": 99,
+        "id": 7,
+        "name": "叶刃",
+        "description": "像用剑一般操纵叶片切斩对手进行攻击。容易击中要害。",
+        "pmType": "Grass",
+        "skillType": "Damage",
+        "rangeType": "非指向性",
+        "power": 90,
+        "hitRate": 100,
+        "range": [
+            {
+                "x": 0,
+                "y": 1
+            }
+        ]
+    },
+    {
+        "id": 8,
+        "name": "勇鸟猛攻",
+        "description": "收拢翅膀，通过低空飞行突击对手。自己也会受到不小的伤害。",
+        "pmType": "Fly",
+        "skillType": "Damage",
+        "rangeType": "非指向性",
+        "power": 120,
+        "hitRate": 100,
+        "range": [
+            {
+                "x": 0,
+                "y": 1
+            }
+        ],
+        "effects": [
+            {
+                "effectType" : "SelfDamage",
+                "fixedPercent" : 0.33
+            }
+        ]
+    },
+    {
+        "id": 9,
+        "name": "泥巴射击",
+        "description": "收拢翅膀，通过低空飞行突击对手。自己也会受到不小的伤害。",
+        "pmType": "Ground",
+        "skillType": "Damage",
+        "rangeType": "非指向性",
+        "power": 55,
+        "hitRate": 90,
+        "range": [
+            {
+                "x": 0,
+                "y": 2
+            }
+        ],
+        "effects": [
+            {
+                "effectType" : "APDown",
+                "probability" : 1,
+                "effectTurns": 3
+            }
+        ]
+    },
+    {
+        "id": 10,
         "name": "剑舞",
         "description": "挥舞传说之剑，使自身攻击上升2级",
         "pmType": "Common",
@@ -132,9 +193,550 @@
         "effects": [
             {
                 "effectType": "AtkUp",
+                "isSelf" : "true",
                 "probability": 1,
                 "effectLevel": 2,
-                "effectTurns": 99
+                "effectTurns": 5
+            }
+        ]
+    },
+    {
+        "id": 11,
+        "name": "臂錘",
+        "description": "挥舞强力而沉重的拳头，给予对手伤害。命中后自己的行动力会降低1，持续3回合",
+        "pmType": "Fight",
+        "skillType": "Damage",
+        "rangeType": "非指向性",
+        "power": 100,
+        "hitRate": 90,
+        "range": [
+            {
+                "x": 0,
+                "y": 1
+            }
+        ],
+        "effects": [
+            {
+                "effectType": "APDown",
+                "isSelf" : "true", 
+                "probability" : 1,
+                "effectTurns": 3
+            }
+        ]
+    },
+    {
+        "id": 13,
+        "name": "猛撞",
+        "description": "挥舞强力而沉重的拳头，给予对手伤害。命中后自己的行动力会降低1，持续3回合",
+        "pmType": "Common",
+        "skillType": "Damage",
+        "rangeType": "非指向性",
+        "power": 90,
+        "hitRate": 85,
+        "range": [
+            {
+                "x": 0,
+                "y": 1
+            }
+        ],
+        "effects": [
+            {
+                "effectType" : "SelfDamage",
+                "fixedPercent" : 0.25
+            }
+        ]
+    },
+    {
+        "id": 14,
+        "name": "意念头锤",
+        "description": "挥舞强力而沉重的拳头，给予对手伤害。命中后自己的行动力会降低1，持续3回合",
+        "pmType": "Psychic",
+        "skillType": "Damage",
+        "rangeType": "非指向性",
+        "power": 80,
+        "hitRate": 90,
+        "range": [
+            {
+                "x": 0,
+                "y": 1
+            }
+        ],
+        "effects": [
+            {
+                "effectType": "Fear",
+                "probability": 0.2
+            }
+        ]
+    },
+    {
+        "id": 14,
+        "name": "彗星拳",
+        "description": "挥舞强力而沉重的拳头，给予对手伤害。命中后自己的行动力会降低1，持续3回合",
+        "pmType": "Metal",
+        "skillType": "Damage",
+        "rangeType": "非指向性",
+        "power": 90,
+        "hitRate": 90,
+        "range": [
+            {
+                "x": 0,
+                "y": 1
+            }
+        ],
+        "effects": [
+            {
+                "effectType": "AtkUp",
+                "isSelf" : "true",
+                "probability": 1,
+                "effectLevel": 1,
+                "effectTurns": 3
+            }
+        ]
+    },
+    {
+        "id": 15,
+        "name": "龙之怒",
+        "description": "挥舞强力而沉重的拳头，给予对手伤害。命中后自己的行动力会降低1，持续3回合",
+        "pmType": "Dragon",
+        "skillType": "Damage",
+        "rangeType": "非指向性",
+        "power": 0,
+        "hitRate": 100,
+        "range": [
+            {
+                "x": 0,
+                "y": 1
+            }
+        ],
+        "effects": [
+            {
+                "effectType": "FixedDamage",
+                "fixedDamage" : 30
+            }
+        ]
+    },
+    {
+        "id": 16,
+        "name": "龙爪",
+        "description": "挥舞强力而沉重的拳头，给予对手伤害。命中后自己的行动力会降低1，持续3回合",
+        "pmType": "Dragon",
+        "skillType": "Damage",
+        "rangeType": "非指向性",
+        "power": 80,
+        "hitRate": 100,
+        "range": [
+            {
+                "x": 0,
+                "y": 1
+            }
+        ]
+    },
+    {
+        "id": 17,
+        "name": "地震",
+        "description": "挥舞强力而沉重的拳头，给予对手伤害。命中后自己的行动力会降低1，持续3回合",
+        "pmType": "Ground",
+        "skillType": "Damage",
+        "rangeType": "非指向性",
+        "power": 100,
+        "hitRate": 100,
+        "range": [
+            {
+                "x": -1,
+                "y": 1
+            },
+            {
+                "x": 0,
+                "y": 1
+            },
+            {
+                "x": 1,
+                "y": 1
+            },
+            {
+                "x": -1,
+                "y": 0
+            },
+            {
+                "x": 1,
+                "y": 0
+            },
+            {
+                "x": -1,
+                "y": -1
+            },
+            {
+                "x": 0,
+                "y": -1
+            },
+            {
+                "x": 1,
+                "y": -1
+            }
+        ]
+    },
+    {
+        "id": 18,
+        "name": "冰冻拳",
+        "description": "挥舞强力而沉重的拳头，给予对手伤害。命中后自己的行动力会降低1，持续3回合",
+        "pmType": "Ice",
+        "skillType": "Damage",
+        "rangeType": "非指向性",
+        "power": 75,
+        "hitRate": 100,
+        "range": [
+            {
+                "x": 0,
+                "y": 1
+            }
+        ],
+        "effects": [
+            {
+                "effectType": "Freeze",
+                "probability": 0.1
+            }
+        ]
+    },
+    {
+        "id": 18,
+        "name": "暗袭要害",
+        "description": "挥舞强力而沉重的拳头，给予对手伤害。命中后自己的行动力会降低1，持续3回合",
+        "pmType": "Dark",
+        "skillType": "Damage",
+        "rangeType": "非指向性",
+        "power": 70,
+        "hitRate": 100,
+        "range": [
+            {
+                "x": 0,
+                "y": 1
+            }
+        ]
+    },
+    {
+        "id": 19,
+        "name": "变硬",
+        "description": "挥舞传说之剑，使自身攻击上升2级",
+        "pmType": "Common",
+        "skillType": "Effect",
+        "rangeType": "自身",
+        "power": 0,
+        "hitRate": 100,
+        "range": [
+            {
+                "x": 0,
+                "y": 0
+            }
+        ],
+        "effects": [
+            {
+                "effectType": "DefUp",
+                "isSelf" : "true",
+                "probability": 1,
+                "effectLevel": 1,
+                "effectTurns": 5
+            }
+        ]
+    },
+    {
+        "id": 20,
+        "name": "电磁波",
+        "description": "挥舞传说之剑，使自身攻击上升2级",
+        "pmType": "Electric",
+        "skillType": "Effect",
+        "rangeType": "自身",
+        "power": 0,
+        "hitRate": 90,
+        "range": [
+            {
+                "x": 0,
+                "y": 1
+            }
+        ],
+        "effects": [
+            {
+                "effectType": "Paralysis",
+                "probability": 1,
+                "effectTurns": 3
+            }
+        ]
+    },
+    {
+        "id": 21,
+        "name": "岩崩",
+        "description": "挥舞强力而沉重的拳头，给予对手伤害。命中后自己的行动力会降低1，持续3回合",
+        "pmType": "Rock",
+        "skillType": "Damage",
+        "rangeType": "非指向性",
+        "power": 75,
+        "hitRate": 90,
+        "range": [
+            {
+                "x": -1,
+                "y": 1
+            },
+            {
+                "x": 0,
+                "y": 1
+            },
+            {
+                "x": 1,
+                "y": 1
+            }
+        ],
+        "effects": [
+            {
+                "effectType": "Fear",
+                "probability": 0.3
+            }
+        ]
+    },
+    {
+        "id": 22,
+        "name": "十字剪",
+        "description": "挥舞强力而沉重的拳头，给予对手伤害。命中后自己的行动力会降低1，持续3回合",
+        "pmType": "Bug",
+        "skillType": "Damage",
+        "rangeType": "非指向性",
+        "power": 80,
+        "hitRate": 100,
+        "range": [
+            {
+                "x": 0,
+                "y": 1
+            }
+        ]
+    },
+    {
+        "id": 23,
+        "name": "原始之力",
+        "description": "挥舞强力而沉重的拳头，给予对手伤害。命中后自己的行动力会降低1，持续3回合",
+        "pmType": "Rock",
+        "skillType": "Damage",
+        "rangeType": "非指向性",
+        "power": 60,
+        "hitRate": 100,
+        "range": [
+            {
+                "x": 0,
+                "y": 2
+            }
+        ],
+        "effects": [
+            {
+                "effectType": "AtkUp",
+                "isSelf" : "true",
+                "probability": 0.1,
+                "effectLevel": 1,
+                "effectTurns": 3
+            },
+            {
+                "effectType": "DefUp",
+                "isSelf" : "true",
+                "probability": 0.1,
+                "effectLevel": 1,
+                "effectTurns": 3
+            },
+            {
+                "effectType": "APUp",
+                "isSelf" : "true",
+                "probability": 0.1,
+                "effectLevel": 1,
+                "effectTurns": 3
+            }
+        ]
+    },
+    {
+        "id": 24,
+        "name": "飞翔",
+        "description": "挥舞强力而沉重的拳头，给予对手伤害。命中后自己的行动力会降低1，持续3回合",
+        "pmType": "Fly",
+        "skillType": "Damage",
+        "rangeType": "非指向性",
+        "power": 90,
+        "hitRate": 95,
+        "range": [
+            {
+                "x": 0,
+                "y": 1
+            }
+        ]
+    },
+    {
+        "id": 25,
+        "name": "啄食",
+        "description": "挥舞强力而沉重的拳头，给予对手伤害。命中后自己的行动力会降低1，持续3回合",
+        "pmType": "Fly",
+        "skillType": "Damage",
+        "rangeType": "非指向性",
+        "power": 60,
+        "hitRate": 100,
+        "range": [
+            {
+                "x": 0,
+                "y": 1
+            }
+        ]
+    },
+    {
+        "id": 26,
+        "name": "羽栖",
+        "description": "挥舞强力而沉重的拳头，给予对手伤害。命中后自己的行动力会降低1，持续3回合",
+        "pmType": "Fly",
+        "skillType": "Heal",
+        "rangeType": "自身",
+        "power": 0,
+        "fixedPercent": 0.5,
+        "hitRate": 100,
+        "range": [
+            {
+                "x": 0,
+                "y": 0
+            }
+        ]
+    },
+    {
+        "id": 27,
+        "name": "雷电牙",
+        "description": "挥舞强力而沉重的拳头，给予对手伤害。命中后自己的行动力会降低1，持续3回合",
+        "pmType": "Electric",
+        "skillType": "Damage",
+        "rangeType": "非指向性",
+        "power": 65,
+        "hitRate": 95,
+        "range": [
+            {
+                "x": 0,
+                "y": 1
+            }
+        ],
+        "effects": [
+            {
+                "effectType": "Paralysis",
+                "probability": 0.1,
+                "effectTurns": 3
+            },
+            {
+                "effectType": "Fear",
+                "probability": 0.1
+            }
+        ]
+    },
+    {
+        "id": 28,
+        "name": "咬碎",
+        "description": "挥舞强力而沉重的拳头，给予对手伤害。命中后自己的行动力会降低1，持续3回合",
+        "pmType": "Dark",
+        "skillType": "Damage",
+        "rangeType": "非指向性",
+        "power": 80,
+        "hitRate": 100,
+        "range": [
+            {
+                "x": 0,
+                "y": 1
+            }
+        ],
+        "effects": [
+            {
+                "effectType": "DefDown",
+                "probability": 0.2,
+                "effectTurns": 3
+            }
+        ]
+    },
+    {
+        "id": 29,
+        "name": "嬉闹",
+        "description": "挥舞强力而沉重的拳头，给予对手伤害。命中后自己的行动力会降低1，持续3回合",
+        "pmType": "Fairy",
+        "skillType": "Damage",
+        "rangeType": "非指向性",
+        "power": 90,
+        "hitRate": 90,
+        "range": [
+            {
+                "x": 0,
+                "y": 1
+            }
+        ],
+        "effects": [
+            {
+                "effectType": "AtkDown",
+                "probability": 0.1,
+                "effectTurns": 3
+            }
+        ]
+    },
+    {
+        "id": 30,
+        "name": "大地之力",
+        "description": "挥舞强力而沉重的拳头，给予对手伤害。命中后自己的行动力会降低1，持续3回合",
+        "pmType": "Ground",
+        "skillType": "Damage",
+        "rangeType": "非指向性",
+        "power": 90,
+        "hitRate": 100,
+        "range": [
+            {
+                "x": 0,
+                "y": 1
+            }
+        ],
+        "effects": [
+            {
+                "effectType": "DefDown",
+                "probability": 0.1,
+                "effectTurns": 3
+            }
+        ]
+    },
+    {
+        "id": 31,
+        "name": "地裂",
+        "description": "挥舞强力而沉重的拳头，给予对手伤害。命中后自己的行动力会降低1，持续3回合",
+        "pmType": "Ground",
+        "skillType": "Damage",
+        "rangeType": "非指向性",
+        "power": 0,
+        "hitRate": 100,
+        "range": [
+            {
+                "x": 0,
+                "y": 1
+            }
+        ],
+        "effects": [
+            {
+                "effectType": "OHK",
+                "probability": 0.3
+            }
+        ]
+    },
+    {
+        "id": 32,
+        "name": "喷射火焰",
+        "description": "挥舞强力而沉重的拳头，给予对手伤害。命中后自己的行动力会降低1，持续3回合",
+        "pmType": "Fire",
+        "skillType": "Damage",
+        "rangeType": "非指向性",
+        "power": 90,
+        "hitRate": 100,
+        "range": [
+            {
+                "x": 0,
+                "y": 1
+            },
+            {
+                "x": 0,
+                "y": 2
+            }
+        ],
+        "effects": [
+            {
+                "effectType": "Burn",
+                "probability": 0.1,
+                "effectTurns": 3
             }
         ]
     }

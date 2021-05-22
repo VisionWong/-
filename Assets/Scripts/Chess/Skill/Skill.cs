@@ -27,8 +27,9 @@ public enum SkillEffectType
     Paralysis,  //麻痹,
     Freeze,     //冰冻,
     Confusion,  //混乱
+    Fear,       //害怕
     //击退,
-    FixedDamge, //固定伤害,
+    FixedDamage, //固定伤害,
     AtkUp,      //上升攻击,
     DefUp,      //上升防御,
     APUp,       //上升行动力,
@@ -37,6 +38,7 @@ public enum SkillEffectType
     APDown,     //下降行动力,
     SelfDamage, //自损
     Charge,     //蓄力
+    OHK,        //一击必杀
 }
 
 /// <summary>
@@ -254,6 +256,16 @@ public class Skill
                         _chess.Healing((int)(_damage * effect.fixedPercent));
                         break;
                     case SkillEffectType.AtkUp:
+                        foreach (var target in _effectableList)
+                        {
+                            if (Random.Range(0, 1f) < effect.probability)
+                                target.AddBuff(new ChangeAttackBuff(_chess, effect.effectTurns, effect.effectLevel));
+                        }
+                        break;
+                    case SkillEffectType.SelfDamage:
+                        _chess.TakeDamage((int)(_damage * effect.fixedPercent), DamageType.Common, EnumTool.GetOppositeDir(dir));
+                        break;
+                    case SkillEffectType.APDown:
                         foreach (var target in _effectableList)
                         {
                             if (Random.Range(0, 1f) < effect.probability)

@@ -264,4 +264,21 @@
 	"prefabPath": "Chess/445",
 	"audioPath": ""
 },
+{
+	"id": 461,
+	"name": "玛狃拉",
+	"pmType1": "Ice",
+	"pmType2": "Dark",
+	"abilityIdList": [1],
+	"skillId": 1,
+	"evoTaskId": 1,
+	"evoStage": 0,
+	"hp": 100,
+	"ap": 4,
+	"attack": 80,
+	"defence": 43,
+	"spritePath": "Sprite/Chess/461",
+	"prefabPath": "Chess/461",
+	"audioPath": ""
+},
 ]
