@@ -61,9 +61,9 @@ public class BattleSystem : MonoSingleton<BattleSystem>
 
     private void LoadPlayerChess()
     {
-        LoadPlayerChess(5, 4, 252);
-        LoadPlayerChess(4, 3, 252);
-        LoadPlayerChess(4, 6, 255);
+        LoadPlayerChess(5, 4, 348);
+        LoadPlayerChess(4, 3, 383);
+        LoadPlayerChess(4, 6, 445);
         //TODO 根据玩家背包里的信息生成棋子，位置则根据关卡默认位置，玩家后续可在区域内调整
     }   
 

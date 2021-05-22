@@ -7,14 +7,14 @@ using VFramework.UIManager;
 
 public class BattlePanel : BasePanel
 {
-    private Transform _gridInfo;
+    //private Transform _gridInfo;
     private Transform _actionField;
     private Transform _skillField;
     private Transform _skillGroup;
 
-    private Transform _gridDes;
-    private Text txtGridDes;
-    private Text txtGridType;
+    //private Transform _gridDes;
+    //private Text txtGridDes;
+    //private Text txtGridType;
 
     private Button btnSkill;
     private Button btnStay;
@@ -44,10 +44,10 @@ public class BattlePanel : BasePanel
         AddUIItem(UIPanelType.TurnTipBoard);
 
         //棋格信息
-        _gridInfo = transform.Find("GridInfo");
-        _gridDes = _gridInfo.Find("Description");
-        txtGridType = _gridInfo.Find("txtGridType").GetComponent<Text>();
-        txtGridDes = _gridDes.Find("txtGridDes").GetComponent<Text>();
+        //_gridInfo = transform.Find("GridInfo");
+        //_gridDes = _gridInfo.Find("Description");
+        //txtGridType = _gridInfo.Find("txtGridType").GetComponent<Text>();
+        //txtGridDes = _gridDes.Find("txtGridDes").GetComponent<Text>();
 
         //棋子行动
         _actionField = transform.Find("ActionField");
@@ -98,23 +98,23 @@ public class BattlePanel : BasePanel
         RemoveAll();
     }
 
-    private void Update()
-    {
-        if (_gridInfo.gameObject.activeSelf)
-        {
-            if (Input.GetKeyDown(KeyCode.Q))
-            {
-                if (_gridDes.gameObject.activeSelf)
-                    _gridDes.gameObject.SetActive(false);
-                else _gridDes.gameObject.SetActive(true);
-            }
-        }
-    }
+    //private void Update()
+    //{
+    //    if (_gridInfo.gameObject.activeSelf)
+    //    {
+    //        if (Input.GetKeyDown(KeyCode.Q))
+    //        {
+    //            if (_gridDes.gameObject.activeSelf)
+    //                _gridDes.gameObject.SetActive(false);
+    //            else _gridDes.gameObject.SetActive(true);
+    //        }
+    //    }
+    //}
 
     private void HideAll()
     {
-        _gridDes.gameObject.SetActive(false);
-        _gridInfo.gameObject.SetActive(false);
+        //_gridDes.gameObject.SetActive(false);
+        //_gridInfo.gameObject.SetActive(false);
 
         _actionField.gameObject.SetActive(false);
         _skillField.gameObject.SetActive(false);
@@ -123,20 +123,20 @@ public class BattlePanel : BasePanel
 
     private void OnSelectGrid(MapGrid grid)
     {
-        if (!_gridInfo.gameObject.activeSelf)
-            _gridInfo.gameObject.SetActive(true);
-        txtGridType.text = grid.TypeName;
-        txtGridDes.text = grid.Description;
+        //if (!_gridInfo.gameObject.activeSelf)
+        //    _gridInfo.gameObject.SetActive(true);
+        //txtGridType.text = grid.TypeName;
+        //txtGridDes.text = grid.Description;
     }
 
     private void ShowGridDes()
     {
-        _gridDes.gameObject.SetActive(true);
+        //_gridDes.gameObject.SetActive(true);
     }
 
     private void HideGridDes()
     {
-        _gridDes.gameObject.SetActive(false);
+        //_gridDes.gameObject.SetActive(false);
     }
 
     private void OnClickSkillBtn()
