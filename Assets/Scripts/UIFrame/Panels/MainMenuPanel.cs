@@ -16,7 +16,7 @@ public class MainMenuPanel : BasePanel
         btnStart = leftField.Find("btnStart").GetComponent<Button>();
         btnQuit = leftField.Find("btnQuit").GetComponent<Button>();
 
-        btnStart.onClick.AddListener(()=> UIManager.Instance.PushPanel(UIPanelType.SelectChess, true));
+        btnStart.onClick.AddListener(()=> UIManager.Instance.PushPanel(UIPanelType.SelectChess));
         btnQuit.onClick.AddListener(() => Application.Quit());
     }
 
