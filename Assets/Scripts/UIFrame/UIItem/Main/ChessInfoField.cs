@@ -66,9 +66,29 @@ public class ChessInfoField : MonoBehaviour
         txtAtk.text = info.attack.ToString();
         txtDef.text = info.defence.ToString();
         txtAP.text = info.ap.ToString();
-        btnSkill1.SetInfo(icon.skillId1);
-        btnSkill2.SetInfo(icon.skillId2);
-        btnSkill3.SetInfo(icon.skillId3);
+        btnSkill1.SetInfo(info.skillIdList[1]);
+        btnSkill2.SetInfo(info.skillIdList[2]);
+        btnSkill3.SetInfo(info.skillIdList[3]);
+    }
+
+    public void ShowChessInfo(EnemyChessIcon icon)
+    {
+        _skillInfoFiled.gameObject.SetActive(false);
+
+        var info = ChessLib.Instance.GetData(icon.chessId);
+        txtName.text = info.name;
+        txtPMType1.text = EnumTool.GetPMTypeName(info.pmType1);
+        if (info.pmType2 != PMType.None)
+            txtPMType2.text = EnumTool.GetPMTypeName(info.pmType2);
+        else
+            txtPMType2.text = "无";
+        txtHP.text = info.hp.ToString();
+        txtAtk.text = info.attack.ToString();
+        txtDef.text = info.defence.ToString();
+        txtAP.text = info.ap.ToString();
+        btnSkill1.SetInfo(info.skillIdList[1]);
+        btnSkill2.SetInfo(info.skillIdList[2]);
+        btnSkill3.SetInfo(info.skillIdList[3]);
     }
 
     public void OnClickSkillBtn(SkillData data)
@@ -80,6 +100,15 @@ public class ChessInfoField : MonoBehaviour
         txtSkillPower.text = data.power.ToString();
         txtSkillHitRate.text = data.hitRate.ToString();
         txtSkillDes.text = data.description;
-        txtSkillRange.text = data.range.ToString();
+        string str = "";
+        foreach (var item in data.range)
+        {
+            str += "(";
+            str += item.x.ToString();
+            str += ",";
+            str += item.y.ToString();
+            str += ")";
+        }
+        txtSkillRange.text = str;
     }
 }

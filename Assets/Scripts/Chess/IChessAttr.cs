@@ -15,7 +15,7 @@ public class ChessData : IData
     public PMType pmType1;
     public PMType pmType2 = PMType.None;
     public List<int> abilityIdList;
-    public int skillId;//自带的技能ID
+    public List<int> skillIdList;//自带的技能ID
     public int evoTaskId;//进化条件
     public EvolutionStage evoStage;
     public int hp;

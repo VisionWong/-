@@ -739,5 +739,48 @@
                 "effectTurns": 3
             }
         ]
+    },
+    {
+        "id": 35,
+        "name": "金属爪",
+        "description": "挥舞强力而沉重的拳头，给予对手伤害。命中后自己的行动力会降低1，持续3回合",
+        "pmType": "Metal",
+        "skillType": "Damage",
+        "rangeType": "非指向性",
+        "power": 55,
+        "hitRate": 100,
+        "range": [
+            {
+                "x": 0,
+                "y": 1
+            }
+        ],
+        "effects": [
+            {
+                "effectType": "AtkUp",
+                "probability": 0.1,
+                "effectTurns": 3
+            }
+        ]
+    },
+    {
+        "id": 36,
+        "name": "龙之波动",
+        "description": "挥舞强力而沉重的拳头，给予对手伤害。命中后自己的行动力会降低1，持续3回合",
+        "pmType": "Dragon",
+        "skillType": "Damage",
+        "rangeType": "非指向性",
+        "power": 80,
+        "hitRate": 100,
+        "range": [
+            {
+                "x": 0,
+                "y": 1
+            },
+            {
+                "x": 0,
+                "y": 2
+            }
+        ]
     }
 ]

@@ -20,7 +20,10 @@ public static class ChessFactory
         chess.SetSelectableScript(go.AddComponent<SelectablePlayerChess>());
 
         //技能
-        chess.LearnSkill(SkillFactory.Produce(data.skillId));
+        foreach (var skillId in data.skillIdList)
+        {
+            chess.LearnSkill(SkillFactory.Produce(skillId));
+        }
         return chess;
     }
 
@@ -41,7 +44,10 @@ public static class ChessFactory
         chess.AI.SetChess(chess);
 
         //技能
-        chess.LearnSkill(SkillFactory.Produce(data.skillId));
+        foreach (var skillId in data.skillIdList)
+        {
+            chess.LearnSkill(SkillFactory.Produce(skillId));
+        }
         return chess;
     }
 }
