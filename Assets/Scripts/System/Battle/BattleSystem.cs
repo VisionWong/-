@@ -19,6 +19,9 @@ public class BattleSystem : MonoSingleton<BattleSystem>
 {
     public BattleState BattleState { get; private set; }
 
+    private List<int> _playerIdList = new List<int>();
+    private List<int> _enemyIdList = new List<int>();
+
     private Map _map;
     private List<PlayerChess> _playerList = new List<PlayerChess>();
     private List<EnemyChess> _enemyList = new List<EnemyChess>();
@@ -36,8 +39,18 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     private Skill _curUsedSkill = null;
 
     #region 战斗准备
-    public void StartBattle()
+    public void AddPlayerChessToLoad(int id)
     {
+        _playerIdList.Add(id);
+    }
+
+    public void AddEnemyChessToLoad(int id)
+    {
+        _enemyIdList.Add(id);
+    }
+
+    public void StartBattle()
+    {       
         RegisterAll();
         LoadMap();
         LoadPlayerChess();
@@ -47,9 +60,8 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         //TODO 敌方特性触发
         //TODO 我方特性触发
         //我方回合开始
+        //TODO 先环视敌方棋子，再回到自己的棋子
         OnPlayerTurn();
-        
-
     }
 
     private void LoadMap()
@@ -61,19 +73,23 @@ public class BattleSystem : MonoSingleton<BattleSystem>
 
     private void LoadPlayerChess()
     {
-        LoadPlayerChess(5, 4, 348);
-        LoadPlayerChess(4, 3, 383);
-        LoadPlayerChess(4, 6, 445);
         //TODO 根据玩家背包里的信息生成棋子，位置则根据关卡默认位置，玩家后续可在区域内调整
+        foreach (var id in _playerIdList)
+        {
+            int rx = UnityEngine.Random.Range(1, _map.col - 1);
+            int ry = UnityEngine.Random.Range(_map.row - 3, _map.row);
+            if (_map.GetGridByCoord(rx, ry).StayedChess != null)
+            {
+                rx = UnityEngine.Random.Range(1, _map.col - 1);
+                ry = UnityEngine.Random.Range(_map.row - 3, _map.row);
+            }
+            LoadPlayerChess(rx, ry, id);
+        }
     }   
 
     private void LoadPlayerChess(int x, int y, int id)
     {
-        var chess = ChessFactory.ProducePlayer(id);
-        chess.LearnSkill(SkillFactory.Produce(5));
-        chess.LearnSkill(SkillFactory.Produce(6));
-        chess.LearnSkill(SkillFactory.Produce(2));
-        //chess.LearnSkill(SkillFactory.Produce(5));
+        var chess = ChessFactory.ProducePlayer(id);        
         MapGrid grid = _map.GetGridByCoord(x, y);
         chess.SetStayGrid(grid);
         _playerList.Add(chess);
@@ -82,17 +98,23 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     public void LoadEnemyChess()
     {
         //TODO 据关卡信息生成
-        LoadEnemyChess(5, 3, 252);
-        LoadEnemyChess(6, 3, 252);
+        foreach (var id in _enemyIdList)
+        {
+            int rx = UnityEngine.Random.Range(1, _map.col - 1);
+            int ry = UnityEngine.Random.Range(0, 3);
+            if (_map.GetGridByCoord(rx, ry).StayedChess != null)
+            {
+                rx = UnityEngine.Random.Range(1, _map.col - 1);
+                ry = UnityEngine.Random.Range(0, 3);
+            }
+            LoadEnemyChess(rx, ry, id);
+        }
         _enemyController = new AutoActionController(_enemyList, _playerList);
     }
 
     private void LoadEnemyChess(int x, int y, int id)
     {
         var chess = ChessFactory.ProduceEnemy(id, new CommonAIController(_playerList, _map));
-        chess.LearnSkill(SkillFactory.Produce(5));
-        chess.LearnSkill(SkillFactory.Produce(6));
-        chess.LearnSkill(SkillFactory.Produce(2));
         MapGrid grid = _map.GetGridByCoord(x, y);
         chess.SetStayGrid(grid);
         _enemyList.Add(chess);

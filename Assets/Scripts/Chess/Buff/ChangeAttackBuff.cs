@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChangeAttackBuff : IBuff
+public class ChangeAttackBuff : ILevelChange
 {
     private int _level;
 
@@ -20,5 +20,14 @@ public class ChangeAttackBuff : IBuff
     {
         _chess.Attribute.ChangeAttackLevel(-_level);
         base.OnBuffEnd();
+    }
+
+    public override void OnTurnStart()
+    {
+        _turns--;
+        if (_turns == 0)
+        {
+            OnBuffEnd();
+        }
     }
 }

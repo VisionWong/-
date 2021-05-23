@@ -50,7 +50,8 @@ public class SelectChessPanel : BasePanel
         //记录三个棋子
         foreach (var item in _chessIcons)
         {
-            BattleSystem.Instance.AddPlayerChessToLoad(item.chessId);
+            if (item.IsSelect)
+                BattleSystem.Instance.AddPlayerChessToLoad(item.chessId);
         }
     }
 

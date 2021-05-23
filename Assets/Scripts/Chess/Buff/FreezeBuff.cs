@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FreezeBuff : IBuff
+public class FreezeBuff : IDebuff
 {
     public FreezeBuff(IChess chess, int turns) : base(chess, turns)
     {
+        BuffType = BuffType.Freeze;
     }
 
     public override void OnBuffBegin()

@@ -150,6 +150,8 @@ public static class EnumTool
     {
         switch (effectType)
         {
+            case SkillEffectType.Fear:
+                return BuffType.Fear;
             case SkillEffectType.Burn:
                 return BuffType.Burn;
             case SkillEffectType.Sleep:

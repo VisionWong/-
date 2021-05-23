@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SleepBuff : IBuff
+public class SleepBuff : IDebuff
 {
     public SleepBuff(IChess chess, int turns) : base(chess, turns)
     {
+        BuffType = BuffType.Sleep;
     }
 
     public override void OnBuffBegin()

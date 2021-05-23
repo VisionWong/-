@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ConfusionBuff : IBuff
+public class ConfusionBuff : IDebuff
 {
     public ConfusionBuff(IChess chess, int turns) : base(chess, turns)
     {
+        BuffType = BuffType.Confusion;
     }
 
     public override void OnBuffBegin()

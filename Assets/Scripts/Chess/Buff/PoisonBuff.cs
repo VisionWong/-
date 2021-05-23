@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PoisonBuff : IBuff
+public class PoisonBuff : IDebuff
 {
     private float _bloodPer;
 
     public PoisonBuff(IChess chess, int turns, float bloodPer) : base(chess, turns)
     {
         _bloodPer = bloodPer;
+        BuffType = BuffType.Posion;
     }
 
     public override void OnBuffBegin()

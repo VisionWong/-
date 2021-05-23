@@ -82,6 +82,7 @@ public class SelectEnemyPanel : BasePanel
         BattleSystem.Instance.AddEnemyChessToLoad(_curEnemyIcon.chessId2);
         BattleSystem.Instance.AddEnemyChessToLoad(_curEnemyIcon.chessId3);
         UIManager.Instance.Clear();
+        UIManager.Instance.PushPanel(UIPanelType.Battle);
         BattleSystem.Instance.StartBattle();
     }
 }

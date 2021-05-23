@@ -187,6 +187,11 @@ public abstract class IChess : IAttackable
     public void AddBuff(IBuff buff)
     {
         //TODO 不能出现重复异常BUFF
+        if (buff is IDebuff)
+        {
+            if (ContainsBuff(buff.BuffType))
+                return;
+        }
         Debug.Log(string.Format("buff:{0}添加成功", buff.ToString()));
         _buffList.Add(buff);
         buff.OnBuffBegin();
@@ -199,7 +204,8 @@ public abstract class IChess : IAttackable
     {
         foreach (var buff in _buffList)
         {
-            
+            if (buff.BuffType == type)
+                return true;
         }
         return false;
     }
@@ -224,6 +230,12 @@ public abstract class IChess : IAttackable
         }
     }
     #endregion
+
+    public void Fear()
+    {
+        //跳过该行动回合
+        //TODO 播放动画
+    }
 
     public void Sleep()
     {

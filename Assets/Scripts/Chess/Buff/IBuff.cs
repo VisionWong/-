@@ -11,6 +11,7 @@ public enum BuffType
     Posion,
     Paralysis,
     Confusion,
+    Fear,
     AtkUp,      //上升攻击,
     DefUp,      //上升防御,
     APUp,       //上升行动力,
@@ -48,5 +49,19 @@ public abstract class IBuff
         {
             OnBuffEnd();            
         }
+    }
+}
+
+public abstract class IDebuff : IBuff
+{
+    public IDebuff(IChess chess, int turns) : base(chess, turns)
+    {
+    }
+}
+
+public abstract class ILevelChange : IBuff
+{
+    protected ILevelChange(IChess chess, int turns) : base(chess, turns)
+    {
     }
 }

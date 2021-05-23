@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ParalysisBuff : IBuff
+public class ParalysisBuff : IDebuff
 {
     public ParalysisBuff(IChess chess, int turns) : base(chess, turns)
     {
+        BuffType = BuffType.Paralysis;
     }
 
     public override void OnBuffBegin()

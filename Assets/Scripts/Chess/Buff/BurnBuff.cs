@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BurnBuff : IBuff
+public class BurnBuff : IDebuff
 {
     public BurnBuff(IChess chess, int turns) : base(chess, turns)
     {
+        BuffType = BuffType.Burn;
     }
 
     public override void OnBuffBegin()
