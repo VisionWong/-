@@ -174,6 +174,7 @@ public class Skill
         switch (Data.skillType)
         {
             case SkillType.Damage:
+                //TODO 
                 return Formulas.CalSkillDamage(Data, _chess, target, false);
             case SkillType.Heal:
                 return ((int)(target.Attribute.MaxHP * (Data.power == 0 ? Data.fixedPercent : Data.power)), 0);
@@ -237,39 +238,196 @@ public class Skill
                             }
                         }
                         break;
-                    case SkillEffectType.Burn:
+                    case SkillEffectType.Freeze:
                         if (effect.isSelf)
                         {
                             if (Random.Range(0, 1f) < effect.probability)
-                                _chess.AddBuff(new BurnBuff(_chess, 3));
+                                _chess.AddBuff(new FreezeBuff(_chess, 99));
                         }
                         else
                         {
                             foreach (var target in _effectableList)
                             {
                                 if (BattleSystem.Instance.IsChessAlive(target) && Random.Range(0, 1f) < effect.probability)
-                                    target.AddBuff(new BurnBuff(_chess, 3));
+                                    target.AddBuff(new FreezeBuff(target, 99));
                             }
+                        }
+                        break;
+                    case SkillEffectType.Confusion:
+                        if (effect.isSelf)
+                        {
+                            if (Random.Range(0, 1f) < effect.probability)
+                                _chess.AddBuff(new ConfusionBuff(_chess, effect.effectTurns));
+                        }
+                        else
+                        {
+                            foreach (var target in _effectableList)
+                            {
+                                if (BattleSystem.Instance.IsChessAlive(target) && Random.Range(0, 1f) < effect.probability)
+                                    target.AddBuff(new ConfusionBuff(target, effect.effectTurns));
+                            }
+                        }
+                        break;
+                    case SkillEffectType.Paralysis:
+                        if (effect.isSelf)
+                        {
+                            if (Random.Range(0, 1f) < effect.probability)
+                                _chess.AddBuff(new ParalysisBuff(_chess, effect.effectTurns));
+                        }
+                        else
+                        {
+                            foreach (var target in _effectableList)
+                            {
+                                if (BattleSystem.Instance.IsChessAlive(target) && Random.Range(0, 1f) < effect.probability)
+                                    target.AddBuff(new ParalysisBuff(target, effect.effectTurns));
+                            }
+                        }
+                        break;
+                    case SkillEffectType.Poison:
+                        if (effect.isSelf)
+                        {
+                            if (Random.Range(0, 1f) < effect.probability)
+                                _chess.AddBuff(new PoisonBuff(_chess, 99));
+                        }
+                        else
+                        {
+                            foreach (var target in _effectableList)
+                            {
+                                if (BattleSystem.Instance.IsChessAlive(target) && Random.Range(0, 1f) < effect.probability)
+                                    target.AddBuff(new PoisonBuff(target, 99));
+                            }
+                        }
+                        break;
+                    case SkillEffectType.Burn:
+                        if (effect.isSelf)
+                        {
+                            if (Random.Range(0, 1f) < effect.probability)
+                                _chess.AddBuff(new BurnBuff(_chess, 99));
+                        }
+                        else
+                        {
+                            foreach (var target in _effectableList)
+                            {
+                                if (BattleSystem.Instance.IsChessAlive(target) && Random.Range(0, 1f) < effect.probability)
+                                    target.AddBuff(new BurnBuff(_chess, 99));
+                            }
+                        }
+                        break;
+                    case SkillEffectType.Fear:
+                        foreach (var target in _effectableList)
+                        {
+                            if (BattleSystem.Instance.IsChessAlive(target) && Random.Range(0, 1f) < effect.probability)
+                                target.AddBuff(new FearBuff(target, 1));
                         }
                         break;
                     case SkillEffectType.SuckBlood:
                         _chess.Healing((int)(_damage * effect.fixedPercent));
                         break;
                     case SkillEffectType.AtkUp:
-                        foreach (var target in _effectableList)
+                        if (effect.isSelf)
                         {
                             if (Random.Range(0, 1f) < effect.probability)
-                                target.AddBuff(new ChangeAttackBuff(_chess, effect.effectTurns, effect.effectLevel));
+                                _chess.AddBuff(new ChangeAttackBuff(_chess, effect.effectTurns, effect.effectLevel));
+                        }
+                        else
+                        {
+                            foreach (var target in _effectableList)
+                            {
+                                if (Random.Range(0, 1f) < effect.probability)
+                                    target.AddBuff(new ChangeAttackBuff(_chess, effect.effectTurns, effect.effectLevel));
+                            }
+                        }
+                        break;
+                    case SkillEffectType.AtkDown:
+                        if (effect.isSelf)
+                        {
+                            if (Random.Range(0, 1f) < effect.probability)
+                                _chess.AddBuff(new ChangeAttackBuff(_chess, effect.effectTurns, -effect.effectLevel));
+                        }
+                        else
+                        {
+                            foreach (var target in _effectableList)
+                            {
+                                if (Random.Range(0, 1f) < effect.probability)
+                                    target.AddBuff(new ChangeAttackBuff(_chess, effect.effectTurns, -effect.effectLevel));
+                            }
+                        }
+                        break;
+                    case SkillEffectType.DefUp:
+                        if (effect.isSelf)
+                        {
+                            if (Random.Range(0, 1f) < effect.probability)
+                                _chess.AddBuff(new ChangeDefenceBuff(_chess, effect.effectTurns, effect.effectLevel));
+                        }
+                        else
+                        {
+                            foreach (var target in _effectableList)
+                            {
+                                if (Random.Range(0, 1f) < effect.probability)
+                                    target.AddBuff(new ChangeDefenceBuff(_chess, effect.effectTurns, effect.effectLevel));
+                            }
+                        }
+                        break;
+                    case SkillEffectType.DefDown:
+                        if (effect.isSelf)
+                        {
+                            if (Random.Range(0, 1f) < effect.probability)
+                                _chess.AddBuff(new ChangeDefenceBuff(_chess, effect.effectTurns, -effect.effectLevel));
+                        }
+                        else
+                        {
+                            foreach (var target in _effectableList)
+                            {
+                                if (Random.Range(0, 1f) < effect.probability)
+                                    target.AddBuff(new ChangeDefenceBuff(_chess, effect.effectTurns, -effect.effectLevel));
+                            }
+                        }
+                        break;
+                    case SkillEffectType.APUp:
+                        if (effect.isSelf)
+                        {
+                            if (Random.Range(0, 1f) < effect.probability)
+                                _chess.AddBuff(new ChangeAPBuff(_chess, effect.effectTurns, effect.effectLevel));
+                        }
+                        else
+                        {
+                            foreach (var target in _effectableList)
+                            {
+                                if (Random.Range(0, 1f) < effect.probability)
+                                    target.AddBuff(new ChangeAPBuff(_chess, effect.effectTurns, effect.effectLevel));
+                            }
+                        }
+                        break;
+                    case SkillEffectType.APDown:
+                        if (effect.isSelf)
+                        {
+                            if (Random.Range(0, 1f) < effect.probability)
+                                _chess.AddBuff(new ChangeAPBuff(_chess, effect.effectTurns, -effect.effectLevel));
+                        }
+                        else
+                        {
+                            foreach (var target in _effectableList)
+                            {
+                                if (Random.Range(0, 1f) < effect.probability)
+                                    target.AddBuff(new ChangeAPBuff(_chess, effect.effectTurns, -effect.effectLevel));
+                            }
                         }
                         break;
                     case SkillEffectType.SelfDamage:
                         _chess.TakeDamage((int)(_damage * effect.fixedPercent), DamageType.Common, EnumTool.GetOppositeDir(dir));
                         break;
-                    case SkillEffectType.APDown:
+                    case SkillEffectType.FixedDamage:
                         foreach (var target in _effectableList)
                         {
-                            if (Random.Range(0, 1f) < effect.probability)
-                                target.AddBuff(new ChangeAttackBuff(_chess, effect.effectTurns, effect.effectLevel));
+                            //TODO
+                            target.TakeDamage(effect.fixedDamage, DamageType.Common, dir);
+                        }
+                        break;
+                    case SkillEffectType.OHK:
+                        foreach (var target in _effectableList)
+                        {
+                            if (Random.Range(0, 1f) < 0.3f)
+                                target.TakeDamage(target.Attribute.HP, DamageType.Common, dir);
                         }
                         break;
                     default:

@@ -6,7 +6,7 @@ public class PoisonBuff : IDebuff
 {
     private float _bloodPer;
 
-    public PoisonBuff(IChess chess, int turns, float bloodPer) : base(chess, turns)
+    public PoisonBuff(IChess chess, int turns, float bloodPer = 0.0625f) : base(chess, turns)
     {
         _bloodPer = bloodPer;
         BuffType = BuffType.Posion;
