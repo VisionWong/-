@@ -9,6 +9,14 @@ public class ChangeAttackBuff : ILevelChange
     public ChangeAttackBuff(IChess chess, int turns, int level) : base(chess, turns)
     {
         _level = level;
+        if (_level > 0)
+        {
+            chess.NoticeWord("攻击力上升" + _level.ToString());
+        }
+        else
+        {
+            chess.NoticeWord("攻击力下降" + (-_level).ToString());
+        }
     }
 
     public override void OnBuffBegin()

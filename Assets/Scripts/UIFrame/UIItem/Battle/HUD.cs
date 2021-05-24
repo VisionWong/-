@@ -174,8 +174,9 @@ public class HUD : MonoBehaviour
     public void NoticeWords(string str)
     {
         _txtMsg.enabled = true;
+        _txtMsg.color = EFFECTIVE_COLOR;
         _txtMsg.text = str;
-        Invoke("HideNotice", 1.5f);
+        Invoke("HideNotice", 1f);
     }
 
     public void HideNotice()

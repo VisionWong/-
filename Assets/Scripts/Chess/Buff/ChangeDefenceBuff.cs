@@ -15,6 +15,14 @@ public class ChangeDefenceBuff : ILevelChange
             BuffType = BuffType.DefUp;
         else
             BuffType = BuffType.DefDown;
+        if (_level > 0)
+        {
+            chess.NoticeWord("防御力上升" + _level.ToString());
+        }
+        else
+        {
+            chess.NoticeWord("防御力下降" + (-_level).ToString());
+        }
     }
 
     public override void OnBuffBegin()

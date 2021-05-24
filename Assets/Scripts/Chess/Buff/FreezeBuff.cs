@@ -7,6 +7,8 @@ public class FreezeBuff : IDebuff
     public FreezeBuff(IChess chess, int turns) : base(chess, turns)
     {
         BuffType = BuffType.Freeze;
+        chess.NoticeWord("冰冻了");
+
     }
 
     public override void OnBuffBegin()

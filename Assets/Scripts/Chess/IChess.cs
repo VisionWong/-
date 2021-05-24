@@ -148,6 +148,11 @@ public abstract class IChess : IAttackable
         _hud.NoticeAvoid();
     }
 
+    public void NoticeWord(string str)
+    {
+        _hud.NoticeWords(str);
+    }
+
     public void TakeDamage(int damage, DamageType type, Direction dir, Action callback = null)
     {
         //判断是否死亡

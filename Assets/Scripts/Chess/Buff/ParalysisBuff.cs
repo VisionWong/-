@@ -7,6 +7,8 @@ public class ParalysisBuff : IDebuff
     public ParalysisBuff(IChess chess, int turns) : base(chess, turns)
     {
         BuffType = BuffType.Paralysis;
+        chess.NoticeWord("麻痹了");
+
     }
 
     public override void OnBuffBegin()

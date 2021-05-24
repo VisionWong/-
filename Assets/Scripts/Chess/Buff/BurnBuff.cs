@@ -7,6 +7,7 @@ public class BurnBuff : IDebuff
     public BurnBuff(IChess chess, int turns) : base(chess, turns)
     {
         BuffType = BuffType.Burn;
+        chess.NoticeWord("烧伤了");
     }
 
     public override void OnBuffBegin()

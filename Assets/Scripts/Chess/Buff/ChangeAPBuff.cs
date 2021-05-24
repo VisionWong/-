@@ -11,6 +11,14 @@ public class ChangeAPBuff : ILevelChange
     public ChangeAPBuff(IChess chess, int turns, int level) : base(chess, turns)
     {
         _num = level;
+        if (_num > 0)
+        {
+            chess.NoticeWord("行动力上升" + _num.ToString());
+        }
+        else
+        {
+            chess.NoticeWord("行动力下降" + (-_num).ToString());
+        }
     }
 
     public override void OnBuffBegin()

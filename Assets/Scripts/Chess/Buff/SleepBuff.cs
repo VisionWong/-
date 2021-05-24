@@ -7,6 +7,8 @@ public class SleepBuff : IDebuff
     public SleepBuff(IChess chess, int turns) : base(chess, turns)
     {
         BuffType = BuffType.Sleep;
+        chess.NoticeWord("睡着了");
+
     }
 
     public override void OnBuffBegin()

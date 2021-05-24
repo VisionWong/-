@@ -7,6 +7,7 @@ public class ConfusionBuff : IDebuff
     public ConfusionBuff(IChess chess, int turns) : base(chess, turns)
     {
         BuffType = BuffType.Confusion;
+        chess.NoticeWord("混乱了");
     }
 
     public override void OnBuffBegin()

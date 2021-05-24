@@ -10,6 +10,8 @@ public class PoisonBuff : IDebuff
     {
         _bloodPer = bloodPer;
         BuffType = BuffType.Posion;
+        chess.NoticeWord("中毒了");
+
     }
 
     public override void OnBuffBegin()
