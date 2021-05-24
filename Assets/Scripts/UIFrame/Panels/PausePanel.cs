@@ -9,6 +9,7 @@ public class PausePanel : BasePanel
 {
     private Button btnBack;
     private Button btnClose;
+    private bool needCanSel = false;
 
     private void Awake()
     {
@@ -21,21 +22,40 @@ public class PausePanel : BasePanel
     public override void OnEnter()
     {
         base.OnEnter();
-        MessageCenter.Instance.Broadcast(MessageType.GlobalCantSelect);
+        //CanvasGroup.alpha = 1;
+        //CanvasGroup.interactable = true;
+        //CanvasGroup.blocksRaycasts = true;
+        if (GameManager.Instance.isCantSel)
+        {
+            needCanSel = false;
+        }
+        else
+        {
+            needCanSel = true;
+            MessageCenter.Instance.Broadcast(MessageType.GlobalCantSelect);
+        }
         Time.timeScale = 0;
     }
 
     public override void OnExit()
     {
         base.OnExit();
-        MessageCenter.Instance.Broadcast(MessageType.GlobalCanSelect);
+        //CanvasGroup.alpha = 0;
+        //CanvasGroup.interactable = false;
+        //CanvasGroup.blocksRaycasts = false;
+        if (needCanSel)
+            MessageCenter.Instance.Broadcast(MessageType.GlobalCanSelect);
         Time.timeScale = 1;
+        GameManager.Instance.PauseEnd();
     }
 
     public override void OnClear()
     {
         base.OnClear();
+        if (needCanSel)
+            MessageCenter.Instance.Broadcast(MessageType.GlobalCanSelect);
         Time.timeScale = 1;
+        GameManager.Instance.PauseEnd();
     }
 
     private void OnClickBackBtn()
@@ -46,5 +66,6 @@ public class PausePanel : BasePanel
     private void OnClickCloseBtn()
     {
         UIManager.Instance.PopPanel();
+        GameManager.Instance.PauseEnd();
     }
 }

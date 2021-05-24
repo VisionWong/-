@@ -7,7 +7,11 @@ using VFramework.UIManager;
 
 public class GameManager : MonoSingleton<GameManager>
 {
+    public bool isCantSel = false;
+    [SerializeField]
     private bool isBattle = false;
+    [SerializeField]
+    private bool isPause = false;
 
     private List<int> _playerIdList = new List<int>();
     private List<int> _enemyIdList = new List<int>();
@@ -17,15 +21,19 @@ public class GameManager : MonoSingleton<GameManager>
     {
         DataLibsManager.Instance.InitAllLibs();
         UIManager.Instance.PushPanel(UIPanelType.MainMenu);
-
+        
         MessageCenter.Instance.AddListener(MessageType.OnVictory, OnBattleEnd);
         MessageCenter.Instance.AddListener(MessageType.OnDefeat, OnBattleEnd);
+        MessageCenter.Instance.AddListener(MessageType.GlobalCantSelect, OnCantSel);
+        MessageCenter.Instance.AddListener(MessageType.GlobalCanSelect, OnCanSel);
     }
 
     private void OnDestroy()
     {
         MessageCenter.Instance.RemoveListener(MessageType.OnVictory, OnBattleEnd);
         MessageCenter.Instance.RemoveListener(MessageType.OnDefeat, OnBattleEnd);
+        MessageCenter.Instance.RemoveListener(MessageType.GlobalCantSelect, OnCantSel);
+        MessageCenter.Instance.RemoveListener(MessageType.GlobalCanSelect, OnCanSel);
     }
 
     public void ClearPlayerIdList()
@@ -44,6 +52,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void StartBattle()
     {
+        isCantSel = false;
         //加载战斗场景
         StartCoroutine(WaitForLoadScene());
     }
@@ -77,14 +86,29 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void Update()
     {
-        if (isBattle && Input.GetKeyDown(KeyCode.Escape))
+        if (isBattle && !isPause && Input.GetKeyDown(KeyCode.Escape))
         {
-            UIManager.Instance.PushPanel(UIPanelType.Pause, true);
+            isPause = true;
+            UIManager.Instance.PushPanel(UIPanelType.Pause);
         }
     }
 
     private void OnBattleEnd()
     {
         isBattle = false;
+    }
+
+    private void OnCanSel()
+    {
+        isCantSel = false;
+    }
+    private void OnCantSel()
+    {
+        isCantSel = true;
+    }
+
+    public void PauseEnd()
+    {
+        isPause = false;
     }
 }
