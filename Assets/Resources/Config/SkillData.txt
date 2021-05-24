@@ -51,7 +51,7 @@
         "effects": [
             {
                 "effectType": "Burn",
-                "probability": 1
+                "probability": 0.1
             }
         ]
     },
@@ -446,7 +446,8 @@
         "description": "向对手发出微弱的电击，从而让对手陷入麻痹状态。持续3回合。",
         "pmType": "Electric",
         "skillType": "Effect",
-        "rangeType": "自身",
+        "rangeType": "非指向性",
+        "isDebuff" : "true",
         "power": 0,
         "hitRate": 90,
         "range": [

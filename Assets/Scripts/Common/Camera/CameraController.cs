@@ -7,8 +7,8 @@ using VFramework;
 public class CameraController : MonoBehaviour
 {
     public float dragSpeed = 0.2f;
-
-    private bool canDrag = true;
+    [SerializeField]
+    private bool canDrag = false;
     private float leftBorder, rightBorder, upBorder, downBorder;
 
     private void Awake()
@@ -44,6 +44,7 @@ public class CameraController : MonoBehaviour
         rightBorder = right;
         upBorder = up;
         downBorder = down;
+        canDrag = true;
     }
 
     private void CameraDrag()

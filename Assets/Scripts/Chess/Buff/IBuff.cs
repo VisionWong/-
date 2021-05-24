@@ -42,20 +42,22 @@ public abstract class IBuff
         _chess.RemoveBuff(this);
     }
     public virtual void OnTurnStart() { }
-    public virtual void OnTurnEnd()
-    {
-        _leftTurns--;
-        if (_leftTurns == 0)
-        {
-            OnBuffEnd();            
-        }
-    }
+    public virtual void OnTurnEnd() { }
 }
 
 public abstract class IDebuff : IBuff
 {
     public IDebuff(IChess chess, int turns) : base(chess, turns)
     {
+    }
+
+    public override void OnTurnEnd()
+    {
+        _leftTurns--;
+        if (_leftTurns == 0)
+        {
+            OnBuffEnd();
+        }
     }
 }
 

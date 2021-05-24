@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class PlayerChess : IChess
 {
+    [SerializeField]
+    public bool isActionEnd = false;
+
     private SelectablePlayerChess m_selectable;
 
     public PlayerChess(ChessAttr attr, GameObject go) : base(attr, go)
@@ -18,6 +21,7 @@ public class PlayerChess : IChess
 
     public void ChangeToIdle()
     {
+        isActionEnd = false;
         m_selectable.ChangeToIdle();
     }
 
@@ -33,6 +37,7 @@ public class PlayerChess : IChess
 
     public void ChangeToActionEnd()
     {
+        isActionEnd = true;
         m_selectable.ChangeToActionEnd();
     }
 }

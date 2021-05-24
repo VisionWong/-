@@ -37,6 +37,18 @@ public class BattlePanel : BasePanel
         base.OnEnter();
     }
 
+    public override void OnPause()
+    {
+        base.OnPause();
+        CanvasGroup.interactable = false;
+    }
+
+    public override void OnResume()
+    {
+        base.OnResume();
+        CanvasGroup.interactable = true;
+    }
+
     private void FindAll()
     {
         //棋子信息
@@ -216,6 +228,12 @@ public class BattlePanel : BasePanel
         HideActionField();
     }
 
-    private void OnVictory() { }
-    private void OnDefeat() { }
+    private void OnVictory()
+    {
+        UIManager.Instance.PushPanel(UIPanelType.Victory);
+    }
+    private void OnDefeat()
+    {
+        UIManager.Instance.PushPanel(UIPanelType.Defeat);
+    }
 }

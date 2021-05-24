@@ -7,7 +7,6 @@ public class GameRoot : MonoBehaviour
 {
     void Start()
     {
-        DataLibsManager.Instance.InitAllLibs();
-        UIManager.Instance.PushPanel(UIPanelType.MainMenu);
+        GameManager.Instance.Init();
     }
 }

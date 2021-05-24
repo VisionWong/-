@@ -47,12 +47,12 @@ public class SelectChessPanel : BasePanel
     private void OnClickConfirmBtn()
     {
         UIManager.Instance.PushPanel(UIPanelType.SelectEnemy);
-        BattleSystem.Instance.ClearPlayerIdList();
+        GameManager.Instance.ClearPlayerIdList();
         //记录三个棋子
         foreach (var item in _chessIcons)
         {
             if (item.IsSelect)
-                BattleSystem.Instance.AddPlayerChessToLoad(item.chessId);
+                GameManager.Instance.AddPlayerChessToLoad(item.chessId);
         }
     }
 

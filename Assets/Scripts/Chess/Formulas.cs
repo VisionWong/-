@@ -79,6 +79,7 @@ public static class Formulas
     public static float GetHealingWeight(IChess target)
     {
         var attr = target.Attribute;
+        if (attr.MaxHP == attr.HP) return 0f;
         return ((float)attr.MaxHP / attr.HP) * 0.5f;
     }
 

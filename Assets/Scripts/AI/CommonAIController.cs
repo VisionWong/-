@@ -19,6 +19,7 @@ public class CommonAIController : IAIController
 
     public override void StartAction()
     {
+        if (_targetList.Count == 0) return;
         base.StartAction();
         int maxWeight = 0;
         //根据拥有的技能搜索可以作用到的目标，并计算权重，决定使用哪个技能
@@ -38,9 +39,9 @@ public class CommonAIController : IAIController
                         foreach (var chess in target.chessList)
                         {
                             if (chess.Tag == TagDefine.PLAYER)
-                                damage += Formulas.CalSkillDamage(skill.Data, _chess, chess, false).num * skill.Data.hitTimes;
+                                damage += Mathf.RoundToInt(Formulas.CalSkillDamage(skill.Data, _chess, chess, false).num * skill.Data.hitTimes * skill.Data.hitRate / 100f);
                             else
-                                damage -= Formulas.CalSkillDamage(skill.Data, _chess, chess, false).num * skill.Data.hitTimes;
+                                damage -= Mathf.RoundToInt(Formulas.CalSkillDamage(skill.Data, _chess, chess, false).num * skill.Data.hitTimes * skill.Data.hitRate / 100f);
                         }
                         if (damage > maxDamage)
                         {

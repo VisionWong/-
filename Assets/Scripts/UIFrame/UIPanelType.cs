@@ -14,4 +14,7 @@ public enum UIPanelType
     TurnTipBoard,
     SelectChess,
     SelectEnemy,
+    Victory,
+    Defeat,
+    Pause
 }

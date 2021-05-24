@@ -12,7 +12,7 @@ public class SelectableEnemyChess : ISelectable
         Unselectable,
     }
     private EnemyChess _chess;
-    private SelectedState _selectedState;
+    //private SelectedState _selectedState;
 
     public void SetChess(EnemyChess chess)
     {
@@ -26,18 +26,18 @@ public class SelectableEnemyChess : ISelectable
             Camera.main.GetComponent<CameraController>().MoveToTarget(transform.position);
             MessageCenter.Instance.Broadcast(MessageType.OnSelectChess, _chess);
             MessageCenter.Instance.Broadcast(MessageType.OnSelectEnemyChess, _chess);
-            switch (_selectedState)
-            {
-                case SelectedState.Idle:
+            //switch (_selectedState)
+            //{
+            //    case SelectedState.Idle:
                     
-                    break;
-                case SelectedState.OnAction:
-                    Debug.Log("该棋子因行动中暂时无法选中");
-                    break;
-                default:
-                    Debug.LogWarning("棋子不存在该状态");
-                    break;
-            }
+            //        break;
+            //    case SelectedState.OnAction:
+            //        Debug.Log("该棋子因行动中暂时无法选中");
+            //        break;
+            //    default:
+            //        Debug.LogWarning("棋子不存在该状态");
+            //        break;
+            //}
         }
         base.Selected();
     }

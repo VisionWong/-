@@ -245,7 +245,8 @@ public abstract class IChess : IAttackable
     {
         if (_buffList != null)
         {
-            foreach (var buff in _buffList)
+            List<IBuff> tempList = new List<IBuff>(_buffList);
+            foreach (var buff in tempList)
             {
                 buff.OnTurnStart();
             }
@@ -255,7 +256,8 @@ public abstract class IChess : IAttackable
     {
         if (_buffList != null)
         {
-            foreach (var buff in _buffList)
+            List<IBuff> tempList = new List<IBuff>(_buffList);
+            foreach (var buff in tempList)
             {
                 buff.OnTurnEnd();
             }

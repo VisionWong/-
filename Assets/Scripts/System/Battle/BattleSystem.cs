@@ -15,8 +15,31 @@ public enum BattleState
     EnemyTurn,
 }
 
-public class BattleSystem : MonoSingleton<BattleSystem>
+public class BattleSystem : MonoBehaviour
 {
+    protected static BattleSystem _instance = null;
+    private static GameObject _go;
+
+    public static BattleSystem Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _go = new GameObject("BattleSystem");
+                _instance = _go.AddComponent<BattleSystem>();
+            }
+            return _instance;
+        }
+    }
+    public GameObject GameObject
+    {
+        get
+        {
+            return _go;
+        }
+    }
+
     public BattleState BattleState { get; private set; }
 
     private List<int> _playerIdList = new List<int>();
@@ -30,7 +53,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
 
     private ISelectable _curSelected = null;
     private PlayerChess _curPlayerChess = null;
-    private EnemyChess _curEnemyChess = null;
+    //private EnemyChess _curEnemyChess = null;
 
     private GameObject _virtualChess = null;
     private MapGrid _curWalkableGrid = null;
@@ -39,18 +62,23 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     private Skill _curUsedSkill = null;
 
     #region 战斗准备
-    public void ClearPlayerIdList()
-    {
-        _playerIdList.Clear();
-    }
-    public void AddPlayerChessToLoad(int id)
-    {
-        _playerIdList.Add(id);
-    }
+    //public void ClearPlayerIdList()
+    //{
+    //    _playerIdList.Clear();
+    //}
+    //public void AddPlayerChessToLoad(int id)
+    //{
+    //    _playerIdList.Add(id);
+    //}
 
-    public void AddEnemyChessToLoad(int id)
+    //public void AddEnemyChessToLoad(int id)
+    //{
+    //    _enemyIdList.Add(id);
+    //}
+    public void SetChessIdList(List<int> plist, List<int> elist)
     {
-        _enemyIdList.Add(id);
+        _playerIdList = plist;
+        _enemyIdList = elist;
     }
 
     public void StartBattle()
@@ -67,7 +95,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         //TODO 先环视敌方棋子，再回到自己的棋子
         OnPlayerTurn();
     }
-
+    
     private void LoadMap()
     {
         Map map = ResourceMgr.Instance.Load<Map>("Map/Map001");
@@ -80,11 +108,11 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         //TODO 根据玩家背包里的信息生成棋子，位置则根据关卡默认位置，玩家后续可在区域内调整
         foreach (var id in _playerIdList)
         {
-            int rx = UnityEngine.Random.Range(1, _map.col - 1);
+            int rx = UnityEngine.Random.Range(2, _map.col - 2);
             int ry = UnityEngine.Random.Range(_map.row - 3, _map.row);
             if (_map.GetGridByCoord(rx, ry).StayedChess != null)
             {
-                rx = UnityEngine.Random.Range(1, _map.col - 1);
+                rx = UnityEngine.Random.Range(2, _map.col - 2);
                 ry = UnityEngine.Random.Range(_map.row - 3, _map.row);
             }
             LoadPlayerChess(rx, ry, id);
@@ -104,11 +132,11 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         //TODO 据关卡信息生成
         foreach (var id in _enemyIdList)
         {
-            int rx = UnityEngine.Random.Range(1, _map.col - 1);
+            int rx = UnityEngine.Random.Range(2, _map.col - 2);
             int ry = UnityEngine.Random.Range(0, 3);
             if (_map.GetGridByCoord(rx, ry).StayedChess != null)
             {
-                rx = UnityEngine.Random.Range(1, _map.col - 1);
+                rx = UnityEngine.Random.Range(2, _map.col - 2);
                 ry = UnityEngine.Random.Range(0, 3);
             }
             LoadEnemyChess(rx, ry, id);
@@ -150,7 +178,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     }
     public void CancelEnemyHighlight()
     {
-        _curEnemyChess = null;
+        //_curEnemyChess = null;
         _map.CancelLastHighlightGrids();
     }
 
@@ -240,7 +268,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
             _curWalkableGrid = null;
             _curPlayerChess = null;
             //观察我方是否还有可以行动的棋子
-            if (++_actionedNum == _playerList.Count)
+            if (!ContainsActionablePlayerChess())
             {
                 OnEnemyTurn();
             }
@@ -250,6 +278,17 @@ public class BattleSystem : MonoSingleton<BattleSystem>
                 MessageCenter.Instance.Broadcast(MessageType.GlobalCanSelect);
             }
         }
+    }
+    private bool ContainsActionablePlayerChess()
+    {
+        foreach (var item in _playerList)
+        {
+            if (!item.isActionEnd)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void OnChessActionEnd(IChess chess)
@@ -456,6 +495,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     }
     private void OnEnemyDead(EnemyChess chess)
     {
+        chess.ChangeToActionEnd();
         _enemyList.Remove(chess);
         if (_enemyList.Count == 0)
         {
@@ -465,6 +505,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     }
     private void OnPlayerDead(PlayerChess chess)
     {
+        chess.ChangeToActionEnd();
         _playerList.Remove(chess);
         if (_playerList.Count == 0)
         {
@@ -480,15 +521,17 @@ public class BattleSystem : MonoSingleton<BattleSystem>
 
     private void OnPlayerTurn()
     {
+        if (_playerList.Count == 0) return;
         MessageCenter.Instance.Broadcast(MessageType.OnPlayerTurn);
         _actionedNum = 0;
-        foreach (var chess in _playerList)
+        List<PlayerChess> tempList = new List<PlayerChess>(_playerList);
+        foreach (var chess in tempList)
         {
-            Debug.Log(chess.GameObject.name);
+            //Debug.Log(chess.GameObject.name);
             chess.ChangeToIdle();
             chess.OnTurnStart();
         }
-        if (_actionedNum == _playerList.Count)
+        if (!ContainsActionablePlayerChess())
         {
             OnEnemyTurn();
         }
@@ -524,16 +567,19 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         Debug.Log("游戏胜利");
         MessageCenter.Instance.Broadcast(MessageType.GlobalCantSelect);
         MessageCenter.Instance.Broadcast(MessageType.OnVictory);
-        Time.timeScale = 0;
     }
     private void Defeat()
     {
         Debug.Log("游戏失败");
         MessageCenter.Instance.Broadcast(MessageType.GlobalCantSelect);
         MessageCenter.Instance.Broadcast(MessageType.OnDefeat);
-        Time.timeScale = 0;
     }
     #endregion
+
+    private void OnDestroy()
+    {
+        RemoveAll();
+    }
 
     #region 事件注册
     private void RegisterAll()

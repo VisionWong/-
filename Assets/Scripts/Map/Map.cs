@@ -23,7 +23,7 @@ public class Map : MonoBehaviour
         float right = grids[col - 1].transform.position.x;
         float up = grids[0].transform.position.y;
         float down = GetGridByCoord(0, row - 1).transform.position.y;
-        Camera.main.gameObject.AddComponent<CameraController>().SetBorder(left, right, up, down);
+        Camera.main.gameObject.GetComponent<CameraController>().SetBorder(left, right, up, down);
     }
 
     public MapGrid GetGridByCoord(int x, int y)

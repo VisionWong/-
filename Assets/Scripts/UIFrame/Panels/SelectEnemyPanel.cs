@@ -78,11 +78,12 @@ public class SelectEnemyPanel : BasePanel
 
     private void OnClickConfirmBtn()
     {
-        BattleSystem.Instance.AddEnemyChessToLoad(_curEnemyIcon.chessId1);
-        BattleSystem.Instance.AddEnemyChessToLoad(_curEnemyIcon.chessId2);
-        BattleSystem.Instance.AddEnemyChessToLoad(_curEnemyIcon.chessId3);
-        UIManager.Instance.Clear();
-        UIManager.Instance.PushPanel(UIPanelType.Battle);
-        BattleSystem.Instance.StartBattle();
+        GameManager.Instance.AddEnemyChessToLoad(_curEnemyIcon.chessId1);
+        GameManager.Instance.AddEnemyChessToLoad(_curEnemyIcon.chessId2);
+        GameManager.Instance.AddEnemyChessToLoad(_curEnemyIcon.chessId3);
+        GameManager.Instance.StartBattle();
+        //UIManager.Instance.Clear();
+        //UIManager.Instance.PushPanel(UIPanelType.Battle);
+        //BattleSystem.Instance.StartBattle();
     }
 }

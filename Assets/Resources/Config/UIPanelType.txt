@@ -19,4 +19,13 @@
 
 {"panelType":"SelectEnemy",
 "resPath":"UI/SelectEnemyPanel"},
+
+{"panelType":"Victory",
+"resPath":"UI/VictoryPanel"},
+
+{"panelType":"Defeat",
+"resPath":"UI/DefeatPanel"},
+
+{"panelType":"Pause",
+"resPath":"UI/PausePanel"},
 ]
