@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using VFramework;
 
 /// <summary>
 /// 宝可梦克制相关的属性
@@ -112,6 +113,23 @@ public abstract class IChess : IAttackable
 
     public bool CanAvoid(IChess attacker, SkillData data, Direction dir)
     {
+        if (data.effects != null)
+        {
+            foreach (var item in data.effects)
+            {
+                if (item.effectType == SkillEffectType.OHK)
+                {
+                    if (UnityEngine.Random.Range(0, 1f) >= 0.3f)
+                    {
+                        _anim.AvoidDamage(dir);
+                        _hud.NoticeAvoid();
+                        return true;
+                    }
+                    else
+                        return false;
+                }
+            }
+        }
         //根据攻击者的命中等级计算自身回避等级
         if (UnityEngine.Random.Range(0, 100) < Attribute.AvoidRate || UnityEngine.Random.Range(0, 100) >= data.hitRate)
         {
@@ -121,6 +139,13 @@ public abstract class IChess : IAttackable
             return true;
         }
         return false;
+    }
+
+    public void Avoid(Direction dir)
+    {
+        //播放闪避动画
+        _anim.AvoidDamage(dir);
+        _hud.NoticeAvoid();
     }
 
     public void TakeDamage(int damage, DamageType type, Direction dir, Action callback = null)
@@ -189,6 +214,7 @@ public abstract class IChess : IAttackable
         //TODO 不能出现重复异常BUFF
         if (buff is IDebuff)
         {
+            Debug.Log(buff.BuffType.ToString());
             if (ContainsBuff(buff.BuffType))
                 return;
         }
@@ -204,6 +230,7 @@ public abstract class IChess : IAttackable
     {
         foreach (var buff in _buffList)
         {
+            Debug.Log(buff.BuffType.ToString() + " : " + type);
             if (buff.BuffType == type)
                 return true;
         }
@@ -231,53 +258,78 @@ public abstract class IChess : IAttackable
     }
     #endregion
 
+    private IEnumerator WaitForDebuffAnim(Action callback = null)
+    {
+        yield return new WaitForSeconds(1.5f);
+        callback?.Invoke();
+    }
+
     public void Fear()
     {
         //跳过该行动回合
         //TODO 播放动画
+        Camera.main.GetComponent<CameraController>().MoveToTarget(GameObject.transform.position);
+        _hud.NoticeWords("害怕不能动");
+        MonoMgr.Instance.StartCoroutine(WaitForDebuffAnim(()=> BattleSystem.Instance.OnChessActionEnd(this)));
     }
 
     public void Sleep()
     {
         //跳过该行动回合
         //TODO 播放睡眠动画
+        Camera.main.GetComponent<CameraController>().MoveToTarget(GameObject.transform.position);
+        _hud.NoticeWords("正在睡觉zzz");
+        MonoMgr.Instance.StartCoroutine(WaitForDebuffAnim(() => BattleSystem.Instance.OnChessActionEnd(this)));
     }
 
     public void Paralyzed()
     {
         //跳过该行动回合
         //TODO 播放动画
+        Camera.main.GetComponent<CameraController>().MoveToTarget(GameObject.transform.position);
+        _hud.NoticeWords("麻痹不能动");
+        MonoMgr.Instance.StartCoroutine(WaitForDebuffAnim(() => BattleSystem.Instance.OnChessActionEnd(this)));
     }
 
     public void Burned()
     {
+        Camera.main.GetComponent<CameraController>().MoveToTarget(GameObject.transform.position);
         //TODO 播放动画
         if (Attribute.TakeDamage(0.0625f))
         {
             Dead();
         }
         //TODO 播放中毒受伤动画
+        _hud.NoticeWords("烧伤了");
         _hud.ChangeHPValueByDamage(Attribute.HP, Attribute.MaxHP, (int)(0.0625f * Attribute.MaxHP), DamageType.Burn);
+        MonoMgr.Instance.StartCoroutine(WaitForDebuffAnim());
     }
 
     public void Poisoned(float bloodPer)
     {
+        Camera.main.GetComponent<CameraController>().MoveToTarget(GameObject.transform.position);
         if (Attribute.TakeDamage(bloodPer))
         {
             Dead();
         }
         //TODO 播放中毒受伤动画
+        _hud.NoticeWords("中毒了");
         _hud.ChangeHPValueByDamage(Attribute.HP, Attribute.MaxHP, (int)(bloodPer * Attribute.MaxHP), DamageType.Poison);
+        MonoMgr.Instance.StartCoroutine(WaitForDebuffAnim());
     }
 
     public void Freezed()
     {
+        Camera.main.GetComponent<CameraController>().MoveToTarget(GameObject.transform.position);
         //跳过该行动回合
         //TODO 播放冰冻动画
+        _hud.NoticeWords("被冻住不能动");
+        MonoMgr.Instance.StartCoroutine(WaitForDebuffAnim(() => BattleSystem.Instance.OnChessActionEnd(this)));
     }
 
     public void Confused()
     {
+        Camera.main.GetComponent<CameraController>().MoveToTarget(GameObject.transform.position);
         //跳过该行动回合
         //攻击自己
         if (Attribute.TakeDamage(0.0625f))
@@ -286,6 +338,8 @@ public abstract class IChess : IAttackable
         }
         //TODO 播放中毒受伤动画
         _hud.ChangeHPValueByDamage(Attribute.HP, Attribute.MaxHP, (int)(0.0625f * Attribute.MaxHP), DamageType.Common);
+        _hud.NoticeWords("混乱中自损了");
+        MonoMgr.Instance.StartCoroutine(WaitForDebuffAnim(() => BattleSystem.Instance.OnChessActionEnd(this)));
     }
 
     public void Dead()

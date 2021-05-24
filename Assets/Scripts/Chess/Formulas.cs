@@ -36,6 +36,20 @@ public static class Formulas
         else if (Mathf.Abs(damage - 0.5f) <= float.Epsilon) type = DamageType.HalfEffective;
         else if (Mathf.Abs(damage - 1f) <= float.Epsilon) type = DamageType.Common;
         else type = DamageType.Effective;
+        if (attr.effects != null)
+        {
+            foreach (var effect in attr.effects)
+            {
+                if (effect.effectType == SkillEffectType.FixedDamage)
+                {
+                    return (effect.fixedDamage, type);
+                }
+                if (effect.effectType == SkillEffectType.OHK)
+                {
+                    return (target.Attribute.HP, type);
+                }
+            }
+        }
         //计算本属性加成
         if (attr.pmType == user.Attribute.PMType1 || attr.pmType == user.Attribute.PMType2)
         {
@@ -79,7 +93,7 @@ public static class Formulas
             return 2f;
         else if (typeData.halfEffectiveSet.Contains(targetType))
             return 0.5f;
-        else if (typeData.noEffectiSet.Contains(targetType))
+        else if (typeData.noEffectSet.Contains(targetType))
             return 0f;
         return 1f;
     }

@@ -143,8 +143,17 @@ public class Skill
                     else
                     {
                         var damage = Formulas.CalSkillDamage(Data, _chess, target);
-                        _damage = damage.num;
-                        target.TakeDamage(damage.num, damage.type, dir, () => ReadyToDoEffect(dir));
+                        if (damage.type == DamageType.NoEffect)
+                        {
+                            target.Avoid(dir);
+                            _effectableList.Remove(target);
+                            ReadyToDoEffect(dir);
+                        }
+                        else
+                        {
+                            _damage = damage.num;
+                            target.TakeDamage(damage.num, damage.type, dir, () => ReadyToDoEffect(dir));
+                        }
                     }
                 }
                 break;
@@ -309,7 +318,7 @@ public class Skill
                             foreach (var target in _effectableList)
                             {
                                 if (BattleSystem.Instance.IsChessAlive(target) && Random.Range(0, 1f) < effect.probability)
-                                    target.AddBuff(new BurnBuff(_chess, 99));
+                                    target.AddBuff(new BurnBuff(target, 99));
                             }
                         }
                         break;
@@ -334,7 +343,7 @@ public class Skill
                             foreach (var target in _effectableList)
                             {
                                 if (Random.Range(0, 1f) < effect.probability)
-                                    target.AddBuff(new ChangeAttackBuff(_chess, effect.effectTurns, effect.effectLevel));
+                                    target.AddBuff(new ChangeAttackBuff(target, effect.effectTurns, effect.effectLevel));
                             }
                         }
                         break;
@@ -349,7 +358,7 @@ public class Skill
                             foreach (var target in _effectableList)
                             {
                                 if (Random.Range(0, 1f) < effect.probability)
-                                    target.AddBuff(new ChangeAttackBuff(_chess, effect.effectTurns, -effect.effectLevel));
+                                    target.AddBuff(new ChangeAttackBuff(target, effect.effectTurns, -effect.effectLevel));
                             }
                         }
                         break;
@@ -364,7 +373,7 @@ public class Skill
                             foreach (var target in _effectableList)
                             {
                                 if (Random.Range(0, 1f) < effect.probability)
-                                    target.AddBuff(new ChangeDefenceBuff(_chess, effect.effectTurns, effect.effectLevel));
+                                    target.AddBuff(new ChangeDefenceBuff(target, effect.effectTurns, effect.effectLevel));
                             }
                         }
                         break;
@@ -379,7 +388,7 @@ public class Skill
                             foreach (var target in _effectableList)
                             {
                                 if (Random.Range(0, 1f) < effect.probability)
-                                    target.AddBuff(new ChangeDefenceBuff(_chess, effect.effectTurns, -effect.effectLevel));
+                                    target.AddBuff(new ChangeDefenceBuff(target, effect.effectTurns, -effect.effectLevel));
                             }
                         }
                         break;
@@ -394,7 +403,7 @@ public class Skill
                             foreach (var target in _effectableList)
                             {
                                 if (Random.Range(0, 1f) < effect.probability)
-                                    target.AddBuff(new ChangeAPBuff(_chess, effect.effectTurns, effect.effectLevel));
+                                    target.AddBuff(new ChangeAPBuff(target, effect.effectTurns, effect.effectLevel));
                             }
                         }
                         break;
@@ -409,7 +418,7 @@ public class Skill
                             foreach (var target in _effectableList)
                             {
                                 if (Random.Range(0, 1f) < effect.probability)
-                                    target.AddBuff(new ChangeAPBuff(_chess, effect.effectTurns, -effect.effectLevel));
+                                    target.AddBuff(new ChangeAPBuff(target, effect.effectTurns, -effect.effectLevel));
                             }
                         }
                         break;
@@ -417,18 +426,14 @@ public class Skill
                         _chess.TakeDamage((int)(_damage * effect.fixedPercent), DamageType.Common, EnumTool.GetOppositeDir(dir));
                         break;
                     case SkillEffectType.FixedDamage:
-                        foreach (var target in _effectableList)
-                        {
-                            //TODO
-                            target.TakeDamage(effect.fixedDamage, DamageType.Common, dir);
-                        }
+                        //
                         break;
                     case SkillEffectType.OHK:
-                        foreach (var target in _effectableList)
-                        {
-                            if (Random.Range(0, 1f) < 0.3f)
-                                target.TakeDamage(target.Attribute.HP, DamageType.Common, dir);
-                        }
+                        //foreach (var target in _effectableList)
+                        //{
+                        //    if (Random.Range(0, 1f) < 0.3f)
+                        //        target.TakeDamage(target.Attribute.HP, DamageType.Common, dir);
+                        //}
                         break;
                     default:
                         Debug.LogError("该类型尚未实现:" + effect.effectType);

@@ -11,7 +11,7 @@ public class Map : MonoBehaviour
 
     private List<MapGrid> lastGrids = new List<MapGrid>();
 
-    public void Start()
+    public void Awake()
     {
         foreach (var grid in grids)
         {

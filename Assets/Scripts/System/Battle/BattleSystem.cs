@@ -39,6 +39,10 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     private Skill _curUsedSkill = null;
 
     #region 战斗准备
+    public void ClearPlayerIdList()
+    {
+        _playerIdList.Clear();
+    }
     public void AddPlayerChessToLoad(int id)
     {
         _playerIdList.Add(id);
@@ -50,7 +54,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     }
 
     public void StartBattle()
-    {       
+    {
         RegisterAll();
         LoadMap();
         LoadPlayerChess();
@@ -245,6 +249,23 @@ public class BattleSystem : MonoSingleton<BattleSystem>
                 BattleState = BattleState.WaitSelect;
                 MessageCenter.Instance.Broadcast(MessageType.GlobalCanSelect);
             }
+        }
+    }
+
+    public void OnChessActionEnd(IChess chess)
+    {
+        if (chess is PlayerChess)
+        {
+            var c = chess as PlayerChess;
+            c.ChangeToActionEnd();
+            c.OnActionEnd();
+            _actionedNum++;
+        }
+        else
+        {
+            var c = chess as EnemyChess;
+            c.ChangeToActionEnd();
+            c.OnActionEnd();
         }
     }
 
@@ -463,10 +484,21 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         _actionedNum = 0;
         foreach (var chess in _playerList)
         {
+            Debug.Log(chess.GameObject.name);
             chess.ChangeToIdle();
             chess.OnTurnStart();
         }
-        BattleState = BattleState.WaitSelect;
+        if (_actionedNum == _playerList.Count)
+        {
+            OnEnemyTurn();
+        }
+        else
+        {
+            int ran = UnityEngine.Random.Range(0, _playerList.Count);
+            Camera.main.GetComponent<CameraController>().MoveToTarget(_playerList[ran].GameObject.transform.position);
+            BattleState = BattleState.WaitSelect;
+            MessageCenter.Instance.Broadcast(MessageType.GlobalCanSelect);
+        }
     }
     private void OnEnemyTurn()
     {
@@ -476,6 +508,7 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         BattleState = BattleState.EnemyTurn;
         foreach (var chess in _enemyList)
         {
+            chess.ChangeToIdle();
             chess.OnTurnStart();
         }
         //启动敌人策略AI
@@ -484,7 +517,6 @@ public class BattleSystem : MonoSingleton<BattleSystem>
     private void OnEnemyTurnEnd()
     {
         //TODO 判断是否回合数超出关卡限制，是则判负
-        MessageCenter.Instance.Broadcast(MessageType.GlobalCanSelect);
         OnPlayerTurn();
     }
     private void Victory()
@@ -492,12 +524,14 @@ public class BattleSystem : MonoSingleton<BattleSystem>
         Debug.Log("游戏胜利");
         MessageCenter.Instance.Broadcast(MessageType.GlobalCantSelect);
         MessageCenter.Instance.Broadcast(MessageType.OnVictory);
+        Time.timeScale = 0;
     }
     private void Defeat()
     {
         Debug.Log("游戏失败");
         MessageCenter.Instance.Broadcast(MessageType.GlobalCantSelect);
         MessageCenter.Instance.Broadcast(MessageType.OnDefeat);
+        Time.timeScale = 0;
     }
     #endregion
 

@@ -171,6 +171,12 @@ public class HUD : MonoBehaviour
         _txtMsg.text = " " + name + "!";
         Invoke("HideNotice", 1.5f);
     }
+    public void NoticeWords(string str)
+    {
+        _txtMsg.enabled = true;
+        _txtMsg.text = str;
+        Invoke("HideNotice", 1.5f);
+    }
 
     public void HideNotice()
     {

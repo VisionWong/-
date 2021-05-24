@@ -47,6 +47,7 @@ public class SelectChessPanel : BasePanel
     private void OnClickConfirmBtn()
     {
         UIManager.Instance.PushPanel(UIPanelType.SelectEnemy);
+        BattleSystem.Instance.ClearPlayerIdList();
         //记录三个棋子
         foreach (var item in _chessIcons)
         {

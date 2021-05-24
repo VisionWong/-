@@ -28,7 +28,7 @@
         "range": [
             {
                 "x": 0,
-                "y": 1
+                "y": 2
             }
         ],
         
@@ -51,7 +51,7 @@
         "effects": [
             {
                 "effectType": "Burn",
-                "probability": 0.1
+                "probability": 1
             }
         ]
     },
