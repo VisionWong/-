@@ -28,6 +28,8 @@ public class Map : MonoBehaviour
 
     public MapGrid GetGridByCoord(int x, int y)
     {
+        if (x < 0 || x >= col || y < 0 || y >= row)
+            return null;
         int index = y * col + x;
         return index >= grids.Length || index < 0 ? null : grids[index];
     }

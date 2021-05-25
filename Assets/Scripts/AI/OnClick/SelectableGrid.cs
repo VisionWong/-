@@ -30,7 +30,8 @@ public class SelectableGrid : ISelectable
             switch (SelectedState)
             {
                 case GridSelectedState.Idle:
-                    Debug.Log("当前选中的格子类型为" + m_grid.TerrainType.ToString());
+                    //Debug.Log("当前选中的格子类型为" + m_grid.TerrainType.ToString());
+                    Debug.Log("当前选中的格子坐标为:" + m_grid.X + "," + m_grid.Y);
                     MessageCenter.Instance.Broadcast(MessageType.OnSelectIdleGrid, m_grid);
                     break;
                 case GridSelectedState.Moveable:

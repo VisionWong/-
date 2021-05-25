@@ -110,7 +110,7 @@ public class BattleSystem : MonoBehaviour
         {
             int rx = UnityEngine.Random.Range(2, _map.col - 2);
             int ry = UnityEngine.Random.Range(_map.row - 3, _map.row);
-            if (_map.GetGridByCoord(rx, ry).StayedChess != null)
+            while (_map.GetGridByCoord(rx, ry).StayedChess != null)
             {
                 rx = UnityEngine.Random.Range(2, _map.col - 2);
                 ry = UnityEngine.Random.Range(_map.row - 3, _map.row);
@@ -134,7 +134,7 @@ public class BattleSystem : MonoBehaviour
         {
             int rx = UnityEngine.Random.Range(2, _map.col - 2);
             int ry = UnityEngine.Random.Range(0, 3);
-            if (_map.GetGridByCoord(rx, ry).StayedChess != null)
+            while (_map.GetGridByCoord(rx, ry).StayedChess != null)
             {
                 rx = UnityEngine.Random.Range(2, _map.col - 2);
                 ry = UnityEngine.Random.Range(0, 3);
@@ -549,7 +549,8 @@ public class BattleSystem : MonoBehaviour
         MessageCenter.Instance.Broadcast(MessageType.GlobalCantSelect);
         MessageCenter.Instance.Broadcast(MessageType.OnEnemyTurn);
         BattleState = BattleState.EnemyTurn;
-        foreach (var chess in _enemyList)
+        List<EnemyChess> tempList = new List<EnemyChess>(_enemyList);
+        foreach (var chess in tempList)
         {
             chess.ChangeToIdle();
             chess.OnTurnStart();

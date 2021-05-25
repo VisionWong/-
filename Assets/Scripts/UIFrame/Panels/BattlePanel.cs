@@ -49,6 +49,11 @@ public class BattlePanel : BasePanel
         CanvasGroup.interactable = true;
     }
 
+    public override void OnClear()
+    {
+        base.OnClear();
+    }
+
     private void FindAll()
     {
         //棋子信息
@@ -103,6 +108,8 @@ public class BattlePanel : BasePanel
         MessageCenter.Instance.RemoveListener(MessageType.OnCancelMove, HideActionField);
         MessageCenter.Instance.RemoveListener(MessageType.OnSearchAttackableEnd, ShowSkillDirPanel);
         MessageCenter.Instance.RemoveListener(MessageType.OnClickDirCancelBtn, ReShowActionField);
+        MessageCenter.Instance.RemoveListener(MessageType.OnVictory, OnVictory);
+        MessageCenter.Instance.RemoveListener(MessageType.OnDefeat, OnDefeat);
     }
 
     private void OnDestroy()
@@ -230,10 +237,24 @@ public class BattlePanel : BasePanel
 
     private void OnVictory()
     {
-        UIManager.Instance.PushPanel(UIPanelType.Victory);
+        MessageCenter.Instance.Broadcast(MessageType.GlobalCantSelect);
+        StartCoroutine(WaitForDeadV());
     }
     private void OnDefeat()
     {
+        MessageCenter.Instance.Broadcast(MessageType.GlobalCantSelect);
+        StartCoroutine(WaitForDeadD());
+    }
+
+    private IEnumerator WaitForDeadV()
+    {
+        yield return new WaitForSeconds(1f);
+        UIManager.Instance.PushPanel(UIPanelType.Victory);
+    }
+    private IEnumerator WaitForDeadD()
+    {
+        yield return new WaitForSeconds(1f);
         UIManager.Instance.PushPanel(UIPanelType.Defeat);
     }
+
 }
