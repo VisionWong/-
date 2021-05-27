@@ -6,4 +6,10 @@
     public const string CONFIG_PMTYPE_DATA = "Config/PMTypeData";
 
     public const string UI_SKILL_BUTTON = "UI/SkillButton";
+
+    public const string AUDIO_TITLE = "Audio/Title";
+    public const string AUDIO_VICTORY = "Audio/Victory";
+    public const string AUDIO_DEFEAT = "Audio/Defeat";
+
+
 }

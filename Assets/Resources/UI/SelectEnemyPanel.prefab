@@ -88,6 +88,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cdbca917afcc204faa4872cc0703684, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bgmPath: Audio/Battle_FourKing
   chessId1: 334
   chessId2: 330
   chessId3: 373
@@ -1870,6 +1871,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cdbca917afcc204faa4872cc0703684, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bgmPath: Audio/Battle_Leader
   chessId1: 262
   chessId2: 323
   chessId3: 383
@@ -2066,6 +2068,7 @@ RectTransform:
   - {fileID: 4682583088216879009}
   - {fileID: 3561522881334210971}
   - {fileID: 553922521725153873}
+  - {fileID: 384519645570807678}
   m_Father: {fileID: 609617758965742530}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2743,6 +2746,84 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: "\u4F24\u5BB3"
+--- !u!1 &6179418335577140781
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 384519645570807678}
+  - component: {fileID: 5462885571513086762}
+  - component: {fileID: 7490538811134485787}
+  m_Layer: 5
+  m_Name: Text (8)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &384519645570807678
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6179418335577140781}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4002283008259979304}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 158.2976, y: -467.20007}
+  m_SizeDelta: {x: 317.19604, y: 100.49273}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &5462885571513086762
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6179418335577140781}
+  m_CullTransparentMesh: 0
+--- !u!114 &7490538811134485787
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6179418335577140781}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 0.98740625, b: 0, a: 1}
+  m_RaycastTarget: 1
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 26
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 10
+    m_MaxSize: 40
+    m_Alignment: 3
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: "\u8303\u56F4\u89E3\u91CA\uFF1A(0,1)\u4EE3\u8868\u4EE5\u4E0A\u65B9\u5411\u4E3A\u4F8B\uFF0Cx\u8F74\u5DEE\u503C\u4E3A0\uFF0Cy\u8F74\u5DEE\u503C\u4E3A1\uFF0C\u5373\u80FD\u6253\u5230\u4EFB\u610F\u65B9\u5411\u90BB\u63A5\u4E00\u683C\u7684\u610F\u601D"
 --- !u!1 &6251176321239683423
 GameObject:
   m_ObjectHideFlags: 0
@@ -3143,6 +3224,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cdbca917afcc204faa4872cc0703684, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bgmPath: Audio/Battle_Gym
   chessId1: 348
   chessId2: 306
   chessId3: 299
@@ -3879,9 +3961,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chessId: 0
-  skillId1: 0
-  skillId2: 0
-  skillId3: 0
   txtSelected: {fileID: 8757879706658558698}
   panel: {fileID: 3226077995438675161}
 --- !u!1 &8757879707023380877
@@ -4607,9 +4686,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chessId: 0
-  skillId1: 0
-  skillId2: 0
-  skillId3: 0
   txtSelected: {fileID: 8757879708149661755}
   panel: {fileID: 3226077995438675161}
 --- !u!1 &8757879707672947636
@@ -4795,9 +4871,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chessId: 0
-  skillId1: 0
-  skillId2: 0
-  skillId3: 0
   txtSelected: {fileID: 8757879707100348112}
   panel: {fileID: 3226077995438675161}
 --- !u!1 &8757879708149661758

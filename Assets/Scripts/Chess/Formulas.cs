@@ -34,6 +34,7 @@ public static class Formulas
         if (target.Attribute.PMType2 != PMType.None) damage *= GetPMTypeRestraint(attr.pmType, target.Attribute.PMType2);
         if (Mathf.Abs(damage) <= float.Epsilon) return (0, type);
         else if (Mathf.Abs(damage - 0.5f) <= float.Epsilon) type = DamageType.HalfEffective;
+        else if (Mathf.Abs(damage - 0.25f) <= float.Epsilon) type = DamageType.HalfEffective;
         else if (Mathf.Abs(damage - 1f) <= float.Epsilon) type = DamageType.Common;
         else type = DamageType.Effective;
         if (attr.effects != null)

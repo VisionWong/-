@@ -80,8 +80,8 @@ public class ChessAttr
     {
         get
         {
-            if (isBurned) return (int)(0.5f * _atk * addiAttr.AtkFactor.ToFloat());
-            return (int)(_atk * addiAttr.AtkFactor.ToFloat());
+            if (isBurned) return Mathf.RoundToInt(0.8f * _atk * addiAttr.AtkFactor.ToFloat());
+            return Mathf.RoundToInt(_atk * addiAttr.AtkFactor.ToFloat());
         }
         private set { _atk = value; }
     }
@@ -243,12 +243,12 @@ public class Fraction
     }
     public float ToFloat()
     {
-        return son / mom;
+        return 1f * son / mom;
     }
     public void Restore()
     {
-        son = 2;
-        mom = 2;
+        son = 5;
+        mom = 5;
     }
     public void LevelUp(int level)
     {

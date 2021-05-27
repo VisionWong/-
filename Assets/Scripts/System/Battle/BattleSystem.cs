@@ -531,16 +531,16 @@ public class BattleSystem : MonoBehaviour
             chess.ChangeToIdle();
             chess.OnTurnStart();
         }
-        if (!ContainsActionablePlayerChess())
-        {
-            OnEnemyTurn();
-        }
-        else
+        if (ContainsActionablePlayerChess())
         {
             int ran = UnityEngine.Random.Range(0, _playerList.Count);
             Camera.main.GetComponent<CameraController>().MoveToTarget(_playerList[ran].GameObject.transform.position);
             BattleState = BattleState.WaitSelect;
             MessageCenter.Instance.Broadcast(MessageType.GlobalCanSelect);
+        }
+        else
+        {
+            OnEnemyTurn();
         }
     }
     private void OnEnemyTurn()

@@ -277,7 +277,7 @@ public abstract class IChess : IAttackable
         //TODO 播放动画
         Camera.main.GetComponent<CameraController>().MoveToTarget(GameObject.transform.position);
         _hud.NoticeWords("害怕不能动");
-        MonoMgr.Instance.StartCoroutine(WaitForDebuffAnim(()=> BattleSystem.Instance.OnChessActionEnd(this)));
+        BattleSystem.Instance.OnChessActionEnd(this);
     }
 
     public void Sleep()
@@ -286,7 +286,7 @@ public abstract class IChess : IAttackable
         //TODO 播放睡眠动画
         Camera.main.GetComponent<CameraController>().MoveToTarget(GameObject.transform.position);
         _hud.NoticeWords("正在睡觉zzz");
-        MonoMgr.Instance.StartCoroutine(WaitForDebuffAnim(() => BattleSystem.Instance.OnChessActionEnd(this)));
+        BattleSystem.Instance.OnChessActionEnd(this);
     }
 
     public void Paralyzed()
@@ -295,7 +295,7 @@ public abstract class IChess : IAttackable
         //TODO 播放动画
         Camera.main.GetComponent<CameraController>().MoveToTarget(GameObject.transform.position);
         _hud.NoticeWords("麻痹不能动");
-        MonoMgr.Instance.StartCoroutine(WaitForDebuffAnim(() => BattleSystem.Instance.OnChessActionEnd(this)));
+        BattleSystem.Instance.OnChessActionEnd(this);
     }
 
     public void Burned()
@@ -331,7 +331,7 @@ public abstract class IChess : IAttackable
         //跳过该行动回合
         //TODO 播放冰冻动画
         _hud.NoticeWords("被冻住不能动");
-        MonoMgr.Instance.StartCoroutine(WaitForDebuffAnim(() => BattleSystem.Instance.OnChessActionEnd(this)));
+        BattleSystem.Instance.OnChessActionEnd(this);
     }
 
     public void Confused()
@@ -346,7 +346,7 @@ public abstract class IChess : IAttackable
         //TODO 播放中毒受伤动画
         _hud.ChangeHPValueByDamage(Attribute.HP, Attribute.MaxHP, (int)(0.0625f * Attribute.MaxHP), DamageType.Common);
         _hud.NoticeWords("混乱中自损了");
-        MonoMgr.Instance.StartCoroutine(WaitForDebuffAnim(() => BattleSystem.Instance.OnChessActionEnd(this)));
+        BattleSystem.Instance.OnChessActionEnd(this);
     }
 
     public void Dead()

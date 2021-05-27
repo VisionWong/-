@@ -107,7 +107,12 @@ public class CommonAIController : IAIController
                                 int effectNum = 0;
                                 foreach (var chess in target.chessList)
                                 {
-                                    //TODO 棋子是否存在该debuff
+                                    var damage = Formulas.CalSkillDamage(skill.Data, _chess, chess, false);
+                                    if (damage.type == DamageType.NoEffect)
+                                    {
+                                        continue;
+                                    }
+                                    //棋子是否存在该debuff
                                     foreach (var effect in skill.Data.effects)
                                     {
                                         if (!chess.ContainsBuff(EnumTool.EffectTypeToBuffType(effect.effectType)))

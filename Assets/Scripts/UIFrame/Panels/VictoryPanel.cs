@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using VFramework.UIManager;
 using DG.Tweening;
+using VFramework;
 
 public class VictoryPanel : BasePanel
 {
@@ -18,6 +19,7 @@ public class VictoryPanel : BasePanel
     public override void OnEnter()
     {
         base.OnEnter();
+        AudioMgr.Instance.PlayBGM(PathDefine.AUDIO_VICTORY);
     }
 
     private void OnClickBackBtn()

@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class EnemyIcon : MonoBehaviour, IPointerDownHandler
 {
+    public string bgmPath;
     public int chessId1;
     public int chessId2;
     public int chessId3;

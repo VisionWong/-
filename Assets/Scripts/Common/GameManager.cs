@@ -12,6 +12,7 @@ public class GameManager : MonoSingleton<GameManager>
     private bool isBattle = false;
     [SerializeField]
     private bool isPause = false;
+    private string bgmPath;
 
     private List<int> _playerIdList = new List<int>();
     private List<int> _enemyIdList = new List<int>();
@@ -21,7 +22,8 @@ public class GameManager : MonoSingleton<GameManager>
     {
         DataLibsManager.Instance.InitAllLibs();
         UIManager.Instance.PushPanel(UIPanelType.MainMenu);
-        
+        AudioMgr.Instance.PlayBGM(PathDefine.AUDIO_TITLE);
+
         MessageCenter.Instance.AddListener(MessageType.OnVictory, OnBattleEnd);
         MessageCenter.Instance.AddListener(MessageType.OnDefeat, OnBattleEnd);
         MessageCenter.Instance.AddListener(MessageType.GlobalCantSelect, OnCantSel);
@@ -50,6 +52,11 @@ public class GameManager : MonoSingleton<GameManager>
         _enemyIdList.Add(id);
     }
 
+    public void SetBgmPath(string path)
+    {
+        bgmPath = path;
+    }
+
     public void StartBattle()
     {
         isCantSel = false;
@@ -60,6 +67,7 @@ public class GameManager : MonoSingleton<GameManager>
     private IEnumerator WaitForLoadScene()
     {
         var ar = SceneManager.LoadSceneAsync(2);
+        Resources.UnloadUnusedAssets();
         while (ar.progress < 1)
         {
             yield return ar.progress;
@@ -70,6 +78,8 @@ public class GameManager : MonoSingleton<GameManager>
         BattleSystem.Instance.SetChessIdList(_playerIdList, _enemyIdList);
         BattleSystem.Instance.StartBattle();
         isBattle = true;
+        AudioMgr.Instance.PlayBGM(bgmPath);
+        //AudioMgr.Instance.PlayBGM();
     }
 
     public void EndBattle()
@@ -82,6 +92,7 @@ public class GameManager : MonoSingleton<GameManager>
         SceneManager.LoadScene(1);
         UIManager.Instance.Clear();
         UIManager.Instance.PushPanel(UIPanelType.MainMenu);
+        AudioMgr.Instance.PlayBGM(PathDefine.AUDIO_TITLE);
     }
 
     private void Update()

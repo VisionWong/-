@@ -81,6 +81,7 @@ public class SelectEnemyPanel : BasePanel
         GameManager.Instance.AddEnemyChessToLoad(_curEnemyIcon.chessId1);
         GameManager.Instance.AddEnemyChessToLoad(_curEnemyIcon.chessId2);
         GameManager.Instance.AddEnemyChessToLoad(_curEnemyIcon.chessId3);
+        GameManager.Instance.SetBgmPath(_curEnemyIcon.bgmPath);
         GameManager.Instance.StartBattle();
         //UIManager.Instance.Clear();
         //UIManager.Instance.PushPanel(UIPanelType.Battle);

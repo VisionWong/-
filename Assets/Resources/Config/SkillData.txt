@@ -745,7 +745,7 @@
     {
         "id": 35,
         "name": "金属爪",
-        "description": "用钢铁之爪劈开对手进行攻击。10%概率会提高自己的攻击。持续3回合。",
+        "description": "用钢铁之爪劈开对手进行攻击。30%概率会提高自己的攻击。持续3回合。",
         "pmType": "Metal",
         "skillType": "Damage",
         "rangeType": "非指向性",
@@ -760,7 +760,7 @@
         "effects": [
             {
                 "effectType": "AtkUp",
-                "probability": 0.1,
+                "probability": 0.3,
                 "effectTurns": 3
             }
         ]

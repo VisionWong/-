@@ -36,6 +36,7 @@ public enum SkillEffectType
     AtkDown,    //下降攻击,
     DefDown,    //下降防御,
     APDown,     //下降行动力,
+    AllUp,      //全上升
     SelfDamage, //自损
     Charge,     //蓄力
     OHK,        //一击必杀
@@ -163,10 +164,24 @@ public class Skill
                     if (Random.Range(0, 100) < Data.hitRate)
                         target.Healing(Data.power == 0 ? Data.fixedPercent : Data.power);
                 }
-                DoSkillEffect(dir);
+                MonoMgr.Instance.StartCoroutine(DoSkillEffect(dir));
+                //DoSkillEffect(dir);
                 break;
             case SkillType.Effect:
-                DoSkillEffect(dir);
+                if (Data.rangeType != SkillRangeType.自身)
+                {
+                    foreach (var target in targets)
+                    {
+                        var damage = Formulas.CalSkillDamage(Data, _chess, target, false);
+                        if (damage.type == DamageType.NoEffect)
+                        {
+                            target.Avoid(dir);
+                            _effectableList.Remove(target);
+                        }
+                    }
+                }
+                MonoMgr.Instance.StartCoroutine(DoSkillEffect(dir));
+                //DoSkillEffect(dir);
                 break;
             default:
                 Debug.LogError("该类型尚未实现" + Data.skillType);
@@ -218,18 +233,20 @@ public class Skill
         if (_lockNum == _lockTarget)
         {
             _lockNum = 0;
-            DoSkillEffect(dir);
+            //DoSkillEffect(dir);
+            MonoMgr.Instance.StartCoroutine(DoSkillEffect(dir));
         }
     }
 
     //TODO 让特效演出完成再结算下一个特效 使用协程
-    private void DoSkillEffect(Direction dir)
+    private IEnumerator DoSkillEffect(Direction dir)
     {
         //等伤害结算完处理技能特效
         if (Data.effects != null)
         {
             foreach (var effect in Data.effects)
             {
+                yield return new WaitForSeconds(0.5f);
                 switch (effect.effectType)
                 {
                     case SkillEffectType.Sleep:

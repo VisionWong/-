@@ -32,11 +32,12 @@ namespace VFramework
         {
             if (_bgm != null)
             {
-                //ResourceMgr.Instance.LoadAsync<AudioClip>(path, clip =>
-                //{
-                //    _bgm.clip = clip;
-                //    _bgm.loop = isLoop;
-                //});
+                ResourceMgr.Instance.LoadAsync<AudioClip>(path, clip =>
+                {
+                    _bgm.clip = clip;
+                    _bgm.loop = isLoop;
+                    _bgm.Play();
+                });
             }
         }
 
@@ -107,10 +108,10 @@ namespace VFramework
         {
             if (_sound != null)
             {
-                //ResourceMgr.Instance.LoadAsync<AudioClip>(path, clip =>
-                //{
-                //    _sound.PlayOneShot(clip);
-                //});
+                ResourceMgr.Instance.LoadAsync<AudioClip>(path, clip =>
+                {
+                    _sound.PlayOneShot(clip);
+                });
             }
         }
 
